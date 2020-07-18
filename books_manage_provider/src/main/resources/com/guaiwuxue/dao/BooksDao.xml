@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.guaiwuxue.dao.BooksDao">
+    <update id="updateBorrowNumById" parameterType="int">
+        update books set borrowNum=#{borrowNum} where bookId=#{bookId}
+    </update>
+
+    <select id="findAll" resultType="com.guaiwuxue.pojo.Books">
+        select * from books;
+    </select>
+    <select id="findPageByCondition" parameterType="string" resultType="com.guaiwuxue.pojo.Books">
+        select * from books
+        <if test="value != null and value.length > 0 and value!='' ">
+            where typeId like #{value} or bookName like #{value}
+            or bookWriter like #{value} or bookCompany like #{value}
+        </if>
+    </select>
+    <select id="findBorrowNumById" parameterType="int" resultType="java.lang.Integer">
+        select borrowNum from books where bookId=#{bookId}
+    </select>
+    <select id="findBookNumById" parameterType="int" resultType="java.lang.Integer">
+        select bookNum from books where bookId=#{bookId}
+    </select>
+    <select id="findCountByTypeId" parameterType="string" resultType="java.lang.Integer">
+        select count(typeId) from books where typeId=#{typeId}
+    </select>
+</mapper>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../js/vue/vue.min.js"></script>
+    <script src="../js/jQuery/jquery-3.5.0.min.js"></script>
+    <script src="../js/vue/axios-0.18.0.js"></script>
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <script src="../plugins/elementui/index.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div id="app">
+        <div class="leaderTab" style="width: 100%;">
+            <div class="title-h3">
+                <h3>信息管理<small>图书管理</small></h3>
+            </div>
+            <div class="title-item">
+                <el-breadcrumb separator-class="el-icon-arrow-right">
+                    <el-breadcrumb-item :to="{ path: '/pages/index.html' }">首页</el-breadcrumb-item>
+                    <el-breadcrumb-item>信息管理</el-breadcrumb-item>
+                    <el-breadcrumb-item>图书管理</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <div style="clear: both;"></div>
+        </div>
+        <div class="data">
+            <div class="data-info">
+                <div class="data-query">
+                    <el-input
+                            placeholder="书籍名称/作者"
+                            v-model="pagination.requirement"
+                            style="width: 200px;"
+                            @change="findPage()"
+                            clearable>
+                    </el-input>
+                    <el-button @click="findPage()">查询</el-button>
+                    <el-button type="primary" plain @click="upCreate()">添加</el-button>
+                </div>
+                <el-row>
+                    <el-col :span="3" v-for="(item) in dataList" :key="item.classId" :offset="1">
+                        <el-card :body-style="{ padding: '0px'}">
+                            <img src="../img/custom.jpg" class="image">
+                            <div style="padding: 10px;">
+                                <span v-text="item.bookName"></span>
+                                <div class="bottom clearfix">
+                                    <time class="time" v-text="item.bookWriter"></time>
+                                    <el-button type="text" class="button">操作按钮</el-button>
+                                </div>
+                            </div>
+                        </el-card>
+                    </el-col>
+                </el-row>
+
+
+
+                <div class="pageNum">
+                    <el-pagination
+                            @current-change="handleCurrentChange"
+                            :current-page="pagination.currentPage"
+                            :page-size="pagination.pageSize"
+                            layout="total, prev, pager, next, jumper"
+                            :total="pagination.total">
+                    </el-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+<style>
+    .time {
+        font-size: 13px;
+        color: #999;
+    }
+
+    .bottom {
+        margin-top: 13px;
+        line-height: 12px;
+    }
+
+    .el-col{
+        margin: 10px;
+    }
+
+    .button {
+        padding: 0;
+        float: right;
+    }
+
+    .image {
+        width: 100%;
+        display: block;
+    }
+
+    .clearfix:before,.clearfix:after {
+        display: table;
+        content: "";
+    }
+
+    .clearfix:after {
+        clear: both
+    }
+</style>
+
+<script>
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            pagination:{
+                currentPage: 1,
+                pageSize:10,
+                total: 100,
+                requirement: null
+            },
+            dataList: [
+                {
+                    bookName: '书名1',
+                    bookWriter: "作者1",
+                },
+                {
+                    bookName: '书名2',
+                    bookWriter: "作者2",
+                },
+                {
+                    bookName: '书名3',
+                    bookWriter: "作者3",
+                },
+                {
+                    bookName: '书名4',
+                    bookWriter: "作者4",
+                },
+                {
+                    bookName: '书名5',
+                    bookWriter: "作者5",
+                },
+                {
+                    bookName: '书名5',
+                    bookWriter: "作者5",
+                },
+                {
+                    bookName: '书名5',
+                    bookWriter: "作者5",
+                },
+                {
+                    bookName: '书名5',
+                    bookWriter: "作者5",
+                },
+                {
+                    bookName: '书名5',
+                    bookWriter: "作者5",
+                },
+                {
+                    bookName: '书名5',
+                    bookWriter: "作者5",
+                },
+                {
+                    bookName: '书名5',
+                    bookWriter: "作者5",
+                },
+                {
+                    bookName: '书名5',
+                    bookWriter: "作者5",
+                },
+                {
+                    bookName: '书名5',
+                    bookWriter: "作者5",
+                },
+                {
+                    bookName: '书名5',
+                    bookWriter: "作者5",
+                },
+
+            ]
+        },
+        //钩子函数，VUE对象初始化完成后自动执行
+        created() {
+            this.findPage();
+        },
+        methods: {
+
+            //切换页码
+            handleCurrentChange(currentPage) {
+                //设置最新的页码
+                this.pagination.currentPage = currentPage;
+                //重新调用findPage方法进行分页查询
+                this.findPage();
+            },
+            //分页查询
+            findPage() {
+
+            },
+        }
+    })
+</script>
+</html>

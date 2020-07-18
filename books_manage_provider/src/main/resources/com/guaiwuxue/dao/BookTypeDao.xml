@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.guaiwuxue.dao.BookTypeDao">
+    <insert id="createBookType" parameterType="com.guaiwuxue.pojo.BookType">
+        insert into book_type values(#{typeId},#{typeName})
+    </insert>
+    <update id="updateByTypeId" parameterType="com.guaiwuxue.pojo.BookType">
+        update book_type set typeId=#{typeId},typeName=#{typeName} where typeId=#{typeId}
+    </update>
+    <delete id="deleteBytypeId" parameterType="string">
+        delete from book_type where typeId=#{typeId}
+    </delete>
+
+    <select id="findPageByCondition" parameterType="string" resultType="com.guaiwuxue.pojo.BookType">
+        select * from book_type
+        <if test="value != null and value.length > 0 and value!='' ">
+            where typeId like #{value} or typeName like #{value}
+        </if>
+    </select>
+    <select id="findTypeNameByTypeId" parameterType="string" resultType="com.guaiwuxue.pojo.BookType">
+        select typeId,typeName from book_type where typeId = #{typeId}
+    </select>
+
+</mapper>
