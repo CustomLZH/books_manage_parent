@@ -3,3 +3,5 @@
 /books_manage_common/target/
 /books_manage_interface/target/
 /books_manage_provider/target/
+.idea
+*.iml
