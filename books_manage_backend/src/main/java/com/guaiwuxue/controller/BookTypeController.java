@@ -2,11 +2,13 @@ package com.guaiwuxue.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.guaiwuxue.constant.MessageConstant;
+import com.guaiwuxue.constant.RolePermissionConstant;
 import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.entity.Result;
 import com.guaiwuxue.pojo.BookType;
 import com.guaiwuxue.service.BookTypeService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,6 +31,7 @@ public class BookTypeController {
         return bookTypeService.findPage(queryPageBean);
     }
 
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.BOOK_TYPE_DELETE + "')")
     @RequestMapping("/delete")
     public Result delete(String typeId){
         try{
@@ -43,6 +46,7 @@ public class BookTypeController {
         }
     }
 
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.BOOK_TYPE_CREATE + "')")
     @RequestMapping("/createBookType")
     public Result createBookType(@RequestBody BookType bookType){
         try {
@@ -72,6 +76,7 @@ public class BookTypeController {
         return new Result(true,MessageConstant.QUERY_BOOKTYPE_SUCCESS,bookType);
     }
 
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.BOOK_TYPE_UPDATE + "')")
     @RequestMapping("/updateBookType")
     public Result updateBookType(@RequestBody BookType bookType){
         try {

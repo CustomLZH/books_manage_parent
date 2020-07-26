@@ -46,7 +46,11 @@ public class BookTypeServiceImpl implements BookTypeService {
         //保证条件正常
         if (requirement == null || "".equals(requirement.trim())){
             requirement = "";
+        }else {
+            //保证分页后回到第一页
+            currentPage = 1;
         }
+
 
         //初始化分页数据
         PageHelper.startPage(currentPage,pageSize);

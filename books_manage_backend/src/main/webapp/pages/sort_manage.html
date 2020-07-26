@@ -197,7 +197,7 @@
                     this.dialogVisibleCreate = true;
                     this.resetForm('typeForm');
                 },
-                //提交表单
+                //添加提交
                 handleCreate(formName){
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
@@ -207,12 +207,15 @@
                                         message: res.data.message,
                                         type: 'success'
                                     });
+                                    this.dialogVisibleCreate = false;
                                     this.findPage();
                                 }else {
                                     this.$message.error(res.data.message);
                                 }
+                            }).catch((res) => {
+                                this.dialogVisibleCreate = false;
+                                this.permissionsMessage(res);
                             });
-                            this.dialogVisibleCreate = false;
                         } else {
                             this.$message.error('请检查信息填写是否正确！');
                             return false;
@@ -234,6 +237,9 @@
                                 }else {
                                     this.$message.error(res.data.message);
                                 }
+                            }).catch((res) => {
+                                this.dialogVisibleEdit = false;
+                                this.permissionsMessage(res);
                             });
                         } else {
                             this.$message.error('请检查信息填写是否正确！');
@@ -280,7 +286,9 @@
                             }else {
                                 this.$message.error(res.data.message);
                             }
-                        })
+                        }).catch((res) => {
+                            this.permissionsMessage(res);
+                        });
                     }).catch(action => {
                         this.$message({
                             type: 'info',
@@ -288,6 +296,18 @@
                         })
                     });
                 },
+
+                permissionsMessage(res){
+                    if (res == 'Error: Request failed with status code 403'){
+                        //权限不足
+                        this.$message.error('权限不足');
+                        return;
+                    }else {
+                        this.$message.error('删除失败');
+                        return;
+                    }
+                },
+
                 //切换页码
                 handleCurrentChange(currentPage) {
                     //设置最新的页码

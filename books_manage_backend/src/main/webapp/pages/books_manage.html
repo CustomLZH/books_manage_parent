@@ -40,15 +40,21 @@
                     <el-button type="primary" plain @click="upCreate()">添加</el-button>
                 </div>
                 <el-row>
-                    <el-col :span="3" v-for="(item) in dataList" :key="item.classId" :offset="1">
+                    <el-col :span="11" v-for="(item) in dataList" :key="item.classId" :offset="1">
                         <el-card :body-style="{ padding: '0px'}">
-                            <img src="../img/custom.jpg" class="image">
-                            <div style="padding: 10px;">
-                                <span v-text="item.bookName"></span>
-                                <div class="bottom clearfix">
-                                    <time class="time" v-text="item.bookWriter"></time>
-                                    <el-button type="text" class="button">操作按钮</el-button>
+                            <div class="div-card-img">
+                                <img src="../img/default.jpg" class="image">
+                            </div>
+                            <div class="div-card-info">
+                                <div class="div-info-data">
+                                    <a href="">《<span class="data-span data-name" v-text="item.bookName"></span>》</a><br/>
+                                    <span class="data-span span-title">作者：</span><span class="data-span data-writer" v-text="item.bookWriter"></span>
+                                    <span class="data-span span-title">出版社：</span><span class="data-span data-company" v-text="item.bookCompany"></span>
+                                    <span class="data-span span-title">出版日期：</span><span class="data-span data-date" v-text="item.bookDate"></span>
+                                    <br/>
+                                    <span class="data-span span-title-brief">简介：<span class="data-span data-brief" v-text="item.bookBrief"></span></span>
                                 </div>
+
                             </div>
                         </el-card>
                     </el-col>
@@ -77,23 +83,73 @@
         color: #999;
     }
 
-    .bottom {
-        margin-top: 13px;
-        line-height: 12px;
+    .data,.leaderTab{
+        min-width: 1630px;
     }
 
     .el-col{
-        margin: 10px;
+        margin: 10px 20px;
     }
 
-    .button {
-        padding: 0;
-        float: right;
+
+
+    .div-card-img{
+        float: left;
     }
 
     .image {
-        width: 100%;
+        margin: 0;
+        padding: 0;
         display: block;
+    }
+
+    .image,.div-card-img{
+        width: 80px;
+        height: 120px;
+    }
+
+    .div-card-info{
+        margin: 0 10px 0 90px;
+        padding-top: 10px;
+        text-align: left;
+        height: 100px;
+        font-family: 宋体;
+    }
+    .div-info-data{
+        height: 70px;
+    }
+
+    .data-span{
+        font-size: 8px;
+        color: #008B00;
+    }
+
+    .data-name{
+        font-size: 20px;
+        color: #f00;
+    }
+
+    .span-title{
+        font-weight: bold;
+    }
+
+    .span-title-brief{
+        font-weight: bold;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 4;
+        overflow: hidden;
+    }
+    .span-title-brief,.data-brief{
+        color: #666;
+    }
+
+    .data-brief{
+        font-weight: normal;
+    }
+
+    .bottom{
+        height: 25px;
     }
 
     .clearfix:before,.clearfix:after {
@@ -118,60 +174,87 @@
             },
             dataList: [
                 {
+                    bookId: 1,
                     bookName: '书名1',
-                    bookWriter: "作者1",
+                    bookWriter: '作者1',
+                    bookDate: '2017-06-01',
+                    bookCompany: '北京国际文化出版公司',
+                    bookBrief: '《邓小平》详细而真实地讲述了一代伟人邓小平一生的经历。他是乡下家庭里的孩子，' +
+                        '因为父亲开明，参加了勤工俭学运动，然后有了法国留学的机会。' +
+                        '而正是这次留学经历让他认识了包括周恩来、李维汉等在内的一些革命党人',
                 },
                 {
+                    bookId: 2,
                     bookName: '书名2',
-                    bookWriter: "作者2",
+                    bookWriter: '作者2',
+                    bookDate: '2017-06-01',
+                    bookCompany: '北京国际文化出版公司',
+                    bookBrief: '本书按照世界历史发展的时间顺序，将总体内容分为六大章，即六个主体时间段，' +
+                        '各章均以独特的视角切入人类历史的宏大画卷，从中撷取重大历史主题，' +
+                        '并从政治、经济、文化、艺术等方面对主题进行研究和探索。在每个主题开始时，' +
+                        '我们设定了“像历史学家一样思考”的栏目，这一栏目对主题内容做了简洁的叙述，' +
+                        '并提出具有深度、值得思考的问题，使学生带着问题去阅读，并在阅读与思考中获得对问' +
+                        '并提出具有深度、值得思考的问题，使学生带着问题去阅读，并在阅读与思考中获得对问',
                 },
                 {
+                    bookId: 3,
                     bookName: '书名3',
-                    bookWriter: "作者3",
+                    bookWriter: '作者3',
+                    bookDate: '2017-06-01',
+                    bookCompany: '北京国际文化出版公司',
+                    bookBrief: '《邓小平》详细而真实地讲述了一代伟人邓小平一生的经历。他是乡下家庭里的孩子，' +
+                        '因为父亲开明，参加了勤工俭学运动，然后有了法国留学的机会。' +
+                        '而正是这次留学经历让他认识了包括周恩来、李维汉等在内的一些革命党人',
                 },
                 {
+                    bookId: 4,
                     bookName: '书名4',
-                    bookWriter: "作者4",
+                    bookWriter: '作者4',
+                    bookDate: '2017-06-01',
+                    bookCompany: '北京国际文化出版公司',
+                    bookBrief: '《邓小平》详细而真实地讲述了一代伟人邓小平一生的经历。他是乡下家庭里的孩子，' +
+                        '因为父亲开明，参加了勤工俭学运动，然后有了法国留学的机会。' +
+                        '而正是这次留学经历让他认识了包括周恩来、李维汉等在内的一些革命党人',
                 },
                 {
+                    bookId: 5,
                     bookName: '书名5',
-                    bookWriter: "作者5",
+                    bookWriter: '作者5',
+                    bookDate: '2017-06-01',
+                    bookCompany: '北京国际文化出版公司',
+                    bookBrief: '《邓小平》详细而真实地讲述了一代伟人邓小平一生的经历。他是乡下家庭里的孩子，' +
+                        '因为父亲开明，参加了勤工俭学运动，然后有了法国留学的机会。' +
+                        '而正是这次留学经历让他认识了包括周恩来、李维汉等在内的一些革命党人',
                 },
                 {
+                    bookId: 6,
                     bookName: '书名5',
-                    bookWriter: "作者5",
+                    bookWriter: '作者5',
+                    bookDate: '2017-06-01',
+                    bookCompany: '北京国际文化出版公司',
+                    bookBrief: '《邓小平》详细而真实地讲述了一代伟人邓小平一生的经历。他是乡下家庭里的孩子，' +
+                        '因为父亲开明，参加了勤工俭学运动，然后有了法国留学的机会。' +
+                        '而正是这次留学经历让他认识了包括周恩来、李维汉等在内的一些革命党人',
                 },
                 {
+                    bookId: 7,
                     bookName: '书名5',
-                    bookWriter: "作者5",
+                    bookWriter: '作者5',
+                    bookDate: '2017-06-01',
+                    bookCompany: '北京国际文化出版公司',
+                    bookBrief: '《邓小平》详细而真实地讲述了一代伟人邓小平一生的经历。他是乡下家庭里的孩子，' +
+                        '因为父亲开明，参加了勤工俭学运动，然后有了法国留学的机会。' +
+                        '而正是这次留学经历让他认识了包括周恩来、李维汉等在内的一些革命党人',
                 },
                 {
+                    bookId: 8,
                     bookName: '书名5',
-                    bookWriter: "作者5",
-                },
-                {
-                    bookName: '书名5',
-                    bookWriter: "作者5",
-                },
-                {
-                    bookName: '书名5',
-                    bookWriter: "作者5",
-                },
-                {
-                    bookName: '书名5',
-                    bookWriter: "作者5",
-                },
-                {
-                    bookName: '书名5',
-                    bookWriter: "作者5",
-                },
-                {
-                    bookName: '书名5',
-                    bookWriter: "作者5",
-                },
-                {
-                    bookName: '书名5',
-                    bookWriter: "作者5",
+                    bookWriter: '作者5',
+                    bookDate: '2017-06-01',
+                    bookCompany: '北京国际文化出版公司',
+                    bookBrief: '《邓小平》详细而真实地讲述了一代伟人邓小平一生的经历。他是乡下家庭里的孩子，' +
+                        '因为父亲开明，参加了勤工俭学运动，然后有了法国留学的机会。' +
+                        '而正是这次留学经历让他认识了包括周恩来、李维汉等在内的一些革命党人',
                 },
 
             ]
