@@ -18,6 +18,7 @@
     <security:http security="none" pattern="/css/**"/>
     <security:http security="none" pattern="/img/**"/>
     <security:http security="none" pattern="/plugins/**"/>
+    <security:http security="none" pattern="/favicon.ico"/>
 
     <security:http auto-config="true" use-expressions="true">
         <security:headers>

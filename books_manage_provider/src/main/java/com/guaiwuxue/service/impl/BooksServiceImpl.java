@@ -41,11 +41,16 @@ public class BooksServiceImpl implements BooksService {
         if (currentPage==null||currentPage<1){
             currentPage = 1;
         }
+        //保证页码正常
         if (pageSize==null||pageSize<1){
             pageSize=10;
         }
+        //保证每页显示记录正常
         if (requirement==null||"".equals(requirement.trim())){
             requirement="";
+        }else {
+            //保证分页后回到第一页
+            currentPage = 1;
         }
 
         PageHelper.startPage(currentPage,pageSize);

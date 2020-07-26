@@ -12,8 +12,7 @@
     <select id="findPageByCondition" parameterType="string" resultType="com.guaiwuxue.pojo.Books">
         select * from books
         <if test="value != null and value.length > 0 and value!='' ">
-            where typeId like #{value} or bookName like #{value}
-            or bookWriter like #{value} or bookCompany like #{value}
+            where bookName like #{value} or bookWriter like #{value}
         </if>
     </select>
     <select id="findBorrowNumById" parameterType="int" resultType="java.lang.Integer">
