@@ -5,6 +5,7 @@ import com.guaiwuxue.pojo.Books;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author: Custom
@@ -24,7 +25,7 @@ public interface BooksDao {
      * @param requirement
      * @return
      */
-    public Page<Books> findPageByCondition(String requirement);
+    public Page<Map<String,Object>> findPageByCondition(String requirement);
 
     /**
      * 根据id更新借阅数量
@@ -54,4 +55,29 @@ public interface BooksDao {
      * @return
      */
     public int findCountByTypeId(String typeId);
+
+    /**
+     * 根据书籍id查找书籍详细信息
+     * @param bookId
+     * @return
+     */
+    Map<String, Object> findBookInfoByBookId(int bookId);
+
+    /**
+     * 根据Map添加书籍
+     * @param bookCreate
+     */
+    void insertBookByMap(Map<String, Object> bookCreate);
+
+    /**
+     * 根据书籍id删除书籍
+     * @param bookId
+     */
+    void deleteBookByBookId(int bookId);
+
+    /**
+     * 根据书籍id更新书籍
+     * @param booksMap
+     */
+    void updateBookByBookId(Map<String, Object> booksMap);
 }

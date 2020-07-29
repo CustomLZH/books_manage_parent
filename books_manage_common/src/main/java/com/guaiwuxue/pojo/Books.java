@@ -2,6 +2,8 @@ package com.guaiwuxue.pojo;
 
 
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -34,8 +36,9 @@ public class Books implements Serializable {
      */
     private String bookCompany;
     /**
-     *
+     * 出版日期
      */
+    @JSONField(format = "yyyy-MM-dd")
     private Date bookDate;
     /**
      * 简介

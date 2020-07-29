@@ -11,6 +11,7 @@ import com.guaiwuxue.service.BooksService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 关于图书接口的实现类
@@ -43,7 +44,7 @@ public class BooksServiceImpl implements BooksService {
         }
         //保证页码正常
         if (pageSize==null||pageSize<1){
-            pageSize=10;
+            pageSize=8;
         }
         //保证每页显示记录正常
         if (requirement==null||"".equals(requirement.trim())){
@@ -54,7 +55,7 @@ public class BooksServiceImpl implements BooksService {
         }
 
         PageHelper.startPage(currentPage,pageSize);
-        Page<Books> page = booksDao.findPageByCondition("%" + requirement +"%");
+        Page<Map<String,Object>> page = booksDao.findPageByCondition("%" + requirement +"%");
 
         PageResult pageResult = new PageResult(page.getTotal(),page.getResult());
         return pageResult;
@@ -68,5 +69,25 @@ public class BooksServiceImpl implements BooksService {
             throw new RuntimeException("库存不足");
         }
         booksDao.updateBorrowNumById(bookId,borrowNum+borrowNumOld);
+    }
+
+    @Override
+    public Map<String, Object> findBookInfo(int bookId) {
+        return booksDao.findBookInfoByBookId(bookId);
+    }
+
+    @Override
+    public void insertBookByMap(Map<String, Object> bookCreate) {
+        booksDao.insertBookByMap(bookCreate);
+    }
+
+    @Override
+    public void deleteBookByBookId(int bookId) {
+        booksDao.deleteBookByBookId(bookId);
+    }
+
+    @Override
+    public void updateBookByBookId(Map<String, Object> booksMap) {
+        booksDao.updateBookByBookId(booksMap);
     }
 }

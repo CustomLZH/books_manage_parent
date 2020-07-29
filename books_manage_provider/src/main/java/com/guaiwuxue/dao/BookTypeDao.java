@@ -3,6 +3,8 @@ package com.guaiwuxue.dao;
 import com.github.pagehelper.Page;
 import com.guaiwuxue.pojo.BookType;
 
+import java.util.List;
+
 /**
  * @Author: Custom
  * @Date: 2020/7/17 21:10
@@ -40,4 +42,6 @@ public interface BookTypeDao {
      * @param bookType
      */
     public void updateByTypeId(BookType bookType);
+
+    List<BookType> findBookTypeAll();
 }

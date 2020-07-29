@@ -5,12 +5,32 @@
     <update id="updateBorrowNumById" parameterType="int">
         update books set borrowNum=#{borrowNum} where bookId=#{bookId}
     </update>
+    <update id="updateBookByBookId" parameterType="map">
+        update books set
+        typeId=#{typeId},
+        bookName=#{bookName},
+        bookWriter=#{bookWriter},
+        bookCompany=#{bookCompany},
+        bookDate=#{bookDate},
+        bookBrief=#{bookBrief},
+        bookNum=#{bookNum},
+        borrowNum=#{borrowNum}
+        where bookId=#{bookId}
+    </update>
+    <delete id="deleteBookByBookId" parameterType="int">
+        delete from books where bookId=#{bookId}
+    </delete>
+    <insert id="insertBookByMap" parameterType="map">
+        insert into books(bookName,typeId,bookWriter,bookCompany,bookDate,bookBrief,bookNum,borrowNum)
+        values(#{bookName},#{typeId},#{bookWriter},#{bookCompany},#{bookDate},#{bookBrief},#{bookNum},#{borrowNum})
+    </insert>
 
     <select id="findAll" resultType="com.guaiwuxue.pojo.Books">
-        select * from books;
-    </select>
-    <select id="findPageByCondition" parameterType="string" resultType="com.guaiwuxue.pojo.Books">
         select * from books
+    </select>
+    <select id="findPageByCondition" parameterType="string" resultType="map">
+        select bookId,bookName,bookWriter,bookCompany
+        ,bookDate,bookBrief from books
         <if test="value != null and value.length > 0 and value!='' ">
             where bookName like #{value} or bookWriter like #{value}
         </if>
@@ -23,5 +43,11 @@
     </select>
     <select id="findCountByTypeId" parameterType="string" resultType="java.lang.Integer">
         select count(typeId) from books where typeId=#{typeId}
+    </select>
+    <select id="findBookInfoByBookId" resultType="java.util.Map">
+        SELECT b.bookName,b.typeId,bt.typeName,b.bookWriter
+        ,b.bookCompany,b.bookDate,b.bookBrief,b.bookNum,b.borrowNum
+        FROM books as b,book_type as bt
+        where b.typeId = bt.typeId and b.bookId = #{bookId};
     </select>
 </mapper>

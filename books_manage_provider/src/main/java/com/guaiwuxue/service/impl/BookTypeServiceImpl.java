@@ -97,4 +97,9 @@ public class BookTypeServiceImpl implements BookTypeService {
     public void updateBookType(BookType bookType) {
         bookTypeDao.updateByTypeId(bookType);
     }
+
+    @Override
+    public List<BookType> findBookTypeAll() {
+        return bookTypeDao.findBookTypeAll();
+    }
 }

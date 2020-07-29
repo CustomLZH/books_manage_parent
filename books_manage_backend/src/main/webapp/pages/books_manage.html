@@ -9,9 +9,165 @@
     <link rel="stylesheet" href="../plugins/elementui/index.css">
     <script src="../plugins/elementui/index.js"></script>
     <link rel="stylesheet" href="../css/style.css">
+
+
+    <style>
+        .data-info>.el-row{
+            width: 1600px;
+        }
+        .time {
+            font-size: 13px;
+            color: #999;
+        }
+
+        .data,.leaderTab{
+            /*设置最小宽度*/
+            min-width: 1630px;
+        }
+
+        .el-col{
+            margin: 10px 20px;
+        }
+        .div_dialog .el-col{
+            margin: 0 10px 0 0;
+        }
+
+
+
+        .div-card-img{
+            float: left;
+        }
+
+        .image {
+            margin: 0;
+            padding: 0;
+            display: block;
+        }
+
+        .image,.div-card-img{
+            width: 80px;
+            height: 120px;
+        }
+
+        .div-card-info{
+            margin: 0 10px 0 90px;
+            padding-top: 10px;
+            text-align: left;
+            height: 100px;
+            font-family: 宋体;
+        }
+        .div-info-data{
+            height: 70px;
+        }
+
+        .div-info-data span{
+            margin: 8px 0;
+        }
+
+        .data-span{
+            font-size: 8px;
+            color: #008B00;
+        }
+
+        .data-name{
+            font-size: 20px;
+            color: #f00;
+        }
+
+        .span-title{
+            font-weight: bold;
+        }
+
+        .span-title-brief{
+            /*设置最大字数，超过用省略号表示*/
+            font-weight: bold;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 4;
+            overflow: hidden;
+        }
+        .span-title-brief,.data-brief{
+            color: #666;
+        }
+
+        .data-brief{
+            font-weight: normal;
+        }
+
+        .bottom{
+            height: 25px;
+        }
+
+        .clearfix:before,.clearfix:after {
+            display: table;
+            content: "";
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+
+
+
+        .card_div{
+            width: 740px;
+            padding: 1px;
+            border-radius: 5px;
+        }
+
+
+        .card_div:hover{
+            background-color: red;
+            cursor: pointer;
+        }
+
+        .card_div:active{
+            background-color: cyan;
+        }
+
+        .table_bookInfo{
+            /*字体左对齐*/
+            text-align: left;
+        }
+
+        .bookInfo_info,.bookInfo_title{
+            /*表格字体向上对齐*/
+            vertical-align: text-top;
+        }
+
+        .bookInfo_title{
+            min-width: 110px;
+            color: #99a9bf;
+        }
+
+        .bookInfo_info{
+            padding: 8px 0;
+            /*最大宽度*/
+            min-width: 200px;
+            max-width: 400px;
+        }
+        .bookInfo_edit{
+            width:100%;
+            /*字体居中*/
+            text-align: center;
+        }
+        .bookInfo_edit .el-button{
+            width: 100px;
+        }
+
+        .typeSelect_form{
+            margin-top: 50px;
+            margin-left: 40px;
+        }
+        .typeSelect_form .el-input{
+            width: 350px;
+        }
+
+    </style>
+
+
 </head>
 <body>
-
     <div id="app">
         <div class="leaderTab" style="width: 100%;">
             <div class="title-h3">
@@ -41,25 +197,313 @@
                 </div>
                 <el-row>
                     <el-col :span="11" v-for="(item) in dataList" :key="item.classId" :offset="1">
-                        <el-card :body-style="{ padding: '0px'}">
-                            <div class="div-card-img">
-                                <img src="../img/default.jpg" class="image">
-                            </div>
-                            <div class="div-card-info">
-                                <div class="div-info-data">
-                                    <a href="">《<span class="data-span data-name" v-text="item.bookName"></span>》</a><br/>
-                                    <span class="data-span span-title">作者：</span><span class="data-span data-writer" v-text="item.bookWriter"></span>
-                                    <span class="data-span span-title">出版社：</span><span class="data-span data-company" v-text="item.bookCompany"></span>
-                                    <span class="data-span span-title">出版日期：</span><span class="data-span data-date" v-text="item.bookDate"></span>
-                                    <br/>
-                                    <span class="data-span span-title-brief">简介：<span class="data-span data-brief" v-text="item.bookBrief"></span></span>
-                                </div>
+                        <el-popover
+                                placement="bottom"
+                                trigger="click"
+                                :ref="refNamePopover_Info + item.bookId">
 
+                            <table class="table_bookInfo">
+                                <tr class="bookInfo_tr">
+                                    <td class="bookInfo_title">书名：</td>
+                                    <td class="bookInfo_info">{{ bookInfo.bookName }}</td>
+                                </tr>
+                                <tr class="bookInfo_tr">
+                                    <td class="bookInfo_title">作者：</td>
+                                    <td class="bookInfo_info">{{ bookInfo.bookWriter }}</td>
+                                </tr>
+                                <tr class="bookInfo_tr">
+                                    <td class="bookInfo_title">中图分类号：</td>
+                                    <td class="bookInfo_info">{{ bookInfo.typeId }}</td>
+                                </tr>
+                                <tr class="bookInfo_tr">
+                                    <td class="bookInfo_title">分类号名称：</td>
+                                    <td class="bookInfo_info">{{ bookInfo.typeName }}</td>
+                                </tr>
+                                <tr class="bookInfo_tr" v-if="bookInfo.bookCompany!=''">
+                                    <td class="bookInfo_title">出版社：</td>
+                                    <td class="bookInfo_info">{{ bookInfo.bookCompany }}</td>
+                                </tr>
+                                <tr class="bookInfo_tr">
+                                    <td class="bookInfo_title">出版日期：</td>
+                                    <td class="bookInfo_info">{{ bookInfo.bookDate }}</td>
+                                </tr>
+                                <tr class="bookInfo_tr">
+                                    <td class="bookInfo_title">库存/借阅量：</td>
+                                    <td class="bookInfo_info">{{ bookInfo.bookNum }}/{{ bookInfo.borrowNum }}
+                                        <span style="color: red">
+                                            {{bookInfo.bookNum<=bookInfo.borrowNum? "(库存不足)" : ""}}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr class="bookInfo_tr" v-if="bookInfo.bookBrief!=''">
+                                    <td class="bookInfo_title">简介：</td>
+                                    <td class="bookInfo_info">{{ bookInfo.bookBrief }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" class="bookInfo_edit">
+                                        <el-button type="primary" @click="upEdit(item.bookId)">编 辑</el-button>
+
+                                        <el-popover
+                                                placement="top"
+                                                width="160"
+                                                trigger="click"
+                                                :ref="refNamePopover + item.bookId">
+                                            <p>确定删除吗？</p>
+                                            <div style="text-align: right; margin: 0">
+                                                <el-button size="mini" type="text" @click="bookNoDelete(item.bookId)">取消</el-button>
+                                                <el-button type="primary" size="mini" @click="bookDelete(item.bookId)">确定</el-button>
+                                            </div>
+                                            <el-button slot="reference" type="danger">删 除</el-button>
+                                        </el-popover>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div slot="reference" class="card_div" @click="findBookInfo(item.bookId)">
+
+                                <el-card :body-style="{ padding: '0px'}" shadow="hover">
+                                        <div class="div-card-img">
+                                            <img src="../img/default.jpg" class="image">
+                                        </div>
+                                        <div class="div-card-info">
+                                            <div class="div-info-data">
+                                                《<span class="data-span data-name" v-text="item.bookName"></span>》<br/>
+                                                <span class="data-span span-title">作者：</span><span class="data-span data-writer" v-text="item.bookWriter"></span>
+                                                <span class="data-span span-title">出版社：</span><span class="data-span data-company" v-text="item.bookCompany"></span>
+                                                <span class="data-span span-title">出版日期：</span><span class="data-span data-date" v-text="item.bookDate"></span>
+                                                <br/>
+                                                <span class="data-span span-title-brief" v-if="item.bookBrief!=''">
+                                                    简介：<span class="data-span data-brief" v-text="item.bookBrief"></span>
+                                                </span>
+                                            </div>
+                                        </div>
+                                </el-card>
                             </div>
-                        </el-card>
+                        </el-popover>
+
                     </el-col>
                 </el-row>
 
+                <div class="div_dialog">
+                    <el-dialog
+                            title="添加"
+                            :visible.sync="dialogVisibleCreate"
+                            :before-close="handleClose">
+                        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+                            <el-tab-pane label="基本信息" name="first">
+                                <el-form :model="bookForm" :rules="bookRules" ref="bookForm" label-position="right" label-width="100px">
+                                    <el-row>
+                                        <el-col :span="10">
+                                            <el-form-item label="书名" prop="bookName">
+                                                <el-input v-model="bookForm.bookName"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <el-form-item label="作者" prop="bookWriter">
+                                                <el-input v-model="bookForm.bookWriter"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="10">
+                                            <el-form-item label="出版社" prop="bookCompany">
+                                                <el-input v-model="bookForm.bookCompany"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <el-form-item label="出版日期" prop="bookDate">
+                                                <el-date-picker type="date" placeholder="选择日期" v-model="bookForm.bookDate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="10">
+                                            <el-form-item label="库存" prop="bookNum">
+                                                <el-input v-model.number="bookForm.bookNum"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <el-form-item label="借阅量" prop="borrowNum">
+                                                <el-input clearable v-model.number="bookForm.borrowNum"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="18">
+                                            <el-form-item label="简介" prop="bookBrief">
+                                                <el-input :autosize="{ minRows: 2, maxRows: 6}" type="textarea" v-model="bookForm.bookBrief"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                </el-form>
+                            </el-tab-pane>
+                            <el-tab-pane label="中图分类号" name="second">
+                                <el-row>
+                                    <el-col :span="10">
+                                        <el-table
+                                                ref="singleTable"
+                                                height="260"
+                                                :data="typeList"
+                                                highlight-current-row
+                                                @current-change="handleCurrentChange_table"
+                                                style="width: 100%">
+                                            <el-table-column
+                                                    type="index"
+                                                    width="50">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    property="typeId"
+                                                    label="中图分类号"
+                                                    width="120">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    property="typeName"
+                                                    label="分类号名称"
+                                                    width="120">
+                                            </el-table-column>
+                                        </el-table>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-form class="typeSelect_form" ref="typeSelect" :model="typeSelect" label-position="left">
+                                            <el-row>
+                                                <el-col :span="20">
+                                                    <el-form-item label="中图分类号：">
+                                                        <el-input v-model="typeSelect.typeId" :disabled="true"> </el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </el-row>
+                                            <el-row>
+                                                <el-col :span="20">
+                                                    <el-form-item label="分类号名称：">
+                                                        <el-input v-model="typeSelect.typeName" :disabled="true"></el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </el-row>
+                                        </el-form>
+                                    </el-col>
+                                </el-row>
+
+                            </el-tab-pane>
+                        </el-tabs>
+
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="resetForm('bookForm')">重 置</el-button>
+                            <el-button @click="dialogVisibleCreate = false">取 消</el-button>
+                            <el-button type="primary" @click="bookCreate('bookForm')">添 加</el-button>
+                        </div>
+                    </el-dialog>
+                </div>
+
+
+
+                <div class="div_dialog">
+                    <el-dialog
+                            title="编辑"
+                            :visible.sync="dialogVisibleEdit"
+                            :before-close="handleClose">
+                        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+                            <el-tab-pane label="基本信息" name="first">
+                                <el-form :model="bookEditForm" :rules="bookRules" ref="bookEditForm" label-position="right" label-width="100px">
+                                    <el-row>
+                                        <el-col :span="10">
+                                            <el-form-item label="书名" prop="bookName">
+                                                <el-input v-model="bookEditForm.bookName"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <el-form-item label="作者" prop="bookWriter">
+                                                <el-input v-model="bookEditForm.bookWriter"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="10">
+                                            <el-form-item label="出版社" prop="bookCompany">
+                                                <el-input v-model="bookEditForm.bookCompany"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <el-form-item label="出版日期" prop="bookDate">
+                                                <el-date-picker type="date" placeholder="选择日期" v-model="bookEditForm.bookDate" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="10">
+                                            <el-form-item label="库存" prop="bookNum">
+                                                <el-input v-model.number="bookEditForm.bookNum"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                        <el-col :span="10">
+                                            <el-form-item label="借阅量" prop="borrowNum">
+                                                <el-input clearable v-model.number="bookEditForm.borrowNum"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row>
+                                        <el-col :span="18">
+                                            <el-form-item label="简介" prop="bookBrief">
+                                                <el-input :autosize="{ minRows: 2, maxRows: 6}" type="textarea" v-model="bookEditForm.bookBrief"></el-input>
+                                            </el-form-item>
+                                        </el-col>
+                                    </el-row>
+                                </el-form>
+                            </el-tab-pane>
+                            <el-tab-pane label="中图分类号" name="second">
+                                <el-row>
+                                    <el-col :span="10">
+                                        <el-table
+                                                ref="singleTable"
+                                                height="260"
+                                                :data="typeList"
+                                                highlight-current-row
+                                                @current-change="handleCurrentChange_table_edit"
+                                                style="width: 100%">
+                                            <el-table-column
+                                                    type="index"
+                                                    width="50">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    property="typeId"
+                                                    label="中图分类号"
+                                                    width="120">
+                                            </el-table-column>
+                                            <el-table-column
+                                                    property="typeName"
+                                                    label="分类号名称"
+                                                    width="120">
+                                            </el-table-column>
+                                        </el-table>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-form class="typeSelect_form" label-position="left">
+                                            <el-row>
+                                                <el-col :span="20">
+                                                    <el-form-item label="中图分类号：">
+                                                        <el-input v-model="bookEditForm.typeId" :disabled="true"> </el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </el-row>
+                                            <el-row>
+                                                <el-col :span="20">
+                                                    <el-form-item label="分类号名称：">
+                                                        <el-input v-model="bookEditForm.typeName" :disabled="true"></el-input>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </el-row>
+                                        </el-form>
+                                    </el-col>
+                                </el-row>
+                            </el-tab-pane>
+                        </el-tabs>
+
+                        <div slot="footer" class="dialog-footer">
+                            <el-button @click="resetEditForm()">重 置</el-button>
+                            <el-button @click="dialogVisibleEdit = false">取 消</el-button>
+                            <el-button type="primary" @click="bookEdit('bookEditForm')">修 改</el-button>
+                        </div>
+                    </el-dialog>
+                </div>
 
 
                 <div class="pageNum">
@@ -77,109 +521,68 @@
 
 </body>
 
-<style>
-    .time {
-        font-size: 13px;
-        color: #999;
-    }
-
-    .data,.leaderTab{
-        min-width: 1630px;
-    }
-
-    .el-col{
-        margin: 10px 20px;
-    }
-
-
-
-    .div-card-img{
-        float: left;
-    }
-
-    .image {
-        margin: 0;
-        padding: 0;
-        display: block;
-    }
-
-    .image,.div-card-img{
-        width: 80px;
-        height: 120px;
-    }
-
-    .div-card-info{
-        margin: 0 10px 0 90px;
-        padding-top: 10px;
-        text-align: left;
-        height: 100px;
-        font-family: 宋体;
-    }
-    .div-info-data{
-        height: 70px;
-    }
-
-    .data-span{
-        font-size: 8px;
-        color: #008B00;
-    }
-
-    .data-name{
-        font-size: 20px;
-        color: #f00;
-    }
-
-    .span-title{
-        font-weight: bold;
-    }
-
-    .span-title-brief{
-        font-weight: bold;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 4;
-        overflow: hidden;
-    }
-    .span-title-brief,.data-brief{
-        color: #666;
-    }
-
-    .data-brief{
-        font-weight: normal;
-    }
-
-    .bottom{
-        height: 25px;
-    }
-
-    .clearfix:before,.clearfix:after {
-        display: table;
-        content: "";
-    }
-
-    .clearfix:after {
-        clear: both
-    }
-</style>
-
 <script>
     var vm = new Vue({
         el:"#app",
         data:{
+            paginationShow: true,
+            activeName: 'first',
+            refNamePopover: 'popover-',
+            refNamePopover_Info: 'popover_info-',
+            dialogVisibleCreate: false,
+            dialogVisibleEdit: false,
             pagination:{
                 currentPage: 1,
-                pageSize:10,
+                pageSize:8,
                 total: 100,
                 requirement: null
             },
             dataList: [
 
-            ]
+            ],
+            typeList: [
+
+            ],
+            typeSelect:{
+                typeId: "暂未选择",
+                typeName: "暂未选择",
+            },
+            bookInfo: {
+
+            },
+            bookForm: {
+
+            },
+            bookEditForm: {
+
+            },
+            bookRules: {
+                bookName: [
+                    { required: true, message: '请填写书名', trigger: 'blur' },
+                    { min: 1, message: '请填写书名', trigger: 'change' }
+                ],
+                bookWriter: [
+                    { required: true, message: '请填写作者名称', trigger: 'blur' },
+                    { min: 1, message: '请填写作者名称', trigger: 'change' }
+                ],
+                bookDate: [
+                    { required: true, message: '请选择日期', trigger: 'blur' },
+                    { min: 1, message: '请选择日期', trigger: 'change' }
+                ],
+                bookNum: [
+                    { required: true, message: '库存不能为空', trigger: 'blur' },
+                    { type: 'number', message: '库存必须为数字值', trigger: ['change','blur']},
+                ],
+                borrowNum: [
+                    { type: 'number', message: '借阅量必须为数字值'}
+                ]
+            },
         },
         //钩子函数，VUE对象初始化完成后自动执行
         created() {
             this.findPage();
         },
+
         methods: {
 
             //切换页码
@@ -200,7 +603,199 @@
                     //解析返回的数据
                     this.pagination.total = res.data.total;
                     this.dataList = res.data.rows;
+                });
+                if (this.typeList==''){
+                    this.findBookType();
+                }
+            },
+            //查询书籍详细信息
+            findBookInfo(bookId){
+                axios.get("/books/findBookInfo.do?bookId=" + bookId).then((res) => {
+                    if (res.data.flag){
+                        this.bookInfo = res.data.data;
+                    }else {
+                        this.$message.error(res.data.message);
+                    }
+                });
+            },
+            //编辑
+            upEdit(bookId){
+                //数据封装
+                this.bookDataEdit(bookId);
+                this.activeName='first';
+                this.dialogVisibleEdit = true;
+            },
+
+            bookDataEdit(bookId){
+                var bookInfo = this.bookInfo;
+                //表单数据
+                this.bookEditForm = {
+                    bookId: bookId,
+                    bookName: bookInfo.bookName,
+                    bookWriter: bookInfo.bookWriter,
+                    bookCompany: bookInfo.bookCompany,
+                    bookDate: bookInfo.bookDate,
+                    bookNum: bookInfo.bookNum,
+                    borrowNum: bookInfo.borrowNum,
+                    bookBrief: bookInfo.bookBrief,
+                    typeId: bookInfo.typeId,
+                    typeName: bookInfo.typeName,
+                };
+
+            },
+
+            //编辑重置
+            resetEditForm(){
+                this.bookDataEdit(this.bookEditForm.bookId);
+
+            },
+
+            //删除
+            bookDelete(bookId){
+                axios.get("/books/deleteBookByBookId.do?bookId=" + bookId).then((res) => {
+                   if (res.data.flag){
+                       this.$message({
+                           message: res.data.message,
+                           type: 'success'
+                       });
+                       this.bookNoDelete(bookId);
+                       this.infoClose(bookId);
+                       this.findPage();
+                   } else {
+                       this.$message.error(res.data.message);
+                       this.bookNoDelete(bookId);
+                   }
+                });
+            },
+            bookNoDelete(bookId){
+                let refName = this.refNamePopover + bookId;
+                this.$refs[refName][0].doClose();
+            },
+            infoClose(bookId){
+                let refName = this.refNamePopover_Info + bookId;
+                this.$refs[refName][0].doClose();
+            },
+
+            //表单重置
+            resetForm(formName) {
+                this.bookForm = {};
+                this.typeSelect = {typeId: "暂未选择", typeName: "暂未选择",};
+                this.dialogVisibleCreate = true;
+                if (this.$refs[formName]!==undefined){
+                    this.$refs[formName].resetFields();
+                }
+                this.setCurrent();
+            },
+
+            //获取书籍类型
+            findBookType(){
+                axios.get("/bookType/findBookTypeAll.do").then((res) => {
+                    if (res.data.flag){
+                        this.typeList = res.data.data;
+                    }else {
+                        this.$message.error(res.data.message);
+                    }
                 })
+            },
+
+            //编辑
+            bookEdit(formName){
+                //为了验证表单的
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        axios.post("/books/updateBookByBookId.do",this.bookEditForm).then((res) => {
+                            if (res.data.flag){
+                                this.$message({
+                                    message: res.data.message,
+                                    type: 'success',
+                                });
+                                this.dialogVisibleEdit = false;
+                                this.findPage();
+                            } else {
+                                this.$message.error(res.data.message);
+                            };
+                        });
+                    } else {
+                        this.$message.error('请检查信息填写是否正确！');
+                        return false;
+                    }
+                });
+            },
+
+            //书籍添加提交
+            bookCreate(formName){
+                //为了验证表单的
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        if (this.typeSelect.typeId!='暂未选择'){
+                            var bookCreate = {
+                                bookName: this.bookForm.bookName,
+                                bookWriter: this.bookForm.bookWriter,
+                                bookCompany: this.bookForm.bookCompany===undefined?'':this.bookForm.bookCompany,
+                                bookDate: this.bookForm.bookDate,
+                                bookBrief: this.bookForm.bookBrief===undefined?'':this.bookForm.bookBrief,
+                                bookNum: this.bookForm.bookNum,
+                                borrowNum: this.bookForm.borrowNum===undefined?0:this.bookForm.borrowNum===''?0:this.bookForm.borrowNum,
+                                typeId: this.typeSelect.typeId,
+                                typeName: this.typeSelect.typeName,
+                            };
+                            axios.post("/books/insertBookByMap.do",bookCreate).then((res) => {
+                                if (res.data.flag){
+                                    this.$message({
+                                        message: res.data.message,
+                                        type: 'success'
+                                    });
+                                    this.dialogVisibleCreate = false;
+                                    this.findPage();
+                                }else {
+                                    this.$message.error(res.data.message);
+                                }
+                            });
+                        }else {
+                            this.$message.error('请选择中图分类号！');
+                            return false;
+                        }
+                    } else {
+                        this.$message.error('请检查信息填写是否正确！');
+                        return false;
+                    }
+                });
+            },
+            //添加中图分类号单选触发
+            handleCurrentChange_table(val) {
+                if (val!==undefined){
+                    this.typeSelect=val;
+                }
+            },
+            //编辑中图分类号单选触发
+            handleCurrentChange_table_edit(val){
+                if (val!==undefined){
+                    this.bookEditForm.typeId=val.typeId;
+                    this.bookEditForm.typeName=val.typeName;
+                }
+            },
+            //弹窗关闭确定
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+            //弹出添加窗口
+            upCreate(){
+                this.activeName='first';
+                this.dialogVisibleCreate = true;
+                this.resetForm('bookForm');
+            },
+            handleClick(tab, event) {
+                console.log(tab, event);
+            },
+
+            setCurrent(row) {
+                if (this.$refs.singleTable!==undefined){
+                    this.$refs.singleTable.setCurrentRow(row);
+                }
             },
         }
     })

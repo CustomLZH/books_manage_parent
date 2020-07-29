@@ -1,17 +1,18 @@
 package com.guaiwuxue.entity;
 
-/**
- * @Author: Custom
- * @Date: 2020/7/11 14:28
- * @Version: 1.0
- */
+
+
+import com.alibaba.fastjson.JSONObject;
 
 import java.io.Serializable;
 
 /**
  * 封装返回结果
+ * @Author: Custom
+ * @Date: 2020/7/11 14:28
+ * @Version: 1.0
  */
-public class Result implements Serializable {
+public class Result<T> implements Serializable {
     /**
      * 执行结果，true为执行成功，false为执行失败
      */
@@ -23,14 +24,14 @@ public class Result implements Serializable {
     /**
      * 返回数据
      */
-    private Object data;
+    private T data;
 
     public Result(Boolean flag, String message) {
         this.flag = flag;
         this.message = message;
     }
 
-    public Result(Boolean flag, String message, Object data) {
+    public Result(Boolean flag, String message, T data) {
         this.flag = flag;
         this.message = message;
         this.data = data;
@@ -52,11 +53,11 @@ public class Result implements Serializable {
         this.message = message;
     }
 
-    public Object getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 }
