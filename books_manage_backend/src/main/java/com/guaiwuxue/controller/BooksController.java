@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * 关于图书的调用
@@ -53,8 +52,18 @@ public class BooksController {
      */
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
-        JSONObject.DEFFAULT_DATE_FORMAT="yyyy-MM-dd";
+        //JSONObject.DEFFAULT_DATE_FORMAT="yyyy-MM-dd";
         return booksService.findPage(queryPageBean);
+    }
+
+    /**
+     * 分页查询详细数据
+     * @param queryPageBean
+     * @return
+     */
+    @RequestMapping("/findPageInfo")
+    public PageResult findPageInfo(@RequestBody QueryPageBean queryPageBean){
+        return booksService.findPageInfo(queryPageBean);
     }
 
 

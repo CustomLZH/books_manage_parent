@@ -57,8 +57,7 @@ public class BooksServiceImpl implements BooksService {
         PageHelper.startPage(currentPage,pageSize);
         Page<Map<String,Object>> page = booksDao.findPageByCondition("%" + requirement +"%");
 
-        PageResult pageResult = new PageResult(page.getTotal(),page.getResult());
-        return pageResult;
+        return new PageResult(page.getTotal(),page.getResult());
     }
 
     @Override
@@ -89,5 +88,35 @@ public class BooksServiceImpl implements BooksService {
     @Override
     public void updateBookByBookId(Map<String, Object> booksMap) {
         booksDao.updateBookByBookId(booksMap);
+    }
+
+    @Override
+    public PageResult findPageInfo(QueryPageBean queryPageBean) {
+        //页码
+        Integer currentPage = queryPageBean.getCurrentPage();
+        //每页记录数
+        Integer pageSize = queryPageBean.getPageSize();
+        //查询条件
+        String requirement = queryPageBean.getRequirement();
+        //做判断,以防万一当前页面和每页显示的数量为负数
+        if (currentPage==null||currentPage<1){
+            currentPage = 1;
+        }
+        //保证页码正常
+        if (pageSize==null||pageSize<1){
+            pageSize=8;
+        }
+        //保证每页显示记录正常
+        if (requirement==null||"".equals(requirement.trim())){
+            requirement="";
+        }else {
+            //保证分页后回到第一页
+            currentPage = 1;
+        }
+
+        PageHelper.startPage(currentPage,pageSize);
+        Page<Map<String,Object>> page = booksDao.findPageInfo("%" + requirement +"%");
+
+        return new PageResult(page.getTotal(),page.getResult());
     }
 }

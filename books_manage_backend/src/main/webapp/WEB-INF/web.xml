@@ -4,6 +4,8 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+
+
   <!-- 解决post乱码 -->
   <filter>
     <filter-name>CharacterEncodingFilter</filter-name>
@@ -33,6 +35,8 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+
+
   <!--SpringMVC配置-->
   <servlet>
     <servlet-name>springmvc</servlet-name>
@@ -48,4 +52,10 @@
     <servlet-name>springmvc</servlet-name>
     <url-pattern>*.do</url-pattern>
   </servlet-mapping>
+
+  <!--设置欢迎页-->
+  <welcome-file-list>
+    <welcome-file>pages/login.html</welcome-file>
+  </welcome-file-list>
+
 </web-app>

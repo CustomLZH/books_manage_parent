@@ -50,4 +50,13 @@
         FROM books as b,book_type as bt
         where b.typeId = bt.typeId and b.bookId = #{bookId};
     </select>
+    <select id="findPageInfo" resultType="java.util.Map" parameterType="string">
+        SELECT b.bookId,b.bookName,b.typeId,bt.typeName,b.bookWriter
+        ,b.bookCompany,b.bookDate,b.bookBrief,b.bookNum,b.borrowNum
+        FROM books as b,book_type as bt
+        where b.typeId = bt.typeId
+        <if test="value != null and value.length > 0 and value!='' ">
+            and (b.bookName like #{value} or b.bookWriter like #{value})
+        </if>
+    </select>
 </mapper>

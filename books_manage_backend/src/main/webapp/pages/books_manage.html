@@ -241,7 +241,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="2" class="bookInfo_edit">
-                                        <el-button type="primary" @click="upEdit(item.bookId)">编 辑</el-button>
+                                        <el-button type="primary" @click="upEdit(item)">编 辑</el-button>
 
                                         <el-popover
                                                 placement="top"
@@ -259,7 +259,7 @@
                                 </tr>
                             </table>
 
-                            <div slot="reference" class="card_div" @click="findBookInfo(item.bookId)">
+                            <div slot="reference" class="card_div" @click="findBookInfo(item)">
 
                                 <el-card :body-style="{ padding: '0px'}" shadow="hover">
                                         <div class="div-card-img">
@@ -556,6 +556,11 @@
             bookEditForm: {
 
             },
+
+            item: {
+
+            },
+
             bookRules: {
                 bookName: [
                     { required: true, message: '请填写书名', trigger: 'blur' },
@@ -599,55 +604,51 @@
                     pageSize: this.pagination.pageSize,
                     requirement: this.pagination.requirement,
                 };
-                axios.post("/books/findPage.do",param).then((res) => {
+                axios.post("/books/findPageInfo.do",param).then((res) => {
                     //解析返回的数据
                     this.pagination.total = res.data.total;
                     this.dataList = res.data.rows;
+                    for (let i = 0; i < this.dataList.length; i++) {
+                        this.dataList[i].bookDate=this.dataList[i].bookDate.substring(0,10);
+                    }
                 });
                 if (this.typeList==''){
                     this.findBookType();
-                }
+                };
             },
             //查询书籍详细信息
-            findBookInfo(bookId){
-                axios.get("/books/findBookInfo.do?bookId=" + bookId).then((res) => {
-                    if (res.data.flag){
-                        this.bookInfo = res.data.data;
-                    }else {
-                        this.$message.error(res.data.message);
-                    }
-                });
+            findBookInfo(item){
+                this.bookInfo = item;
             },
             //编辑
-            upEdit(bookId){
+            upEdit(item){
+                this.item = item;
                 //数据封装
-                this.bookDataEdit(bookId);
+                this.bookDataEdit();
                 this.activeName='first';
                 this.dialogVisibleEdit = true;
             },
 
-            bookDataEdit(bookId){
-                var bookInfo = this.bookInfo;
+            bookDataEdit(){
                 //表单数据
                 this.bookEditForm = {
-                    bookId: bookId,
-                    bookName: bookInfo.bookName,
-                    bookWriter: bookInfo.bookWriter,
-                    bookCompany: bookInfo.bookCompany,
-                    bookDate: bookInfo.bookDate,
-                    bookNum: bookInfo.bookNum,
-                    borrowNum: bookInfo.borrowNum,
-                    bookBrief: bookInfo.bookBrief,
-                    typeId: bookInfo.typeId,
-                    typeName: bookInfo.typeName,
+                    bookId: this.item.bookId,
+                    bookName: this.item.bookName,
+                    bookWriter: this.item.bookWriter,
+                    bookCompany: this.item.bookCompany,
+                    bookDate: this.item.bookDate,
+                    bookNum: this.item.bookNum,
+                    borrowNum: this.item.borrowNum,
+                    bookBrief: this.item.bookBrief,
+                    typeId: this.item.typeId,
+                    typeName: this.item.typeName,
                 };
 
             },
 
             //编辑重置
             resetEditForm(){
-                this.bookDataEdit(this.bookEditForm.bookId);
-
+                this.bookDataEdit();
             },
 
             //删除

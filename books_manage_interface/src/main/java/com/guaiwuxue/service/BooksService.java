@@ -62,4 +62,11 @@ public interface BooksService {
      * @param booksMap
      */
     void updateBookByBookId(Map<String, Object> booksMap);
+
+    /**
+     * 分页查询详细数据
+     * @param queryPageBean
+     * @return
+     */
+    PageResult findPageInfo(QueryPageBean queryPageBean);
 }

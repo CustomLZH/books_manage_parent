@@ -104,7 +104,7 @@
                         </el-form>
 
                         <span slot="footer" class="dialog-footer">
-                            <el-button @click="resetFormEdit('typeForm')">重 置</el-button>
+                            <el-button @click="resetFormEdit()">重 置</el-button>
                             <el-button @click="dialogVisibleEdit = false">取 消</el-button>
                             <el-button type="primary" @click="handleEdit('typeForm')">修 改</el-button>
                         </span>
@@ -143,18 +143,15 @@
                     typeId: null,
                     typeName: null,
                 },
-                resetTypeForm: {
-                    typeId: null,
-                    typeName: null,
+                row: {
+
                 },
                 typeRules: {
                     typeId: [
-                        { required: true, message: '请输入类型编号', trigger: 'blur' },
-                        { min: 1, message: '请填写类型编号', trigger: 'blur' }
+                        { required: true, message: '请输入类型编号', trigger: ['blur','change'] },
                     ],
                     typeName: [
-                        { required: true, message: '请输入类型名称', trigger: 'blur' },
-                        { min: 1, message: '请填写类型名称', trigger: 'blur' }
+                        { required: true, message: '请输入类型名称', trigger: ['blur','change'] },
                     ]
                 }
 
@@ -166,19 +163,13 @@
             methods: {
 
                 //编辑表单重置
-                resetFormEdit(formName) {
-                    this.typeForm.typeId = this.resetTypeForm.typeId;
-                    this.typeForm.typeName = this.resetTypeForm.typeName;
-                    this.$refs[formName].validate((valid) => {
-                        if (!valid){
-                            this.$message.error('请检查信息填写是否正确！');
-                            return false;
-                        }
-                    });
+                resetFormEdit() {
+                    this.setTypeForm();
                 },
 
                 //表单重置
                 resetForm(formName) {
+                    this.typeForm={};
                     if (this.$refs[formName]!==undefined){
                         this.$refs[formName].resetFields();
                     }
@@ -250,23 +241,20 @@
                     });
                 },
 
+
+                setTypeForm(){
+                    this.typeForm = {
+                        typeId: this.row.typeId,
+                        typeName: this.row.typeName,
+                    };
+                },
+
                 //弹出编辑窗口
                 upEdit(row) {
-                    var typeId = row.typeId;
+                    this.row = row;
+                    this.setTypeForm();
                     this.dialogVisibleEdit = true;
-                    axios.get("/bookType/findBookTypeByTypeId.do?typeId=" + typeId).then((res) => {
-                        if (res.data.flag){
-                            this.typeForm = res.data.data;
-                            this.resetTypeForm.typeId = this.typeForm.typeId;
-                            this.resetTypeForm.typeName = this.typeForm.typeName;
-                            this.$message({
-                                message: res.data.message,
-                                type: 'success'
-                            })
-                        }else {
-                            this.$message.error(res.data.message);
-                        }
-                    });
+
                 },
 
                 //删除

@@ -80,4 +80,11 @@ public interface BooksDao {
      * @param booksMap
      */
     void updateBookByBookId(Map<String, Object> booksMap);
+
+    /**
+     * 分页查询详细数据
+     * @param requirement
+     * @return
+     */
+    Page<Map<String, Object>> findPageInfo(String requirement);
 }
