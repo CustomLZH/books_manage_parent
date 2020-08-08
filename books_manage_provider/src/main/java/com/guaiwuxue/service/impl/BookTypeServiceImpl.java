@@ -9,7 +9,10 @@ import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.pojo.BookType;
 import com.guaiwuxue.service.BookTypeService;
+import com.guaiwuxue.util.SerializeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.util.List;
 
@@ -25,6 +28,8 @@ public class BookTypeServiceImpl implements BookTypeService {
     private BookTypeDao bookTypeDao;
     @Autowired
     private BooksDao booksDao;
+    @Autowired
+    private JedisPool jedisPool;
 
     @Override
     public PageResult findPage(QueryPageBean queryPageBean) {
@@ -62,7 +67,8 @@ public class BookTypeServiceImpl implements BookTypeService {
 
     @Override
     public int delete(String typeId) {
-
+        // 先从redis中获取数据
+        Jedis resource = jedisPool.getResource();
         //查询是否有书籍使用该类型编号
         int count = booksDao.findCountByTypeId(typeId);
         //进行判断
@@ -72,11 +78,15 @@ public class BookTypeServiceImpl implements BookTypeService {
 
         //删除该类型
         bookTypeDao.deleteBytypeId(typeId);
+        // 将查询出的新集合对象序列化存入redis
+        resource.set("typeList".getBytes(),SerializeUtil.serialize(bookTypeDao.findBookTypeAll()));
         return count;
     }
 
     @Override
     public boolean createBookType(BookType bookType) {
+        // 先从redis中获取数据
+        Jedis resource = jedisPool.getResource();
         //根据类型id查询书籍类型
         BookType bookType1 = bookTypeDao.findTypeNameByTypeId(bookType.getTypeId());
         //查询到则使用更新操作
@@ -85,6 +95,8 @@ public class BookTypeServiceImpl implements BookTypeService {
             return false;
         }
         bookTypeDao.createBookType(bookType);
+        // 将查询出的新集合对象序列化存入redis
+        resource.set("typeList".getBytes(),SerializeUtil.serialize(bookTypeDao.findBookTypeAll()));
         return true;
     }
 
@@ -95,11 +107,32 @@ public class BookTypeServiceImpl implements BookTypeService {
 
     @Override
     public void updateBookType(BookType bookType) {
+        // 先从redis中获取数据
+        Jedis resource = jedisPool.getResource();
         bookTypeDao.updateByTypeId(bookType);
+        // 将查询出的新集合对象序列化存入redis
+        resource.set("typeList".getBytes(),SerializeUtil.serialize(bookTypeDao.findBookTypeAll()));
     }
 
     @Override
     public List<BookType> findBookTypeAll() {
-        return bookTypeDao.findBookTypeAll();
+
+        // 先从redis中获取数据
+        Jedis resource = jedisPool.getResource();
+        byte[] bytes = resource.get("typeList".getBytes());
+        Object o = SerializeUtil.unSerialize(bytes);
+        List<BookType> bookType = null;
+        if (o instanceof List){
+            bookType = (List<BookType>) o;
+        }
+        // 判断redis中是否有数据
+        if (bookType==null || bookType.size()==0){
+            bookType = bookTypeDao.findBookTypeAll();
+            // 将查询出的集合对象序列化存入redis
+            resource.set("typeList".getBytes(),SerializeUtil.serialize(bookType));
+        }
+
+        return bookType;
+
     }
 }

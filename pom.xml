@@ -22,6 +22,7 @@
         <spring.version>5.0.5.RELEASE</spring.version>
         <mybatis.version>3.4.5</mybatis.version>
         <log4j.version>1.2.12</log4j.version>
+        <redis.version>3.0.0</redis.version>
     </properties>
 
     <dependencyManagement>
@@ -148,6 +149,14 @@
                 <artifactId>druid</artifactId>
                 <version>1.0.9</version>
             </dependency>
+
+            <!--redis-->
+            <dependency>
+                <groupId>redis.clients</groupId>
+                <artifactId>jedis</artifactId>
+                <version>${redis.version}</version>
+            </dependency>
+
             <!--日志工具-->
             <dependency>
                 <groupId>log4j</groupId>
