@@ -194,7 +194,7 @@
                 handleCreate(formName){
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            axios.post("/bookType/createBookType.do",this.typeForm).then((res) => {
+                            axios.post("/books_manage_backend/bookType/createBookType.do",this.typeForm).then((res) => {
                                 if (res.data.flag){
                                     this.$message({
                                         message: res.data.message,
@@ -219,7 +219,7 @@
                 handleEdit(formName) {
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            axios.post("/bookType/updateBookType.do",this.typeForm).then((res) => {
+                            axios.post("/books_manage_backend/bookType/updateBookType.do",this.typeForm).then((res) => {
                                 if (res.data.flag){
                                     this.$message({
                                         message: res.data.message,
@@ -265,7 +265,7 @@
                         confirmButtonText: '删除',
                         cancelButtonText: '取消'
                     }).then(() => {
-                        axios.get("/bookType/delete.do?typeId=" + row.typeId).then((res) => {
+                        axios.get("/books_manage_backend/bookType/delete.do?typeId=" + row.typeId).then((res) => {
                             if (res.data.flag){
                                 this.$message({
                                     message: res.data.message,
@@ -313,7 +313,7 @@
                         pageSize: this.pagination.pageSize,
                         requirement: this.pagination.requirement,
                     };
-                    axios.post("/bookType/findPage.do",param).then((res) => {
+                    axios.post("/books_manage_backend/bookType/findPage.do",param).then((res) => {
                         //解析返回的数据
                         this.pagination.total = res.data.total;
                         this.dataList = res.data.rows;

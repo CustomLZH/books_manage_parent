@@ -29,7 +29,7 @@
     <!-- 指定应用名称 -->
     <dubbo:application name="books_manage_backend" />
     <!--指定服务注册中心地址-->
-    <dubbo:registry address="zookeeper://192.168.200.20:2181"/>
+    <dubbo:registry address="zookeeper://127.0.0.1:2181"/>
     <!--批量扫描-->
     <dubbo:annotation package="com.guaiwuxue" />
     <!--

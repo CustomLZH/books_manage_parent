@@ -604,7 +604,7 @@
                     pageSize: this.pagination.pageSize,
                     requirement: this.pagination.requirement,
                 };
-                axios.post("/books/findPageInfo.do",param).then((res) => {
+                axios.post("/books_manage_backend/books/findPageInfo.do",param).then((res) => {
                     //解析返回的数据
                     this.pagination.total = res.data.total;
                     this.dataList = res.data.rows;
@@ -653,7 +653,7 @@
 
             //删除
             bookDelete(bookId){
-                axios.get("/books/deleteBookByBookId.do?bookId=" + bookId).then((res) => {
+                axios.get("/books_manage_backend/books/deleteBookByBookId.do?bookId=" + bookId).then((res) => {
                    if (res.data.flag){
                        this.$message({
                            message: res.data.message,
@@ -690,7 +690,7 @@
 
             //获取书籍类型
             findBookType(){
-                axios.get("/bookType/findBookTypeAll.do").then((res) => {
+                axios.get("/books_manage_backend/bookType/findBookTypeAll.do").then((res) => {
                     if (res.data.flag){
                         this.typeList = res.data.data;
                     }else {
@@ -704,7 +704,7 @@
                 //为了验证表单的
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        axios.post("/books/updateBookByBookId.do",this.bookEditForm).then((res) => {
+                        axios.post("/books_manage_backend/books/updateBookByBookId.do",this.bookEditForm).then((res) => {
                             if (res.data.flag){
                                 this.$message({
                                     message: res.data.message,
@@ -740,7 +740,7 @@
                                 typeId: this.typeSelect.typeId,
                                 typeName: this.typeSelect.typeName,
                             };
-                            axios.post("/books/insertBookByMap.do",bookCreate).then((res) => {
+                            axios.post("/books_manage_backend/books/insertBookByMap.do",bookCreate).then((res) => {
                                 if (res.data.flag){
                                     this.$message({
                                         message: res.data.message,
