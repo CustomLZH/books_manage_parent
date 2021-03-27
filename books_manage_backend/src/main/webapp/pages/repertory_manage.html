@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分类管理</title>
+    <script src="../js/vue/vue.min.js"></script>
+    <script src="../js/jQuery/jquery-3.5.0.min.js"></script>
+    <script src="../js/vue/axios-0.18.0.js"></script>
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <script src="../plugins/elementui/index.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+
+    <div id="app">
+        <div class="leaderTab" style="width: 100%;">
+            <div class="title-h3">
+                <h3>信息管理<small>库存管理</small></h3>
+            </div>
+            <div class="title-item">
+                <el-breadcrumb separator-class="el-icon-arrow-right">
+                    <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+                    <el-breadcrumb-item>信息管理</el-breadcrumb-item>
+                    <el-breadcrumb-item>库存管理</el-breadcrumb-item>
+                </el-breadcrumb>
+            </div>
+            <div style="clear: both;"></div>
+
+
+        </div>
+        <div class="data">
+            <div class="data-info">
+                <div class="data-query">
+                    <el-input
+                            placeholder="类别编号/类别名称"
+                            v-model="pagination.requirement"
+                            style="width: 200px;"
+                            @change="findPage()"
+                            clearable>
+                    </el-input>
+                    <el-button @click="findPage()">查询</el-button>
+                    <el-button type="primary" plain @click="upCreate()">添加</el-button>
+                </div>
+                <div class="data-table">
+                    <el-table
+                            v-loading="loading"
+                            :data="dataList">
+                        <el-table-column type="index" align="center" label="序号"></el-table-column>
+                        <el-table-column prop="typeId" align="center" label="中图分类号"></el-table-column>
+                        <el-table-column prop="typeName" align="center" label="分类号名称"></el-table-column>
+                        <el-table-column label="操作" align="center">
+                            <template slot-scope="scope">
+                                <el-button
+                                        size="mini"
+                                        type="primary"
+                                        @click="upEdit(scope.row)">编辑</el-button>
+                                <el-button
+                                        size="mini"
+                                        type="danger"
+                                        @click="handleDelete(scope.row)">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+
+                <div>
+                    <el-dialog
+                        title="添加"
+                        :visible.sync="dialogVisibleCreate"
+                        width="30%"
+                        :before-close="handleClose">
+
+                        <el-form :model="typeForm" :rules="typeRules" ref="typeForm" label-width="100px">
+                            <el-form-item label="中图分类号" prop="typeId">
+                                <el-input v-model="typeForm.typeId"></el-input>
+                            </el-form-item>
+                            <el-form-item label="分类号名称" prop="typeName">
+                                <el-input v-model="typeForm.typeName"></el-input>
+                            </el-form-item>
+                        </el-form>
+
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="resetForm('typeForm')">重 置</el-button>
+                            <el-button @click="dialogVisibleCreate = false">取 消</el-button>
+                            <el-button type="primary" @click="handleCreate('typeForm')">添 加</el-button>
+                        </span>
+                    </el-dialog>
+                </div>
+
+                <div>
+                    <el-dialog
+                            title="编辑"
+                            :visible.sync="dialogVisibleEdit"
+                            width="30%"
+                            :before-close="handleClose">
+
+                        <el-form :model="typeForm" :rules="typeRules" ref="typeForm" label-width="100px">
+                            <el-form-item label="中图分类号" prop="typeId">
+                                <el-input v-model="typeForm.typeId" :disabled="true"></el-input>
+                            </el-form-item>
+                            <el-form-item label="分类号名称" prop="typeName">
+                                <el-input v-model="typeForm.typeName"></el-input>
+                            </el-form-item>
+                        </el-form>
+
+                        <span slot="footer" class="dialog-footer">
+                            <el-button @click="resetFormEdit()">重 置</el-button>
+                            <el-button @click="dialogVisibleEdit = false">取 消</el-button>
+                            <el-button type="primary" @click="handleEdit('typeForm')">修 改</el-button>
+                        </span>
+                    </el-dialog>
+                </div>
+
+                <div class="pageNum">
+                    <el-pagination
+                            @current-change="handleCurrentChange"
+                            :current-page="pagination.currentPage"
+                            :page-size="pagination.pageSize"
+                            layout="total, prev, pager, next, jumper"
+                            :total="pagination.total">
+                    </el-pagination>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+    <script>
+        var vm = new Vue({
+            el:"#app",
+            data:{
+                pagination:{
+                    currentPage: 1,
+                    pageSize:10,
+                    total: 100,
+                    requirement: null
+                },
+                dataList: [],
+                loading: true,
+                dialogVisibleCreate: false,
+                dialogVisibleEdit: false,
+                typeForm: {
+                    typeId: null,
+                    typeName: null,
+                },
+                row: {
+
+                },
+                typeRules: {
+                    typeId: [
+                        { required: true, message: '请输入类型编号', trigger: ['blur','change'] },
+                    ],
+                    typeName: [
+                        { required: true, message: '请输入类型名称', trigger: ['blur','change'] },
+                    ]
+                }
+
+            },
+            //钩子函数，VUE对象初始化完成后自动执行
+            created() {
+                this.findPage();
+            },
+            methods: {
+
+                //编辑表单重置
+                resetFormEdit() {
+                    this.setTypeForm();
+                },
+
+                //表单重置
+                resetForm(formName) {
+                    this.typeForm={};
+                    if (this.$refs[formName]!==undefined){
+                        this.$refs[formName].resetFields();
+                    }
+                },
+                //弹窗关闭确定
+                handleClose(done) {
+                    this.$confirm('确认关闭？')
+                        .then(_ => {
+                            done();
+                        })
+                        .catch(_ => {});
+                },
+
+
+
+                //弹出添加窗口
+                upCreate(){
+                    this.dialogVisibleCreate = true;
+                    this.resetForm('typeForm');
+                },
+                //添加提交
+                handleCreate(formName){
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            axios.post("/books_manage_backend/bookType/createBookType.do",this.typeForm).then((res) => {
+                                if (res.data.flag){
+                                    this.$message({
+                                        message: res.data.message,
+                                        type: 'success'
+                                    });
+                                    this.dialogVisibleCreate = false;
+                                    this.findPage();
+                                }else {
+                                    this.$message.error(res.data.message);
+                                }
+                            }).catch((res) => {
+                                this.dialogVisibleCreate = false;
+                                this.permissionsMessage(res);
+                            });
+                        } else {
+                            this.$message.error('请检查信息填写是否正确！');
+                            return false;
+                        }
+                    });
+                },
+                //编辑提交
+                handleEdit(formName) {
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            axios.post("/books_manage_backend/bookType/updateBookType.do",this.typeForm).then((res) => {
+                                if (res.data.flag){
+                                    this.$message({
+                                        message: res.data.message,
+                                        type: 'success'
+                                    });
+                                    this.dialogVisibleEdit = false;
+                                    this.findPage();
+                                }else {
+                                    this.$message.error(res.data.message);
+                                }
+                            }).catch((res) => {
+                                this.dialogVisibleEdit = false;
+                                this.permissionsMessage(res);
+                            });
+                        } else {
+                            this.$message.error('请检查信息填写是否正确！');
+                            return false;
+                        }
+                    });
+                },
+
+
+                setTypeForm(){
+                    this.typeForm = {
+                        typeId: this.row.typeId,
+                        typeName: this.row.typeName,
+                    };
+                },
+
+                //弹出编辑窗口
+                upEdit(row) {
+                    this.row = row;
+                    this.setTypeForm();
+                    this.dialogVisibleEdit = true;
+
+                },
+
+                //删除
+                handleDelete(row) {
+                    //alert(row.typeId);
+                    this.$confirm('是否确认删除？', '删除', {
+                        distinguishCancelAndClose: true,
+                        confirmButtonText: '删除',
+                        cancelButtonText: '取消'
+                    }).then(() => {
+                        axios.get("/books_manage_backend/bookType/delete.do?typeId=" + row.typeId).then((res) => {
+                            if (res.data.flag){
+                                this.$message({
+                                    message: res.data.message,
+                                    type: 'success'
+                                });
+                                //重新查询数据
+                                this.findPage();
+                            }else {
+                                this.$message.error(res.data.message);
+                            }
+                        }).catch((res) => {
+                            this.permissionsMessage(res);
+                        });
+                    }).catch(action => {
+                        this.$message({
+                            type: 'info',
+                            message: '放弃删除'
+                        })
+                    });
+                },
+
+                permissionsMessage(res){
+                    if (res == 'Error: Request failed with status code 403'){
+                        //权限不足
+                        this.$message.error('权限不足');
+                        return;
+                    }else {
+                        this.$message.error('删除失败');
+                        return;
+                    }
+                },
+
+                //切换页码
+                handleCurrentChange(currentPage) {
+                    //设置最新的页码
+                    this.pagination.currentPage = currentPage;
+                    //重新调用findPage方法进行分页查询
+                    this.findPage();
+                },
+                //分页查询
+                findPage() {
+                    //发送ajax请求，提交分页相关请求参数（页码、每页显示记录数、查询条件）
+                    var param = {
+                        currentPage: this.pagination.currentPage,
+                        pageSize: this.pagination.pageSize,
+                        requirement: this.pagination.requirement,
+                    };
+                    axios.post("/books_manage_backend/bookType/findPage.do",param).then((res) => {
+                        //解析返回的数据
+                        this.pagination.total = res.data.total;
+                        this.dataList = res.data.rows;
+                        this.loading = false;
+                    })
+                },
+            }
+        })
+    </script>
+</html>

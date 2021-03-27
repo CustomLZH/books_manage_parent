@@ -1,6 +1,5 @@
 package com.guaiwuxue.service.impl;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.guaiwuxue.pojo.Admin;
 import com.guaiwuxue.pojo.Permission;
 import com.guaiwuxue.pojo.Role;
@@ -30,7 +29,7 @@ public class SpringSecurityAdminServiceImpl implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @Reference
+    @Autowired
     private AdminService adminService;
 
 

@@ -3,7 +3,7 @@ package com.guaiwuxue.dao;
 import com.github.pagehelper.Page;
 import com.guaiwuxue.pojo.BookType;
 
-import java.util.List;
+import java.util.TreeSet;
 
 /**
  * @Author: Custom
@@ -43,5 +43,5 @@ public interface BookTypeDao {
      */
     public void updateByTypeId(BookType bookType);
 
-    List<BookType> findBookTypeAll();
+    TreeSet<BookType> findBookTypeAll();
 }

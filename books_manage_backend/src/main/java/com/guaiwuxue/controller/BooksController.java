@@ -1,7 +1,5 @@
 package com.guaiwuxue.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
-import com.alibaba.fastjson.JSONObject;
 import com.guaiwuxue.constant.MessageConstant;
 import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
@@ -9,6 +7,7 @@ import com.guaiwuxue.entity.Result;
 import com.guaiwuxue.pojo.Books;
 import com.guaiwuxue.service.BooksService;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,7 +26,7 @@ import java.util.Map;
 @RequestMapping("/books")
 public class BooksController {
 
-    @Reference
+    @Autowired
     private BooksService booksService;
 
     /**

@@ -3,14 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>管理员登陆</title>
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <script src="../js/jQuery/jquery-3.5.0.min.js"></script>
+    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
 </head>
+<style>
+    body > div {
+        width: 800px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-70%);
+    }
+</style>
 <body>
-
-    <form action="/books_manage_backend/login.do" method="post">
-        用户名：<input type="text" name="adminUsername"/><br/>
-        密码：<input type="password" name="adminPassword"/><br/>
-        <input type="submit" value="登陆"/>
-
-    </form>
+    <div class="row">
+        <div class="col-lg-6 col-xs-12">
+            <form action="/books_manage_backend/login.do" method="post" class="form-horizontal">
+                <div class="form-group">
+                    <label for="adminUsername" class="col-sm-3 control-label">用户名：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="adminUsername" name="adminUsername" placeholder="用户名">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword" class="col-sm-3 control-label">密  码：</label>
+                    <div class="col-sm-7">
+                        <input type="password" class="form-control" id="adminPassword" name="adminPassword" placeholder="密码">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-7">
+                        <button type="submit" class="btn btn-primary">登陆</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
+<script>
+
+</script>
 </html>

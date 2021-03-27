@@ -1,6 +1,5 @@
 package com.guaiwuxue.service.impl;
 
-import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.guaiwuxue.dao.BookTypeDao;
@@ -11,10 +10,11 @@ import com.guaiwuxue.pojo.BookType;
 import com.guaiwuxue.service.BookTypeService;
 import com.guaiwuxue.util.SerializeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
-import java.util.List;
+import java.util.TreeSet;
 
 /**
  * @Author: Custom
@@ -56,9 +56,10 @@ public class BookTypeServiceImpl implements BookTypeService {
             currentPage = 1;
         }
 
-
+        // 按typeId升序
+        String orderBy = "typeId asc";
         //初始化分页数据
-        PageHelper.startPage(currentPage,pageSize);
+        PageHelper.startPage(currentPage,pageSize,orderBy);
         //调用查询，获得分页对象
         Page<BookType> page = bookTypeDao.findPageByCondition("%" + requirement + "%");
         //返回分页结果数据
@@ -115,21 +116,25 @@ public class BookTypeServiceImpl implements BookTypeService {
     }
 
     @Override
-    public List<BookType> findBookTypeAll() {
-
-        // 先从redis中获取数据
-        Jedis resource = jedisPool.getResource();
-        byte[] bytes = resource.get("typeList".getBytes());
-        Object o = SerializeUtil.unSerialize(bytes);
-        List<BookType> bookType = null;
-        if (o instanceof List){
-            bookType = (List<BookType>) o;
+    public TreeSet<BookType> findBookTypeAll() {
+        TreeSet<BookType> bookType = null;
+        Jedis resource = null;
+        if (jedisPool != null) {
+            // 先从redis中获取数据
+            resource = jedisPool.getResource();
+            byte[] bytes = resource.get("typeSet".getBytes());
+            Object o = SerializeUtil.unSerialize(bytes);
+            if (o instanceof TreeSet) {
+                bookType = (TreeSet<BookType>) o;
+            }
         }
         // 判断redis中是否有数据
         if (bookType==null || bookType.size()==0){
             bookType = bookTypeDao.findBookTypeAll();
-            // 将查询出的集合对象序列化存入redis
-            resource.set("typeList".getBytes(),SerializeUtil.serialize(bookType));
+            if (resource != null) {
+                // 将查询出的集合对象序列化存入redis
+                resource.set("typeSet".getBytes(), SerializeUtil.serialize(bookType));
+            }
         }
 
         return bookType;

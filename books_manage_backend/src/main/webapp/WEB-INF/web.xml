@@ -5,6 +5,11 @@
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
 
+  <!-- 加载spring容器 -->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>classpath*:spring-*.xml</param-value>
+  </context-param>
 
   <!-- 解决post乱码 -->
   <filter>
@@ -19,6 +24,7 @@
       <param-value>true</param-value>
     </init-param>
   </filter>
+
   <!-- Spring Security配置，委派过滤器 -->
   <filter>
     <filter-name>springSecurityFilterChain</filter-name>
@@ -35,7 +41,10 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-
+  <!-- 创建监听 -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
 
   <!--SpringMVC配置-->
   <servlet>
@@ -48,6 +57,7 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
+
   <servlet-mapping>
     <servlet-name>springmvc</servlet-name>
     <url-pattern>*.do</url-pattern>

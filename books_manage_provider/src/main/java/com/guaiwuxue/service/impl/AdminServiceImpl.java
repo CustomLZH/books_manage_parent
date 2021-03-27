@@ -1,6 +1,5 @@
 package com.guaiwuxue.service.impl;
 
-import com.alibaba.dubbo.config.annotation.Service;
 import com.guaiwuxue.dao.AdminDao;
 import com.guaiwuxue.dao.PermissionDao;
 import com.guaiwuxue.dao.RoleDao;
@@ -9,6 +8,7 @@ import com.guaiwuxue.pojo.Permission;
 import com.guaiwuxue.pojo.Role;
 import com.guaiwuxue.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 

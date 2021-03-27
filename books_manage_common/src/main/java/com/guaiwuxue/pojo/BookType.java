@@ -10,7 +10,7 @@ import java.io.Serializable;
  * @Date: 2020/7/10 22:49
  * @Version: 1.0
  */
-public class BookType implements Serializable {
+public class BookType implements Serializable, Comparable {
     /**
      * 类型编码
      */
@@ -34,5 +34,29 @@ public class BookType implements Serializable {
 
     public void setTypeName(String typeName) {
         this.typeName = typeName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BookType)) return false;
+
+        BookType bookType = (BookType) o;
+
+        if (getTypeId() != null ? !getTypeId().equals(bookType.getTypeId()) : bookType.getTypeId() != null)
+            return false;
+        return getTypeName() != null ? getTypeName().equals(bookType.getTypeName()) : bookType.getTypeName() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getTypeId() != null ? getTypeId().hashCode() : 0;
+        result = 31 * result + (getTypeName() != null ? getTypeName().hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.typeId.compareTo(((BookType) o).typeId);
     }
 }

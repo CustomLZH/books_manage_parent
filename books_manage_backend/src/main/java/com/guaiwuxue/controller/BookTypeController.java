@@ -1,6 +1,5 @@
 package com.guaiwuxue.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.guaiwuxue.constant.MessageConstant;
 import com.guaiwuxue.constant.RolePermissionConstant;
 import com.guaiwuxue.entity.PageResult;
@@ -8,12 +7,13 @@ import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.entity.Result;
 import com.guaiwuxue.pojo.BookType;
 import com.guaiwuxue.service.BookTypeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.TreeSet;
 
 /**
  * @Author: Custom
@@ -24,7 +24,7 @@ import java.util.List;
 @RequestMapping("/bookType")
 public class BookTypeController {
 
-    @Reference
+    @Autowired
     private BookTypeService bookTypeService;
 
 
@@ -120,9 +120,9 @@ public class BookTypeController {
      * @return
      */
     @RequestMapping("/findBookTypeAll")
-    public Result<List<BookType>> findBookTypeAll(){
+    public Result<TreeSet<BookType>> findBookTypeAll(){
         try {
-            List<BookType> bookTypes = bookTypeService.findBookTypeAll();
+            TreeSet<BookType> bookTypes = bookTypeService.findBookTypeAll();
             return new Result<>(true,MessageConstant.QUERY_BOOKTYPE_SUCCESS,bookTypes);
         }catch (Exception e){
             return new Result<>(false,MessageConstant.QUERY_BOOKTYPE_FAIL);

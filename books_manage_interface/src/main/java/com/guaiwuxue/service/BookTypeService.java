@@ -4,7 +4,7 @@ import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.pojo.BookType;
 
-import java.util.List;
+import java.util.TreeSet;
 
 /**
  * @Author: Custom
@@ -50,5 +50,5 @@ public interface BookTypeService {
      * 查询全部书籍类型
      * @return
      */
-    List<BookType> findBookTypeAll();
+    TreeSet<BookType> findBookTypeAll();
 }

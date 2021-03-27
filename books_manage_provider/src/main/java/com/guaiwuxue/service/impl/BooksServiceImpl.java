@@ -1,6 +1,5 @@
 package com.guaiwuxue.service.impl;
 
-import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.guaiwuxue.dao.BooksDao;
@@ -9,6 +8,7 @@ import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.pojo.Books;
 import com.guaiwuxue.service.BooksService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
