@@ -13,7 +13,7 @@
 
     <style>
         .data-info>.el-row{
-            width: 1600px;
+            width: 100%;
         }
         .time {
             font-size: 13px;
@@ -53,7 +53,7 @@
             margin: 0 10px 0 90px;
             padding-top: 10px;
             text-align: left;
-            height: 100px;
+            height: 110px;
             font-family: 宋体;
         }
         .div-info-data{
@@ -107,10 +107,8 @@
             clear: both
         }
 
-
-
         .card_div{
-            width: 740px;
+            width: 860px;
             padding: 1px;
             border-radius: 5px;
         }
@@ -267,7 +265,9 @@
                                         </div>
                                         <div class="div-card-info">
                                             <div class="div-info-data">
-                                                《<span class="data-span data-name" v-text="item.bookName"></span>》<br/>
+                                                《<span class="data-span data-name" v-text="item.bookName"></span>》
+                                                <i v-if="item.bookNum<=item.borrowNum" class="el-icon-warning" style="color: red;"></i>
+                                                <br/>
                                                 <span class="data-span span-title">作者：</span><span class="data-span data-writer" v-text="item.bookWriter"></span>
                                                 <span class="data-span span-title">出版社：</span><span class="data-span data-company" v-text="item.bookCompany"></span>
                                                 <span class="data-span span-title">出版日期：</span><span class="data-span data-date" v-text="item.bookDate"></span>
@@ -579,7 +579,7 @@
                     { type: 'number', message: '库存必须为数字值', trigger: ['change','blur']},
                 ],
                 borrowNum: [
-                    { type: 'number', message: '借阅量必须为数字值'}
+                    { type: 'number', message: '借阅量必须为数字值'},
                 ]
             },
         },
@@ -703,7 +703,8 @@
             bookEdit(formName){
                 //为了验证表单的
                 this.$refs[formName].validate((valid) => {
-                    if (valid) {
+                    var flag = this.bookEditForm.bookNum < this.bookEditForm.borrowNum
+                    if (valid && !flag) {
                         axios.post("/books_manage_backend/books/updateBookByBookId.do",this.bookEditForm).then((res) => {
                             if (res.data.flag){
                                 this.$message({
@@ -716,7 +717,10 @@
                                 this.$message.error(res.data.message);
                             };
                         });
-                    } else {
+                    }else if (flag) {
+                        this.$message.error('借阅数量不能大于库存！');
+                        return false;
+                    }else {
                         this.$message.error('请检查信息填写是否正确！');
                         return false;
                     }

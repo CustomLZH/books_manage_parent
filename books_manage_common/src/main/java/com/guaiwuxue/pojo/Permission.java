@@ -1,6 +1,7 @@
 package com.guaiwuxue.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -16,7 +17,7 @@ public class Permission implements Serializable {
     /**
      * 权限id
      */
-    private Integer id;
+    private Long id;
     /**
      * 权限名称
      */
@@ -31,12 +32,38 @@ public class Permission implements Serializable {
      */
     private Set<Role> roles = new HashSet<>();
 
+    /**
+     * 更新时间
+     */
+    private Date updateDate;
 
-    public Integer getId() {
+    /**
+     * 创建时间
+     */
+    private Date createDate;
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

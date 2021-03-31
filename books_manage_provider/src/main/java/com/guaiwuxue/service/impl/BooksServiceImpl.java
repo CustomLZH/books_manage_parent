@@ -91,7 +91,7 @@ public class BooksServiceImpl implements BooksService {
     }
 
     @Override
-    public PageResult findPageInfo(QueryPageBean queryPageBean) {
+    public PageResult findPageInfo(QueryPageBean queryPageBean, String orderBy) {
         //页码
         Integer currentPage = queryPageBean.getCurrentPage();
         //每页记录数
@@ -113,8 +113,8 @@ public class BooksServiceImpl implements BooksService {
             //保证分页后回到第一页
             currentPage = 1;
         }
-
-        PageHelper.startPage(currentPage,pageSize);
+        // 按order排序
+        PageHelper.startPage(currentPage,pageSize,orderBy);
         Page<Map<String,Object>> page = booksDao.findPageInfo("%" + requirement +"%");
 
         return new PageResult(page.getTotal(),page.getResult());

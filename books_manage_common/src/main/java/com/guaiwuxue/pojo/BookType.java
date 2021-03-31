@@ -3,6 +3,7 @@ package com.guaiwuxue.pojo;
 
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 书籍类型实体类
@@ -20,6 +21,32 @@ public class BookType implements Serializable, Comparable {
      */
     private String typeName;
 
+    /**
+     * 更新时间
+     */
+    private Date updateDate;
+
+    /**
+     * 创建时间
+     */
+    private Date createDate;
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
     public String getTypeId() {
         return typeId;
     }
@@ -35,6 +62,8 @@ public class BookType implements Serializable, Comparable {
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
+
+
 
     @Override
     public boolean equals(Object o) {

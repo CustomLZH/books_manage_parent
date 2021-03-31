@@ -2,6 +2,7 @@ package com.guaiwuxue.dao;
 
 import com.github.pagehelper.Page;
 import com.guaiwuxue.pojo.BookType;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.TreeSet;
 
@@ -16,7 +17,7 @@ public interface BookTypeDao {
      * @param requirement
      * @return
      */
-    public Page<BookType> findPageByCondition(String requirement);
+    public Page<BookType> findPageByCondition(@Param("requirement") String requirement);
 
     /**
      * 根据类型ID删除

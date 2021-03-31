@@ -1,5 +1,7 @@
 package com.guaiwuxue.pojo;
 
+import java.util.Date;
+
 /**
  * 用户实体类
  * @Author: Custom
@@ -10,7 +12,7 @@ public class Users {
     /**
      * 用户id
      */
-    private Integer userId;
+    private Long userId;
     /**
      * 用户姓名
      */
@@ -32,11 +34,37 @@ public class Users {
      */
     private String borrowNum;
 
-    public Integer getUserId() {
+    /**
+     * 更新时间
+     */
+    private Date updateDate;
+
+    /**
+     * 创建时间
+     */
+    private Date createDate;
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

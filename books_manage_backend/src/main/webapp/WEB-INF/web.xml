@@ -65,7 +65,7 @@
 
   <!--设置欢迎页-->
   <welcome-file-list>
-    <welcome-file>pages/login.html</welcome-file>
+    <welcome-file>login.html</welcome-file>
   </welcome-file-list>
 
 </web-app>

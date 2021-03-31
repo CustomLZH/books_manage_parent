@@ -68,5 +68,5 @@ public interface BooksService {
      * @param queryPageBean
      * @return
      */
-    PageResult findPageInfo(QueryPageBean queryPageBean);
+    PageResult findPageInfo(QueryPageBean queryPageBean, String orderBy);
 }

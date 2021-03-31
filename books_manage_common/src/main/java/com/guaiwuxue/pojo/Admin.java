@@ -1,6 +1,7 @@
 package com.guaiwuxue.pojo;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ public class Admin implements Serializable {
     /**
      * 管理员id
      */
-    private Integer adminId;
+    private Long adminId;
     /**
      * 管理员用户名
      */
@@ -32,16 +33,43 @@ public class Admin implements Serializable {
      * 管理员状态
      */
     private Integer adminState;
+
+    /**
+     * 更新时间
+     */
+    private Date updateDate;
+
+    /**
+     * 创建时间
+     */
+    private Date createDate;
+
     /**
      * 拥有的角色
      */
     private Set<Role> roles = new HashSet<>();
 
-    public Integer getAdminId() {
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Long getAdminId() {
         return adminId;
     }
 
-    public void setAdminId(Integer adminId) {
+    public void setAdminId(Long adminId) {
         this.adminId = adminId;
     }
 

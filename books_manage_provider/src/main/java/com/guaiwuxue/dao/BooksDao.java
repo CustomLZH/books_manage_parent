@@ -25,7 +25,7 @@ public interface BooksDao {
      * @param requirement
      * @return
      */
-    public Page<Map<String,Object>> findPageByCondition(String requirement);
+    public Page<Map<String,Object>> findPageByCondition(@Param("requirement") String requirement);
 
     /**
      * 根据id更新借阅数量
@@ -86,5 +86,5 @@ public interface BooksDao {
      * @param requirement
      * @return
      */
-    Page<Map<String, Object>> findPageInfo(String requirement);
+    Page<Map<String, Object>> findPageInfo(@Param("requirement") String requirement);
 }

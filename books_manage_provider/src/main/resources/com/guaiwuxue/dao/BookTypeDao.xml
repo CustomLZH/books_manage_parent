@@ -3,7 +3,7 @@
 
 <mapper namespace="com.guaiwuxue.dao.BookTypeDao">
     <insert id="createBookType" parameterType="com.guaiwuxue.pojo.BookType">
-        insert into book_type values(#{typeId},#{typeName})
+        insert into book_type(typeId, typeName) values(#{typeId},#{typeName})
     </insert>
     <update id="updateByTypeId" parameterType="com.guaiwuxue.pojo.BookType">
         update book_type set typeId=#{typeId},typeName=#{typeName} where typeId=#{typeId}
@@ -14,8 +14,8 @@
 
     <select id="findPageByCondition" parameterType="string" resultType="com.guaiwuxue.pojo.BookType">
         select * from book_type
-        <if test="value != null and value.length > 0 and value!='' ">
-            where typeId like #{value} or typeName like #{value}
+        <if test="requirement != null and requirement.length > 0 ">
+            where typeId like #{requirement} or typeName like #{requirement}
         </if>
     </select>
     <select id="findTypeNameByTypeId" parameterType="string" resultType="com.guaiwuxue.pojo.BookType">

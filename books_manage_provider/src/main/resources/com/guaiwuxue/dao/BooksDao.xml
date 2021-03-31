@@ -31,8 +31,8 @@
     <select id="findPageByCondition" parameterType="string" resultType="map">
         select bookId,bookName,bookWriter,bookCompany
         ,bookDate,bookBrief from books
-        <if test="value != null and value.length > 0 and value!='' ">
-            where bookName like #{value} or bookWriter like #{value}
+        <if test="requirement != null and requirement.length > 0 ">
+            where bookName like #{requirement} or bookWriter like #{requirement}
         </if>
     </select>
     <select id="findBorrowNumById" parameterType="int" resultType="java.lang.Integer">
@@ -55,8 +55,8 @@
         ,b.bookCompany,b.bookDate,b.bookBrief,b.bookNum,b.borrowNum
         FROM books as b,book_type as bt
         where b.typeId = bt.typeId
-        <if test="value != null and value.length > 0 and value!='' ">
-            and (b.bookName like #{value} or b.bookWriter like #{value})
+        <if test="requirement != null and requirement.length > 0 ">
+            and (b.bookName like #{requirement} or b.bookWriter like #{requirement})
         </if>
     </select>
 </mapper>

@@ -15,5 +15,5 @@ public interface RoleDao {
      * @param adminId
      * @return
      */
-    public Set<Role> findByAdminId(Integer adminId);
+    public Set<Role> findByAdminId(Long adminId);
 }

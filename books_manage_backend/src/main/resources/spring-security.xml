@@ -12,7 +12,7 @@
                             http://www.springframework.org/schema/security
                             http://www.springframework.org/schema/security/spring-security.xsd">
     <!--配置哪些资源匿名可以访问（不登陆也可以访问）-->
-    <security:http security="none" pattern="/pages/login.html"/>
+    <security:http security="none" pattern="/login.html"/>
     <security:http security="none" pattern="/js/**"/>
     <security:http security="none" pattern="/css/**"/>
     <security:http security="none" pattern="/img/**"/>
@@ -37,12 +37,12 @@
             authentication-failure-url:验证不通过跳转的地址
         -->
         <security:form-login
-                login-page="/pages/login.html"
+                login-page="/login.html"
                 username-parameter="adminUsername"
                 password-parameter="adminPassword"
                 login-processing-url="/login.do"
                 default-target-url="/pages/index.html"
-                authentication-failure-url="/pages/login.html"
+                authentication-failure-url="/login.html"
         />
         <!--
             csrf：对应CsrfFilter过滤器
@@ -56,7 +56,7 @@
         -->
         <security:logout
                 logout-url="/logout.do"
-                logout-success-url="/pages/login.html"
+                logout-success-url="/login.html"
                 invalidate-session="true"
         />
 

@@ -62,7 +62,7 @@ public class BooksController {
      */
     @RequestMapping("/findPageInfo")
     public PageResult findPageInfo(@RequestBody QueryPageBean queryPageBean){
-        return booksService.findPageInfo(queryPageBean);
+        return booksService.findPageInfo(queryPageBean, "bookDate desc");
     }
 
 

@@ -18,7 +18,7 @@ public class Books implements Serializable {
     /**
      * 图书编号
      */
-    private Integer bookId;
+    private Long bookId;
     /**
      * 类别编号
      */
@@ -53,11 +53,37 @@ public class Books implements Serializable {
      */
     private Integer borrowNum;
 
-    public Integer getBookId() {
+    /**
+     * 更新时间
+     */
+    private Date updateDate;
+
+    /**
+     * 创建时间
+     */
+    private Date createDate;
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public Long getBookId() {
         return bookId;
     }
 
-    public void setBookId(Integer bookId) {
+    public void setBookId(Long bookId) {
         this.bookId = bookId;
     }
 

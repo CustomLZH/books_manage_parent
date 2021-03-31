@@ -3,7 +3,7 @@
 
 <mapper namespace="com.guaiwuxue.dao.PermissionDao">
 
-    <select id="findByRoleId" parameterType="integer" resultType="com.guaiwuxue.pojo.Permission">
+    <select id="findByRoleId" parameterType="long" resultType="com.guaiwuxue.pojo.Permission">
         select p.id,p.name,p.keyWord
         from permission p,role_permission rp
         where p.id = rp.permission_id and rp.role_id = #{id}

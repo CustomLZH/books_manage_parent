@@ -15,5 +15,5 @@ public interface PermissionDao {
      * @param id
      * @return
      */
-    public Set<Permission> findByRoleId(Integer id);
+    public Set<Permission> findByRoleId(Long id);
 }
