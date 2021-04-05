@@ -87,11 +87,18 @@ public class BorrowInfoServiceImpl implements BorrowInfoService {
     @Override
     public TreeSet<WeekNumResp> findWeekBorrowNum() {
         TreeSet<WeekNumResp> weekBorrowNum = new TreeSet<>();
-        List<Date> thisWeekDays = DateUtil.getThisWeekDays();
-        for (Date thisWeekDay : thisWeekDays) {
-            weekBorrowNum.add(new WeekNumResp(thisWeekDay, 0));
+        List<Date> sevenDays = DateUtil.getSevenDays();
+        int todayWeek = DateUtil.getTodayWeek();
+        String[] weekNames = new String[] {"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
+        for (Date sevenDay : sevenDays) {
+            int week = DateUtil.getTodayWeek(sevenDay);
+            String weekName = weekNames[week - 1];
+            if (week > todayWeek) {
+                weekName = "上" + weekName;
+            }
+            weekBorrowNum.add(new WeekNumResp(sevenDay, 0, week, weekName));
         }
-        TreeSet<WeekNumResp> weekBorrowNum1 = borrowInfoDao.findWeekBorrowNum(weekBorrowNum.first().getDate(), weekBorrowNum.last().getDate());
+        TreeSet<WeekNumResp> weekBorrowNum1 = borrowInfoDao.findWeekBorrowNum();
         weekBorrowNum.addAll(weekBorrowNum1);
         return weekBorrowNum;
     }

@@ -18,6 +18,17 @@ public class WeekNumResp implements Comparable {
      */
     private Integer num;
 
+    /**
+     * 星期编号
+     */
+    private Integer week;
+
+    /**
+     * 星期名称
+     */
+    private String weekName;
+
+
     public WeekNumResp() {
     }
 
@@ -28,6 +39,13 @@ public class WeekNumResp implements Comparable {
     public WeekNumResp(Date date, Integer num) {
         this.date = date;
         this.num = num;
+    }
+
+    public WeekNumResp(Date date, Integer num, Integer week, String weekName) {
+        this.date = date;
+        this.num = num;
+        this.week = week;
+        this.weekName = weekName;
     }
 
     public Date getDate() {
@@ -46,6 +64,22 @@ public class WeekNumResp implements Comparable {
         this.num = num;
     }
 
+    public Integer getWeek() {
+        return week;
+    }
+
+    public void setWeek(Integer week) {
+        this.week = week;
+    }
+
+    public String getWeekName() {
+        return weekName;
+    }
+
+    public void setWeekName(String weekName) {
+        this.weekName = weekName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -53,8 +87,7 @@ public class WeekNumResp implements Comparable {
 
         WeekNumResp that = (WeekNumResp) o;
 
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-        boolean equals = sf.format(getDate()).equals(sf.format(that.getDate()));
+        boolean equals = this.week.equals(that.week);
         if (equals) {
             ((WeekNumResp)o).num = this.num;
         }
@@ -69,8 +102,8 @@ public class WeekNumResp implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
-        int i = sf.format(this.date).compareTo(sf.format(((WeekNumResp) o).date));
+        WeekNumResp that = (WeekNumResp) o;
+        int i = this.week.compareTo(that.week);
         if (0 == i) {
             ((WeekNumResp)o).num = this.num;
         }

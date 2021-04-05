@@ -265,10 +265,14 @@
                             // });
                             var WeekBorrowNum = res.data.data;
                             var series_data = [];
+                            var xAxis_data = [];
+
                             for (i in WeekBorrowNum) {
                                 series_data.push(WeekBorrowNum[i].num);
+                                xAxis_data.push(WeekBorrowNum[i].weekName);
                             }
                             this.option2.series[0].data = series_data;
+                            this.option2.xAxis[0].data = xAxis_data;
                             this.myChart2.setOption(this.option2);
                         } else {
                             // this.$message.error(res.data.message);
@@ -284,7 +288,12 @@
                             // });
                             var WeekAllNum = res.data.data;
                             var legend_data = [];
+                            var xAxis_data = [];
                             var series = [];
+
+                            for (i in WeekAllNum[0].data) {
+                                xAxis_data.push(WeekAllNum[0].data[i].weekName);
+                            }
 
                             for (i in WeekAllNum) {
                                 legend_data.push(WeekAllNum[i].name);
@@ -297,6 +306,7 @@
 
 
                             this.option1.legend.data = legend_data;
+                            this.option1.xAxis.data = xAxis_data;
                             this.option1.series = WeekAllNum;
                             this.myChart1.setOption(this.option1);
                         } else {

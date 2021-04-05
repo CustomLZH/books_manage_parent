@@ -51,5 +51,5 @@ public interface BorrowInfoDao {
     /**
      * 获取一周内每天的借阅量
      */
-    TreeSet<WeekNumResp> findWeekBorrowNum(Date start, Date end);
+    TreeSet<WeekNumResp> findWeekBorrowNum();
 }
