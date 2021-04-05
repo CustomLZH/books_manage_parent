@@ -43,13 +43,13 @@ public interface BooksService {
      * @param bookId
      * @return
      */
-    Map<String,Object> findBookInfo(int bookId);
+    Books findBookInfo(int bookId);
 
     /**
      * 创建书籍
-     * @param bookCreate
+     * @param books
      */
-    void insertBookByMap(Map<String, Object> bookCreate);
+    void insertBook(Books books);
 
     /**
      * 根据书籍id删除书籍
@@ -59,9 +59,15 @@ public interface BooksService {
 
     /**
      * 根据书籍id更新书籍
-     * @param booksMap
+     * @param books
      */
-    void updateBookByBookId(Map<String, Object> booksMap);
+    void updateBookByBookId(Books books);
+
+    /**
+     * 根据书籍id更新书籍库存
+     * @param books
+     */
+    void updateBookRepertoryByBookId(Books books);
 
     /**
      * 分页查询详细数据
@@ -69,4 +75,10 @@ public interface BooksService {
      * @return
      */
     PageResult findPageInfo(QueryPageBean queryPageBean, String orderBy);
+
+    /**
+     * 查找所有书籍部分信息
+     * @return
+     */
+    List<Books> findAllToBorrowInfoCreate();
 }

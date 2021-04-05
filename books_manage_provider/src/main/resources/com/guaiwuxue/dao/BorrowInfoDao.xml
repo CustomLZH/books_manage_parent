@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.guaiwuxue.dao.BorrowInfoDao">
+    <select id="findPageByCondition" parameterType="string" resultType="com.guaiwuxue.entity.BorrowInfoReq">
+        select bi.*, b.bookName, b.bookWriter, u.userName, u.userPhone from borrow_info as bi
+        left join books as b
+        on bi.bookId = b.bookId
+        left join users as u
+        on bi.userId = u.userId
+        <if test="requirement != null and requirement.length > 0 ">
+            where b.bookName like #{requirement} or u.userName like #{requirement}
+        </if>
+    </select>
+
+    <delete id="delete" parameterType="long">
+        delete from borrow_info where borrowInfoId = #{borrowInfoId}
+    </delete>
+    <select id="monthFiveBorrowNum" resultType="com.guaiwuxue.entity.MonthFiveBorrowNumResp">
+        SELECT bi.bookId, b.bookName, count(bi.borrowInfoId) as count FROM borrow_info as bi
+        left join books b
+        on bi.bookId = b.bookId
+        where bi.borrowDate >= date_add(now(),interval -1 month)
+        group by bi.bookId
+        ORDER BY count desc
+        limit 5
+    </select>
+    <insert id="createBorrowInfo" parameterType="borrowInfo">
+        insert into borrow_info(bookId, userId, borrowDate, returnDate, restore, renew)
+        values(#{bookId}, #{userId}, #{borrowDate}, #{returnDate}, #{restore}, #{renew})
+    </insert>
+
+    <update id="updateBorrowInfo" parameterType="borrowInfo">
+        update borrow_info
+        <set>
+            <if test="bookId != null">
+                bookId = #{bookId},
+            </if>
+            <if test="userId != null">
+                userId = #{userId},
+            </if>
+            <if test="borrowDate != null">
+                borrowDate = #{borrowDate},
+            </if>
+            <if test="returnDate != null">
+                returnDate = #{returnDate},
+            </if>
+            <if test="restore != null">
+                restore = #{restore},
+            </if>
+            <if test="renew != null">
+                renew = #{renew},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+        </set>
+        where borrowInfoId = #{borrowInfoId}
+    </update>
+    <select id="findWeekBorrowNum" resultType="com.guaiwuxue.entity.WeekNumResp">
+        SELECT date_format(bi.borrowDate,'%Y-%m-%d') as date,COUNT(*) AS num
+        FROM borrow_info as bi
+        where bi.borrowDate &gt;= #{param1}
+        and bi.borrowDate &lt;= #{param2}
+<!--        where bi.borrowDate &gt;= subdate(curdate(),date_format(curdate(),'%w')-1)-->
+<!--        and bi.borrowDate &lt;= subdate(curdate(),date_format(curdate(),'%w')-7)-->
+        GROUP BY date
+        ORDER BY date
+    </select>
+
+</mapper>

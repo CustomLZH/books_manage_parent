@@ -25,7 +25,7 @@ public interface BooksDao {
      * @param requirement
      * @return
      */
-    public Page<Map<String,Object>> findPageByCondition(@Param("requirement") String requirement);
+    public Page<Books> findPageByCondition(@Param("requirement") String requirement);
 
     /**
      * 根据id更新借阅数量
@@ -61,13 +61,13 @@ public interface BooksDao {
      * @param bookId
      * @return
      */
-    Map<String, Object> findBookInfoByBookId(int bookId);
+    Books findBookInfoByBookId(int bookId);
 
     /**
-     * 根据Map添加书籍
-     * @param bookCreate
+     * 添加书籍
+     * @param books
      */
-    void insertBookByMap(Map<String, Object> bookCreate);
+    void insertBook(Books books);
 
     /**
      * 根据书籍id删除书籍
@@ -77,9 +77,9 @@ public interface BooksDao {
 
     /**
      * 根据书籍id更新书籍
-     * @param booksMap
+     * @param books
      */
-    void updateBookByBookId(Map<String, Object> booksMap);
+    void updateBookByBookId(Books books);
 
     /**
      * 分页查询详细数据
@@ -87,4 +87,10 @@ public interface BooksDao {
      * @return
      */
     Page<Map<String, Object>> findPageInfo(@Param("requirement") String requirement);
+
+    /**
+     * 查询所有图书部分信息
+     * @return
+     */
+    List<Books> findAllToBorrowInfoCreate();
 }

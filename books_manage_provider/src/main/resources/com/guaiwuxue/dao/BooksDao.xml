@@ -5,22 +5,40 @@
     <update id="updateBorrowNumById" parameterType="int">
         update books set borrowNum=#{borrowNum} where bookId=#{bookId}
     </update>
-    <update id="updateBookByBookId" parameterType="map">
-        update books set
-        typeId=#{typeId},
-        bookName=#{bookName},
-        bookWriter=#{bookWriter},
-        bookCompany=#{bookCompany},
-        bookDate=#{bookDate},
-        bookBrief=#{bookBrief},
-        bookNum=#{bookNum},
-        borrowNum=#{borrowNum}
+    <update id="updateBookByBookId" parameterType="com.guaiwuxue.pojo.Books">
+        update books
+        <set>
+            <if test="typeId != null and typeId != ''">
+                typeId=#{typeId},
+            </if>
+            <if test="bookName != null and bookName != ''">
+                bookName=#{bookName},
+            </if>
+            <if test="bookWriter != null and bookWriter != ''">
+                bookWriter=#{bookWriter},
+            </if>
+            <if test="bookCompany != null and bookCompany != ''">
+                bookCompany=#{bookCompany},
+            </if>
+            <if test="bookDate != null">
+                bookDate=#{bookDate},
+            </if>
+            <if test="bookBrief != null and bookBrief != ''">
+                bookBrief=#{bookBrief},
+            </if>
+            <if test="bookNum != null">
+                bookNum=#{bookNum},
+            </if>
+            <if test="borrowNum != null">
+                borrowNum=#{borrowNum},
+            </if>
+        </set>
         where bookId=#{bookId}
     </update>
     <delete id="deleteBookByBookId" parameterType="int">
         delete from books where bookId=#{bookId}
     </delete>
-    <insert id="insertBookByMap" parameterType="map">
+    <insert id="insertBook" parameterType="books">
         insert into books(bookName,typeId,bookWriter,bookCompany,bookDate,bookBrief,bookNum,borrowNum)
         values(#{bookName},#{typeId},#{bookWriter},#{bookCompany},#{bookDate},#{bookBrief},#{bookNum},#{borrowNum})
     </insert>
@@ -28,7 +46,7 @@
     <select id="findAll" resultType="com.guaiwuxue.pojo.Books">
         select * from books
     </select>
-    <select id="findPageByCondition" parameterType="string" resultType="map">
+    <select id="findPageByCondition" parameterType="string" resultType="books">
         select bookId,bookName,bookWriter,bookCompany
         ,bookDate,bookBrief from books
         <if test="requirement != null and requirement.length > 0 ">
@@ -44,7 +62,7 @@
     <select id="findCountByTypeId" parameterType="string" resultType="java.lang.Integer">
         select count(typeId) from books where typeId=#{typeId}
     </select>
-    <select id="findBookInfoByBookId" resultType="java.util.Map">
+    <select id="findBookInfoByBookId" resultType="books">
         SELECT b.bookName,b.typeId,bt.typeName,b.bookWriter
         ,b.bookCompany,b.bookDate,b.bookBrief,b.bookNum,b.borrowNum
         FROM books as b,book_type as bt
@@ -58,5 +76,8 @@
         <if test="requirement != null and requirement.length > 0 ">
             and (b.bookName like #{requirement} or b.bookWriter like #{requirement})
         </if>
+    </select>
+    <select id="findAllToBorrowInfoCreate" resultType="com.guaiwuxue.pojo.Books">
+        select b.bookId, b.bookName, b.bookWriter from books as b
     </select>
 </mapper>

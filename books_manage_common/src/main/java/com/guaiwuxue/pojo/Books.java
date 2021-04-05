@@ -38,7 +38,7 @@ public class Books implements Serializable {
     /**
      * 出版日期
      */
-    @JSONField(format = "yyyy-MM-dd")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date bookDate;
     /**
      * 简介
@@ -56,11 +56,13 @@ public class Books implements Serializable {
     /**
      * 更新时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date updateDate;
 
     /**
      * 创建时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
     public Date getUpdateDate() {

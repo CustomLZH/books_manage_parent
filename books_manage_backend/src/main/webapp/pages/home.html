@@ -9,7 +9,19 @@
     <link rel="stylesheet" href="../plugins/elementui/index.css">
     <script src="../plugins/elementui/index.js"></script>
     <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/echarts/echarts.min-5.0.2.js"></script>
 </head>
+<style>
+    .el-aside {
+        text-align: center;
+        height: 700px;
+    }
+
+    .el-main {
+        text-align: center;
+        height: 700px;
+    }
+</style>
 <body>
 
     <div id="app">
@@ -28,96 +40,21 @@
         </div>
         <div class="data">
             <div class="data-info">
-                <div class="data-query">
-                    <el-input
-                            placeholder="类别编号/类别名称"
-                            v-model="pagination.requirement"
-                            style="width: 200px;"
-                            @change="findPage()"
-                            clearable>
-                    </el-input>
-                    <el-button @click="findPage()">查询</el-button>
-                    <el-button type="primary" plain @click="upCreate()">添加</el-button>
-                </div>
-                <div class="data-table">
-                    <el-table
-                            v-loading="loading"
-                            :data="dataList">
-                        <el-table-column type="index" align="center" label="序号"></el-table-column>
-                        <el-table-column prop="typeId" align="center" label="中图分类号"></el-table-column>
-                        <el-table-column prop="typeName" align="center" label="分类号名称"></el-table-column>
-                        <el-table-column label="操作" align="center">
-                            <template slot-scope="scope">
-                                <el-button
-                                        size="mini"
-                                        type="primary"
-                                        @click="upEdit(scope.row)">编辑</el-button>
-                                <el-button
-                                        size="mini"
-                                        type="danger"
-                                        @click="handleDelete(scope.row)">删除</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
+                <el-container>
+                    <el-aside width="30%">
+                        <div id="myChart" style="height: 50%; width: 100%">
 
-                <div>
-                    <el-dialog
-                        title="添加"
-                        :visible.sync="dialogVisibleCreate"
-                        width="30%"
-                        :before-close="handleClose">
+                        </div>
+                        <div id="myChart2" style="height: 50%; width: 100%">
 
-                        <el-form :model="typeForm" :rules="typeRules" ref="typeForm" label-width="100px">
-                            <el-form-item label="中图分类号" prop="typeId">
-                                <el-input v-model="typeForm.typeId"></el-input>
-                            </el-form-item>
-                            <el-form-item label="分类号名称" prop="typeName">
-                                <el-input v-model="typeForm.typeName"></el-input>
-                            </el-form-item>
-                        </el-form>
+                        </div>
+                    </el-aside>
+                    <el-main width="65%">
+                        <div id="myChart1" style="height: 100%; width: 100%">
 
-                        <span slot="footer" class="dialog-footer">
-                            <el-button @click="resetForm('typeForm')">重 置</el-button>
-                            <el-button @click="dialogVisibleCreate = false">取 消</el-button>
-                            <el-button type="primary" @click="handleCreate('typeForm')">添 加</el-button>
-                        </span>
-                    </el-dialog>
-                </div>
-
-                <div>
-                    <el-dialog
-                            title="编辑"
-                            :visible.sync="dialogVisibleEdit"
-                            width="30%"
-                            :before-close="handleClose">
-
-                        <el-form :model="typeForm" :rules="typeRules" ref="typeForm" label-width="100px">
-                            <el-form-item label="中图分类号" prop="typeId">
-                                <el-input v-model="typeForm.typeId" :disabled="true"></el-input>
-                            </el-form-item>
-                            <el-form-item label="分类号名称" prop="typeName">
-                                <el-input v-model="typeForm.typeName"></el-input>
-                            </el-form-item>
-                        </el-form>
-
-                        <span slot="footer" class="dialog-footer">
-                            <el-button @click="resetFormEdit()">重 置</el-button>
-                            <el-button @click="dialogVisibleEdit = false">取 消</el-button>
-                            <el-button type="primary" @click="handleEdit('typeForm')">修 改</el-button>
-                        </span>
-                    </el-dialog>
-                </div>
-
-                <div class="pageNum">
-                    <el-pagination
-                            @current-change="handleCurrentChange"
-                            :current-page="pagination.currentPage"
-                            :page-size="pagination.pageSize"
-                            layout="total, prev, pager, next, jumper"
-                            :total="pagination.total">
-                    </el-pagination>
-                </div>
+                        </div>
+                    </el-main>
+                </el-container>
             </div>
         </div>
     </div>
@@ -127,197 +64,255 @@
         var vm = new Vue({
             el:"#app",
             data:{
-                pagination:{
-                    currentPage: 1,
-                    pageSize:10,
-                    total: 100,
-                    requirement: null
-                },
-                dataList: [],
-                loading: true,
-                dialogVisibleCreate: false,
-                dialogVisibleEdit: false,
-                typeForm: {
-                    typeId: null,
-                    typeName: null,
-                },
-                row: {
+                myChart:{},
+                myChart1:{},
+                myChart2:{},
+                myChart3:{},
+                option : {
+                    title: {
+                        text: '月季度前五借阅量',
+                        textStyle: {
+                            color: '#000',
+                        },
+                    },
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: '{a} <br/>{b} : {c} ({d}%)'
+                    },
+                    backgroundColor: '#ffe6cc',
+                    legend: {//图例  标注各种颜色代表的模块
+                        type: 'plain',
+                        orient: 'scroll',//图例的显示方式  默认横向显示
+                        bottom: 20,//控制图例出现的距离  默认左上角
+                        right: 10,
+                        top: 20,
+                        itemWidth: 16,//图例颜色块的宽度和高度
+                        itemHeight: 12,
+                        textStyle: {//图例中文字的样式
+                            color: '#000',
+                            fontSize: 16
+                        },
+                        data: ['借阅第一', '借阅第二', '借阅第三', '借阅第四', '借阅第五']//图例上显示的饼图各模块上的名字
+                    },
 
-                },
-                typeRules: {
-                    typeId: [
-                        { required: true, message: '请输入类型编号', trigger: ['blur','change'] },
-                    ],
-                    typeName: [
-                        { required: true, message: '请输入类型名称', trigger: ['blur','change'] },
+                    series : [
+                        {
+                            name: '借阅百分比',
+                            type: 'pie',
+                            radius: '80%',
+                            right: 30,
+                            data:[
+                                {value:90, name:'借阅第一'},
+                                {value:70, name:'借阅第二'},
+                                {value:60, name:'借阅第三'},
+                                {value:50, name:'借阅第四'},
+                                {value:40, name:'借阅第五'}
+                            ],
+                            color: ['#FE3A64', '#79E454','#F98C62','#4D5DFD', '#693A64'],//饼图中各模块的颜色
+                            label:{            //饼图图形上的文本标签
+                                normal:{
+                                    show:true,
+                                    position:'inner', //标签的位置
+                                    textStyle : {
+                                        fontWeight : 300 ,
+                                        fontSize : 16    //文字的字体大小
+                                    },
+                                    formatter:'{b}\n{d}%',
+                                }
+                            },
+                            itemStyle: {
+                                // normal: {
+                                //     shadowBlur: 200,
+                                //     shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                // }
+                            }
+                        }
                     ]
-                }
-
+                },
+                option1 : {
+                    title: {
+                        text: '星期信息'
+                    },
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    legend: {
+                        data: ['借阅', '归还', '挂失', '用户']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    toolbox: {
+                        feature: {
+                            saveAsImage: {}
+                        }
+                    },
+                    xAxis: {
+                        type: 'category',
+                        boundaryGap: false,
+                        data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [
+                        {
+                            name: '借阅',
+                            type: 'line',
+                            data: [120, 132, 101, 134, 90, 230, 210]
+                        },
+                        {
+                            name: '归还',
+                            type: 'line',
+                            data: [220, 182, 191, 234, 290, 330, 310]
+                        },
+                        {
+                            name: '挂失',
+                            type: 'line',
+                            data: [150, 232, 201, 154, 190, 330, 410]
+                        },
+                        {
+                            name: '用户',
+                            type: 'line',
+                            data: [320, 332, 301, 334, 390, 330, 320]
+                        }
+                    ]
+                },
+                option2: {
+                    title: {
+                        text: '星期借阅量'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {            // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                            axisTick: {
+                                alignWithLabel: true
+                            }
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '借阅量',
+                            type: 'bar',
+                            barWidth: '60%',
+                            data: []
+                        }
+                    ]
+                },
             },
             //钩子函数，VUE对象初始化完成后自动执行
             created() {
-                this.findPage();
+                this.$nextTick(function() {
+                    this.myChart = echarts.init(document.getElementById('myChart'));
+                    this.myChart2 = echarts.init(document.getElementById('myChart2'));
+                    this.myChart1 = echarts.init(document.getElementById('myChart1'));
+                    this.findPage();
+                });
             },
             methods: {
-
-                //编辑表单重置
-                resetFormEdit() {
-                    this.setTypeForm();
-                },
-
-                //表单重置
-                resetForm(formName) {
-                    this.typeForm={};
-                    if (this.$refs[formName]!==undefined){
-                        this.$refs[formName].resetFields();
-                    }
-                },
-                //弹窗关闭确定
-                handleClose(done) {
-                    this.$confirm('确认关闭？')
-                        .then(_ => {
-                            done();
-                        })
-                        .catch(_ => {});
-                },
-
-
-
-                //弹出添加窗口
-                upCreate(){
-                    this.dialogVisibleCreate = true;
-                    this.resetForm('typeForm');
-                },
-                //添加提交
-                handleCreate(formName){
-                    this.$refs[formName].validate((valid) => {
-                        if (valid) {
-                            axios.post("/books_manage_backend/bookType/createBookType.do",this.typeForm).then((res) => {
-                                if (res.data.flag){
-                                    this.$message({
-                                        message: res.data.message,
-                                        type: 'success'
-                                    });
-                                    this.dialogVisibleCreate = false;
-                                    this.findPage();
-                                }else {
-                                    this.$message.error(res.data.message);
-                                }
-                            }).catch((res) => {
-                                this.dialogVisibleCreate = false;
-                                this.permissionsMessage(res);
-                            });
-                        } else {
-                            this.$message.error('请检查信息填写是否正确！');
-                            return false;
-                        }
-                    });
-                },
-                //编辑提交
-                handleEdit(formName) {
-                    this.$refs[formName].validate((valid) => {
-                        if (valid) {
-                            axios.post("/books_manage_backend/bookType/updateBookType.do",this.typeForm).then((res) => {
-                                if (res.data.flag){
-                                    this.$message({
-                                        message: res.data.message,
-                                        type: 'success'
-                                    });
-                                    this.dialogVisibleEdit = false;
-                                    this.findPage();
-                                }else {
-                                    this.$message.error(res.data.message);
-                                }
-                            }).catch((res) => {
-                                this.dialogVisibleEdit = false;
-                                this.permissionsMessage(res);
-                            });
-                        } else {
-                            this.$message.error('请检查信息填写是否正确！');
-                            return false;
-                        }
-                    });
-                },
-
-
-                setTypeForm(){
-                    this.typeForm = {
-                        typeId: this.row.typeId,
-                        typeName: this.row.typeName,
-                    };
-                },
-
-                //弹出编辑窗口
-                upEdit(row) {
-                    this.row = row;
-                    this.setTypeForm();
-                    this.dialogVisibleEdit = true;
-
-                },
-
-                //删除
-                handleDelete(row) {
-                    //alert(row.typeId);
-                    this.$confirm('是否确认删除？', '删除', {
-                        distinguishCancelAndClose: true,
-                        confirmButtonText: '删除',
-                        cancelButtonText: '取消'
-                    }).then(() => {
-                        axios.get("/books_manage_backend/bookType/delete.do?typeId=" + row.typeId).then((res) => {
-                            if (res.data.flag){
-                                this.$message({
-                                    message: res.data.message,
-                                    type: 'success'
-                                });
-                                //重新查询数据
-                                this.findPage();
-                            }else {
-                                this.$message.error(res.data.message);
-                            }
-                        }).catch((res) => {
-                            this.permissionsMessage(res);
-                        });
-                    }).catch(action => {
-                        this.$message({
-                            type: 'info',
-                            message: '放弃删除'
-                        })
-                    });
-                },
-
-                permissionsMessage(res){
-                    if (res == 'Error: Request failed with status code 403'){
-                        //权限不足
-                        this.$message.error('权限不足');
-                        return;
-                    }else {
-                        this.$message.error('删除失败');
-                        return;
-                    }
-                },
-
-                //切换页码
-                handleCurrentChange(currentPage) {
-                    //设置最新的页码
-                    this.pagination.currentPage = currentPage;
-                    //重新调用findPage方法进行分页查询
-                    this.findPage();
-                },
-                //分页查询
                 findPage() {
-                    //发送ajax请求，提交分页相关请求参数（页码、每页显示记录数、查询条件）
-                    var param = {
-                        currentPage: this.pagination.currentPage,
-                        pageSize: this.pagination.pageSize,
-                        requirement: this.pagination.requirement,
-                    };
-                    axios.post("/books_manage_backend/bookType/findPage.do",param).then((res) => {
-                        //解析返回的数据
-                        this.pagination.total = res.data.total;
-                        this.dataList = res.data.rows;
-                        this.loading = false;
-                    })
-                },
+                    var flag = true;
+                    var message = "";
+                    axios.post("/books_manage_backend/home/monthFiveBorrowNum.do").then((res) => {
+                        flag = flag && res.data.flag;
+                        if (res.data.flag){
+                            // this.$message({
+                            //     message: res.data.message,
+                            //     type: 'success',
+                            // });
+                            var borrowInfo = res.data.data;
+                            var legend_data = [];
+                            var series_data = [];
+                            for (i in borrowInfo) {
+                                legend_data.push(borrowInfo[i].bookName);
+                                series_data.push({value: borrowInfo[i].count, name: borrowInfo[i].bookName});
+                            }
+                            this.option.legend.data = legend_data;
+                            this.option.series[0].data = series_data;
+                            this.myChart.setOption(this.option);
+                        } else {
+                            // this.$message.error(res.data.message);
+                            message = res.data.message;
+                        };
+                    });
+                    axios.post("/books_manage_backend/home/findWeekBorrowNum.do").then((res) => {
+                        flag = flag && res.data.flag;
+                        if (res.data.flag){
+                            // this.$message({
+                            //     message: res.data.message,
+                            //     type: 'success',
+                            // });
+                            var WeekBorrowNum = res.data.data;
+                            var series_data = [];
+                            for (i in WeekBorrowNum) {
+                                series_data.push(WeekBorrowNum[i].num);
+                            }
+                            this.option2.series[0].data = series_data;
+                            this.myChart2.setOption(this.option2);
+                        } else {
+                            // this.$message.error(res.data.message);
+                            message = res.data.message;
+                        };
+                    });
+                    axios.post("/books_manage_backend/home/findWeekAllNum.do").then((res) => {
+                        flag = flag && res.data.flag;
+                        if (res.data.flag){
+                            // this.$message({
+                            //     message: res.data.message,
+                            //     type: 'success',
+                            // });
+                            var WeekAllNum = res.data.data;
+                            var legend_data = [];
+                            var series = [];
+
+                            for (i in WeekAllNum) {
+                                legend_data.push(WeekAllNum[i].name);
+                                const data = [];
+                                for (j in WeekAllNum[i].data) {
+                                    data.push(WeekAllNum[i].data[j].num);
+                                }
+                                WeekAllNum[i].data = data;
+                            }
+
+
+                            this.option1.legend.data = legend_data;
+                            this.option1.series = WeekAllNum;
+                            this.myChart1.setOption(this.option1);
+                        } else {
+                            // this.$message.error(res.data.message);
+                            message = res.data.message;
+                        };
+                    });
+                    if (flag) {
+                        this.$message({
+                            message: '获取信息成功',
+                            type: 'success',
+                        });
+                    }else {
+                        this.$message.error(message);
+                    }
+                }
             }
         })
     </script>

@@ -10,12 +10,36 @@
     <script src="../plugins/elementui/index.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
+<style>
+    .el-table__header tr, .el-table__header th {
+        padding: 0;
+        height: 60px;
+    }
+    .el-table__body tr, .el-table__body td {
+        padding: 0;
+        height: 60px;
+    }
+    .el-form-item {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .el-form-item input {
+        text-align: center;
+    }
+</style>
 <body>
-
     <div id="app">
         <div class="leaderTab" style="width: 100%;">
             <div class="title-h3">
-                <h3>信息管理<small>库存管理</small></h3>
+                <h3>
+                    信息管理
+                    <small>库存管理</small>
+                    <el-button type="primary" size="mini"
+                               icon="el-icon-refresh"
+                               @click="findPage()"
+                               circle></el-button>
+                </h3>
             </div>
             <div class="title-item">
                 <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -32,85 +56,48 @@
             <div class="data-info">
                 <div class="data-query">
                     <el-input
-                            placeholder="类别编号/类别名称"
+                            placeholder="书籍名称/作者"
                             v-model="pagination.requirement"
                             style="width: 200px;"
                             @change="findPage()"
                             clearable>
                     </el-input>
                     <el-button @click="findPage()">查询</el-button>
-                    <el-button type="primary" plain @click="upCreate()">添加</el-button>
                 </div>
                 <div class="data-table">
-                    <el-table
-                            v-loading="loading"
-                            :data="dataList">
-                        <el-table-column type="index" align="center" label="序号"></el-table-column>
-                        <el-table-column prop="typeId" align="center" label="中图分类号"></el-table-column>
-                        <el-table-column prop="typeName" align="center" label="分类号名称"></el-table-column>
-                        <el-table-column label="操作" align="center">
-                            <template slot-scope="scope">
-                                <el-button
-                                        size="mini"
-                                        type="primary"
-                                        @click="upEdit(scope.row)">编辑</el-button>
-                                <el-button
-                                        size="mini"
-                                        type="danger"
-                                        @click="handleDelete(scope.row)">删除</el-button>
-                            </template>
-                        </el-table-column>
-                    </el-table>
+                    <el-form :model="forms" ref="forms" :rules="typeRules">
+                        <el-table
+                                v-loading="loading"
+                                :data="forms.dataList">
+                            <el-table-column type="index" align="center" label="序号"></el-table-column>
+                            <el-table-column prop="bookName" align="center" label="书名"></el-table-column>
+                            <el-table-column prop="bookWriter" align="center" label="作者"></el-table-column>
+                            <el-table-column prop="bookDate" align="center" label="出版日期"></el-table-column>
+                            <el-table-column prop="bookNum" align="center" label="库存" width="150px">
+                                <template slot-scope="scope">
+                                    <el-form-item :prop="'dataList.'+scope.$index+'.bookNum'" :rules="typeRules.dataList.bookNum">
+                                        <el-input v-model.number="scope.row.bookNum" placeholder="库存"/>
+                                    </el-form-item>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="borrowNum" align="center" label="借阅量" width="150px">
+                                <template slot-scope="scope">
+                                    <el-form-item :prop="'dataList.'+scope.$index+'.borrowNum'" :rules="typeRules.dataList.borrowNum">
+                                        <el-input v-model.number="scope.row.borrowNum" placeholder="借阅量"/>
+                                    </el-form-item>
+                                </template>
+                            </el-table-column>
+                            <el-table-column label="操作" align="center">
+                                <template slot-scope="scope">
+                                    <el-button
+                                            size="mini"
+                                            type="primary"
+                                            @click="handleEdit(scope.row)">更新库存</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                    </el-form>
                 </div>
-
-                <div>
-                    <el-dialog
-                        title="添加"
-                        :visible.sync="dialogVisibleCreate"
-                        width="30%"
-                        :before-close="handleClose">
-
-                        <el-form :model="typeForm" :rules="typeRules" ref="typeForm" label-width="100px">
-                            <el-form-item label="中图分类号" prop="typeId">
-                                <el-input v-model="typeForm.typeId"></el-input>
-                            </el-form-item>
-                            <el-form-item label="分类号名称" prop="typeName">
-                                <el-input v-model="typeForm.typeName"></el-input>
-                            </el-form-item>
-                        </el-form>
-
-                        <span slot="footer" class="dialog-footer">
-                            <el-button @click="resetForm('typeForm')">重 置</el-button>
-                            <el-button @click="dialogVisibleCreate = false">取 消</el-button>
-                            <el-button type="primary" @click="handleCreate('typeForm')">添 加</el-button>
-                        </span>
-                    </el-dialog>
-                </div>
-
-                <div>
-                    <el-dialog
-                            title="编辑"
-                            :visible.sync="dialogVisibleEdit"
-                            width="30%"
-                            :before-close="handleClose">
-
-                        <el-form :model="typeForm" :rules="typeRules" ref="typeForm" label-width="100px">
-                            <el-form-item label="中图分类号" prop="typeId">
-                                <el-input v-model="typeForm.typeId" :disabled="true"></el-input>
-                            </el-form-item>
-                            <el-form-item label="分类号名称" prop="typeName">
-                                <el-input v-model="typeForm.typeName"></el-input>
-                            </el-form-item>
-                        </el-form>
-
-                        <span slot="footer" class="dialog-footer">
-                            <el-button @click="resetFormEdit()">重 置</el-button>
-                            <el-button @click="dialogVisibleEdit = false">取 消</el-button>
-                            <el-button type="primary" @click="handleEdit('typeForm')">修 改</el-button>
-                        </span>
-                    </el-dialog>
-                </div>
-
                 <div class="pageNum">
                     <el-pagination
                             @current-change="handleCurrentChange"
@@ -135,24 +122,26 @@
                     total: 100,
                     requirement: null
                 },
-                dataList: [],
                 loading: true,
                 dialogVisibleCreate: false,
                 dialogVisibleEdit: false,
-                typeForm: {
-                    typeId: null,
-                    typeName: null,
+                forms: {
+                    dataList:[]
                 },
                 row: {
 
                 },
                 typeRules: {
-                    typeId: [
-                        { required: true, message: '请输入类型编号', trigger: ['blur','change'] },
-                    ],
-                    typeName: [
-                        { required: true, message: '请输入类型名称', trigger: ['blur','change'] },
-                    ]
+                    dataList : {
+                        bookNum: [
+                            { required: true, message: '库存不能为空', trigger: ['change','blur']},
+                            { type: 'number', message: '库存必须为数字值', trigger: ['change','blur']},
+                        ],
+                        borrowNum: [
+                            { required: true, message: '借阅量不能为空', trigger: ['change','blur']},
+                            { type: 'number', message: '借阅量必须为数字值', trigger: ['change','blur']},
+                        ]
+                    },
                 }
 
             },
@@ -174,104 +163,24 @@
                         this.$refs[formName].resetFields();
                     }
                 },
-                //弹窗关闭确定
-                handleClose(done) {
-                    this.$confirm('确认关闭？')
-                        .then(_ => {
-                            done();
-                        })
-                        .catch(_ => {});
-                },
 
-
-
-                //弹出添加窗口
-                upCreate(){
-                    this.dialogVisibleCreate = true;
-                    this.resetForm('typeForm');
-                },
-                //添加提交
-                handleCreate(formName){
-                    this.$refs[formName].validate((valid) => {
-                        if (valid) {
-                            axios.post("/books_manage_backend/bookType/createBookType.do",this.typeForm).then((res) => {
-                                if (res.data.flag){
-                                    this.$message({
-                                        message: res.data.message,
-                                        type: 'success'
-                                    });
-                                    this.dialogVisibleCreate = false;
-                                    this.findPage();
-                                }else {
-                                    this.$message.error(res.data.message);
-                                }
-                            }).catch((res) => {
-                                this.dialogVisibleCreate = false;
-                                this.permissionsMessage(res);
-                            });
-                        } else {
-                            this.$message.error('请检查信息填写是否正确！');
-                            return false;
-                        }
-                    });
-                },
                 //编辑提交
-                handleEdit(formName) {
-                    this.$refs[formName].validate((valid) => {
-                        if (valid) {
-                            axios.post("/books_manage_backend/bookType/updateBookType.do",this.typeForm).then((res) => {
-                                if (res.data.flag){
-                                    this.$message({
-                                        message: res.data.message,
-                                        type: 'success'
-                                    });
-                                    this.dialogVisibleEdit = false;
-                                    this.findPage();
-                                }else {
-                                    this.$message.error(res.data.message);
-                                }
-                            }).catch((res) => {
-                                this.dialogVisibleEdit = false;
-                                this.permissionsMessage(res);
-                            });
-                        } else {
-                            this.$message.error('请检查信息填写是否正确！');
-                            return false;
-                        }
-                    });
-                },
-
-
-                setTypeForm(){
-                    this.typeForm = {
-                        typeId: this.row.typeId,
-                        typeName: this.row.typeName,
-                    };
-                },
-
-                //弹出编辑窗口
-                upEdit(row) {
+                handleEdit(row) {
+                    console.log(row);
                     this.row = row;
-                    this.setTypeForm();
-                    this.dialogVisibleEdit = true;
-
-                },
-
-                //删除
-                handleDelete(row) {
-                    //alert(row.typeId);
-                    this.$confirm('是否确认删除？', '删除', {
-                        distinguishCancelAndClose: true,
-                        confirmButtonText: '删除',
-                        cancelButtonText: '取消'
-                    }).then(() => {
-                        axios.get("/books_manage_backend/bookType/delete.do?typeId=" + row.typeId).then((res) => {
+                    var flag = row.bookNum < row.borrowNum;
+                    var flag1 = true;
+                    if (typeof row.bookNum != "number" || typeof row.borrowNum != "number" || row.bookNum < 0 || row.borrowNum < 0) {
+                        flag1 = false;
+                    }
+                    if (flag1 && !flag) {
+                        axios.post("/books_manage_backend/books/updateBookRepertoryByBookId.do", row).then((res) => {
                             if (res.data.flag){
                                 this.$message({
                                     message: res.data.message,
                                     type: 'success'
                                 });
-                                //重新查询数据
+                                this.dialogVisibleEdit = false;
                                 this.findPage();
                             }else {
                                 this.$message.error(res.data.message);
@@ -279,12 +188,13 @@
                         }).catch((res) => {
                             this.permissionsMessage(res);
                         });
-                    }).catch(action => {
-                        this.$message({
-                            type: 'info',
-                            message: '放弃删除'
-                        })
-                    });
+                    }else if (!flag1) {
+                        this.$message.error('请检查信息填写是否正确！');
+                        return false;
+                    }else {
+                        this.$message.error('借阅数量不能大于库存！');
+                        return false;
+                    }
                 },
 
                 permissionsMessage(res){
@@ -307,18 +217,20 @@
                 },
                 //分页查询
                 findPage() {
-                    //发送ajax请求，提交分页相关请求参数（页码、每页显示记录数、查询条件）
                     var param = {
                         currentPage: this.pagination.currentPage,
                         pageSize: this.pagination.pageSize,
                         requirement: this.pagination.requirement,
                     };
-                    axios.post("/books_manage_backend/bookType/findPage.do",param).then((res) => {
+                    axios.post("/books_manage_backend/books/findPageInfo.do",param).then((res) => {
                         //解析返回的数据
                         this.pagination.total = res.data.total;
-                        this.dataList = res.data.rows;
+                        this.forms.dataList = res.data.rows;
+                        for (let i = 0; i < this.forms.dataList.length; i++) {
+                            this.forms.dataList[i].bookDate=this.forms.dataList[i].bookDate.substring(0,10);
+                        }
                         this.loading = false;
-                    })
+                    });
                 },
             }
         })

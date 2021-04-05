@@ -55,7 +55,7 @@ public class BooksServiceImpl implements BooksService {
         }
 
         PageHelper.startPage(currentPage,pageSize);
-        Page<Map<String,Object>> page = booksDao.findPageByCondition("%" + requirement +"%");
+        Page<Books> page = booksDao.findPageByCondition("%" + requirement +"%");
 
         return new PageResult(page.getTotal(),page.getResult());
     }
@@ -71,13 +71,13 @@ public class BooksServiceImpl implements BooksService {
     }
 
     @Override
-    public Map<String, Object> findBookInfo(int bookId) {
+    public Books findBookInfo(int bookId) {
         return booksDao.findBookInfoByBookId(bookId);
     }
 
     @Override
-    public void insertBookByMap(Map<String, Object> bookCreate) {
-        booksDao.insertBookByMap(bookCreate);
+    public void insertBook(Books books) {
+        booksDao.insertBook(books);
     }
 
     @Override
@@ -86,8 +86,16 @@ public class BooksServiceImpl implements BooksService {
     }
 
     @Override
-    public void updateBookByBookId(Map<String, Object> booksMap) {
-        booksDao.updateBookByBookId(booksMap);
+    public void updateBookByBookId(Books books) {
+        booksDao.updateBookByBookId(books);
+    }
+    @Override
+    public void updateBookRepertoryByBookId(Books books) {
+        Books booksRepertory = new Books();
+        booksRepertory.setBookId(books.getBookId());
+        booksRepertory.setBookNum(books.getBookNum());
+        booksRepertory.setBorrowNum(books.getBorrowNum());
+        booksDao.updateBookByBookId(booksRepertory);
     }
 
     @Override
@@ -118,5 +126,10 @@ public class BooksServiceImpl implements BooksService {
         Page<Map<String,Object>> page = booksDao.findPageInfo("%" + requirement +"%");
 
         return new PageResult(page.getTotal(),page.getResult());
+    }
+
+    @Override
+    public List<Books> findAllToBorrowInfoCreate() {
+        return booksDao.findAllToBorrowInfoCreate();
     }
 }

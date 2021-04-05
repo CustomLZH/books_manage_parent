@@ -1,5 +1,7 @@
 package com.guaiwuxue.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
@@ -35,11 +37,13 @@ public class Role implements Serializable {
     /**
      * 更新时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date updateDate;
 
     /**
      * 创建时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
     public Date getUpdateDate() {

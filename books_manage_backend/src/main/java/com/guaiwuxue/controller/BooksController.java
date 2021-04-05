@@ -44,6 +44,23 @@ public class BooksController {
             return new Result<>(false,"获取失败");
         }
     }
+    /**
+     * 获取所有图书部分信息
+     * @return
+     */
+    @RequestMapping("/findAllToBorrowInfoCreate")
+    public Result<List<Books>> findAllToBorrowInfoCreate(){
+        // 1. 调用service接口
+        try {
+            List<Books> booksList = booksService.findAllToBorrowInfoCreate();
+            return new Result<>(true,"获取成功",booksList);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result<>(false,"获取失败");
+        }
+    }
+
+
 
     /**
      * 分页查询
@@ -73,7 +90,7 @@ public class BooksController {
      * @return
      */
     @RequestMapping("/updateBorrowNumById")
-    public Result updateBorrowNumById(@Param("bookId") int bookId, @Param("borrowNum") int borrowNum){
+    public Result<Void> updateBorrowNumById(@Param("bookId") int bookId, @Param("borrowNum") int borrowNum){
         try {
             booksService.updateBorrowNumById(bookId,borrowNum);
             return new Result<>(true,"借阅成功");
@@ -90,9 +107,9 @@ public class BooksController {
      * @return
      */
     @RequestMapping("/findBookInfo")
-    public Result<Map<String,Object>> findBookInfo(int bookId){
+    public Result<Books> findBookInfo(int bookId){
         try {
-            Map<String, Object> bookInfo = booksService.findBookInfo(bookId);
+            Books bookInfo = booksService.findBookInfo(bookId);
             return new Result<>(true, MessageConstant.QUERY_BOOK_INFO_SUCCESS,bookInfo);
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,15 +118,15 @@ public class BooksController {
     }
 
     /**
-     * 根据Map数据进行书籍添加
-     * @param bookCreate
+     * 根据数据进行书籍添加
+     * @param books
      * @return
      * @throws UnsupportedEncodingException
      */
     @RequestMapping("/insertBookByMap")
-    public Result insertBookByMap(@RequestBody Map<String,Object> bookCreate) throws UnsupportedEncodingException {
+    public Result<Void> insertBookByMap(@RequestBody Books books) throws UnsupportedEncodingException {
         try {
-            booksService.insertBookByMap(bookCreate);
+            booksService.insertBook(books);
             return new Result<>(true,MessageConstant.CREATE_BOOK_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,30 +140,46 @@ public class BooksController {
      * @return
      */
     @RequestMapping("/deleteBookByBookId")
-    public Result deleteBookByBookId(int bookId){
+    public Result<Void> deleteBookByBookId(int bookId){
         try {
             booksService.deleteBookByBookId(bookId);
-            return new Result(true,MessageConstant.DELETE_BOOK_SUCCESS);
+            return new Result<>(true,MessageConstant.DELETE_BOOK_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,MessageConstant.DELETE_BOOK_FAIL);
+            return new Result<>(false,MessageConstant.DELETE_BOOK_FAIL);
         }
     }
 
     /**
      * 根据书籍id更新书籍
-     * @param booksMap
+     * @param books
      * @return
      */
     @RequestMapping("updateBookByBookId")
-    public Result updateBookByBookId(@RequestBody Map<String,Object> booksMap){
-
+    public Result<Void> updateBookByBookId(@RequestBody Books books){
         try {
-            booksService.updateBookByBookId(booksMap);
-            return new Result(true,MessageConstant.UPDATE_BOOK_SUCCESS);
+            booksService.updateBookByBookId(books);
+            return new Result<>(true,MessageConstant.UPDATE_BOOK_SUCCESS);
         } catch (Exception e) {
             e.printStackTrace();
-            return new Result(false,MessageConstant.UPDATE_BOOK_FAIL);
+            return new Result<>(false,MessageConstant.UPDATE_BOOK_FAIL);
+        }
+    }
+
+
+    /**
+     * 根据书籍id更新书籍库存
+     * @param books
+     * @return
+     */
+    @RequestMapping("updateBookRepertoryByBookId")
+    public Result updateBookRepertoryByBookId(@RequestBody Books books){
+        try {
+            booksService.updateBookRepertoryByBookId(books);
+            return new Result(true,MessageConstant.UPDATE_BOOK_REPERTORY_SUCCESS);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(false,MessageConstant.UPDATE_BOOK_REPERTORY_FAIL);
         }
     }
 

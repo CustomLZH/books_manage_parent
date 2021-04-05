@@ -15,7 +15,14 @@
     <div id="app">
         <div class="leaderTab" style="width: 100%;">
             <div class="title-h3">
-                <h3>信息管理<small>分类管理</small></h3>
+                <h3>
+                    信息管理
+                    <small>分类管理</small>
+                    <el-button type="primary" size="mini"
+                               icon="el-icon-refresh"
+                               @click="findPage()"
+                               circle></el-button>
+                </h3>
             </div>
             <div class="title-item">
                 <el-breadcrumb separator-class="el-icon-arrow-right">
@@ -54,10 +61,26 @@
                                         size="mini"
                                         type="primary"
                                         @click="upEdit(scope.row)">编辑</el-button>
-                                <el-button
-                                        size="mini"
-                                        type="danger"
-                                        @click="handleDelete(scope.row)">删除</el-button>
+                                <el-popover
+                                        placement="top"
+                                        width="160"
+                                        trigger="click"
+                                        :ref="refNamePopover + scope.row.typeId">
+                                    <p>确定删除吗？</p>
+                                    <div style="text-align: right; margin: 0">
+                                        <el-button size="mini" type="text" @click="typeNoDelete(scope.row.typeId)">取消</el-button>
+                                        <el-button type="primary" size="mini" @click="typeDelete(scope.row.typeId)">确定</el-button>
+                                    </div>
+<!--                                    <el-button slot="reference" type="danger">删 除</el-button>-->
+<!--                                    <el-button-->
+<!--                                            size="mini"-->
+<!--                                            type="danger"-->
+<!--                                            @click="handleDelete(scope.row)">删除</el-button>-->
+                                    <el-button
+                                            size="mini"
+                                            type="danger"
+                                            slot="reference">删除</el-button>
+                                </el-popover>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -135,6 +158,8 @@
                     total: 100,
                     requirement: null
                 },
+                refNamePopover: 'popover-',
+                visible : false,
                 dataList: [],
                 loading: true,
                 dialogVisibleCreate: false,
@@ -258,7 +283,41 @@
                 },
 
                 //删除
-                handleDelete(row) {
+                typeDelete(typeId){
+                    axios.get("/books_manage_backend/bookType/delete.do?typeId=" + typeId).then((res) => {
+                        if (res.data.flag){
+                            this.$message({
+                                message: res.data.message,
+                                type: 'success'
+                            });
+                            this.findPage();
+                        } else {
+                            this.$message.error(res.data.message);
+                        }
+                        this.deleteWindowClose(typeId);
+                    });
+                },
+
+                /**
+                 * 删除弹窗关闭
+                 * @param typeId
+                 */
+                deleteWindowClose(typeId) {
+                    let refName = this.refNamePopover + typeId;
+                    this.$refs[refName].doClose();
+                },
+
+                //取消删除
+                typeNoDelete(typeId){
+                    this.deleteWindowClose(typeId);
+                    this.$message({
+                        type: 'info',
+                        message: '放弃删除'
+                    })
+                },
+
+                //删除
+                handleDelete(typeId) {
                     //alert(row.typeId);
                     this.$confirm('是否确认删除？', '删除', {
                         distinguishCancelAndClose: true,

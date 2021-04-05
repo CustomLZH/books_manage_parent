@@ -34,6 +34,6 @@
         <property name="defaultEncoding" value="UTF-8"/>
     </bean>
 
-<!--    <import resource="spring-security.xml"/>-->
+    <import resource="springSecurity.xml"/>
 
 </beans>

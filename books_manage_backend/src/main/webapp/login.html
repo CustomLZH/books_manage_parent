@@ -8,36 +8,55 @@
     <script src="plugins/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <style>
+    body {
+        background-image: url("img/background.jpg");
+        background-size:cover;
+        background-attachment:fixed;
+    }
     body > div {
-        width: 800px;
+        width: 600px;
+        height: 300px;
+        background-color: #FAF0E6;
+        opacity:0.9;
+        border:1px solid #ebebeb;
+        border-radius: 5px;
         position: absolute;
         top: 50%;
         left: 50%;
-        transform: translateX(-50%) translateY(-70%);
+        transform: translateX(-50%) translateY(-50%);
+    }
+    body > div > div {
+        width: 400px;
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
     }
 </style>
 <body>
-    <div class="row">
-        <div class="col-lg-6 col-xs-12">
-            <form action="/books_manage_backend/login.do" method="post" class="form-horizontal">
-                <div class="form-group">
-                    <label for="adminUsername" class="col-sm-3 control-label">用户名：</label>
-                    <div class="col-sm-7">
-                        <input type="text" class="form-control" id="adminUsername" name="adminUsername" placeholder="用户名">
+    <div>
+        <div class="row">
+            <div>
+                <form action="/books_manage_backend/login.do" method="post" class="form-horizontal">
+                    <div class="form-group">
+                        <label for="adminUsername" class="col-sm-3 control-label">用户名：</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="adminUsername" name="adminUsername" placeholder="用户名">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label for="adminPassword" class="col-sm-3 control-label">密  码：</label>
-                    <div class="col-sm-7">
-                        <input type="password" class="form-control" id="adminPassword" name="adminPassword" placeholder="密码">
+                    <div class="form-group">
+                        <label for="adminPassword" class="col-sm-3 control-label">密  码：</label>
+                        <div class="col-sm-8">
+                            <input type="password" class="form-control" id="adminPassword" name="adminPassword" placeholder="密码">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-3 col-sm-7">
-                        <button type="submit" class="btn btn-primary">登陆</button>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-7">
+                            <button type="submit" class="btn btn-primary">登陆</button>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </body>

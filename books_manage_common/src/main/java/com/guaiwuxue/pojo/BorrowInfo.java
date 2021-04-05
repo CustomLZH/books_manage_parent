@@ -1,5 +1,7 @@
 package com.guaiwuxue.pojo;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 
 /**
@@ -26,10 +28,12 @@ public class BorrowInfo {
     /**
      * 借阅日期
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date borrowDate;
     /**
      * 归还日期
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date returnDate;
     /**
      * 是否归还
@@ -43,11 +47,13 @@ public class BorrowInfo {
     /**
      * 更新时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date updateDate;
 
     /**
      * 创建时间
      */
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
     public Date getUpdateDate() {

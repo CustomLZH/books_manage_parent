@@ -24,5 +24,19 @@ public class MessageConstant {
     public static final String DELETE_BOOK_SUCCESS = "删除书籍成功";
     public static final String DELETE_BOOK_FAIL = "删除书籍失败";
     public static final String UPDATE_BOOK_SUCCESS = "更新书籍成功";
+    public static final String UPDATE_BOOK_REPERTORY_SUCCESS = "更新书籍库存成功";
     public static final String UPDATE_BOOK_FAIL = "更新书籍失败";
+    public static final String UPDATE_BOOK_REPERTORY_FAIL = "更新书籍库存失败";
+    public static final String DELETE_BORROW_INFO_SUCCESS = "删除借阅信息成功";
+    public static final String DELETE_BORROW_INFO_FAIL = "删除借阅信息失败";
+    public static final String QUERY_MONTH_FIVE_BORROW_NUM_SUCCESS = "获取月季度前五借阅量成功";
+    public static final String QUERY_MONTH_FIVE_BORROW_NUM_FAIL = "获取月季度前五借阅量失败";
+    public static final String CREATE_BORROW_INFO_FAIL = "添加借阅信息失败";
+    public static final String CREATE_BORROW_INFO_SUCCESS = "添加借阅信息成功";
+    public static final String UPDATE_BORROW_INFO_FAIL = "更新借阅信息失败";
+    public static final String UPDATE_BORROW_INFO_SUCCESS = "更新借阅信息成功";
+    public static final String QUERY_WEEK_BORROW_NUM_FAIL = "获取一周内每天的借阅量失败";
+    public static final String QUERY_WEEK_BORROW_NUM_SUCCESS = "获取一周内每天的借阅量成功";
+    public static final String QUERY_WEEK_ALL_NUM_FAIL = "获取一周内每天信息失败";
+    public static final String QUERY_WEEK_ALL_NUM_SUCCESS = "获取一周内每天信息成功";
 }
