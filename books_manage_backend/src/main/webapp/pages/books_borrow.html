@@ -10,6 +10,23 @@
     <script src="../plugins/elementui/index.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
+
+<style>
+    .el-dropdown {
+        margin: 0 10px;
+    }
+    .el-dropdown-link {
+        cursor: pointer;
+        color: #409EFF;
+    }
+    .el-icon-arrow-down {
+        font-size: 12px;
+    }
+    .el-tag {
+        margin-right: 5px;
+    }
+</style>
+
 <body>
 
 <div id="app">
@@ -46,6 +63,23 @@
                 </el-input>
                 <el-button @click="findPage()">查询</el-button>
                 <el-button type="primary" plain @click="upCreate()">添加</el-button>
+                <el-dropdown @command="screen">
+                    <span class="el-dropdown-link">
+                    筛选<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item command="restore">归还</el-dropdown-item>
+                        <el-dropdown-item command="renew">续借</el-dropdown-item>
+                        <el-dropdown-item command="lose">挂失</el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                <el-tag
+                        v-for="tag in tags"
+                        :key="tag"
+                        closable
+                        @close="tagClose(tag)">
+                    {{tag}}
+                </el-tag>
             </div>
             <div class="data-table">
                 <el-table
@@ -80,16 +114,42 @@
                             </el-switch>
                         </template>
                     </el-table-column>
+                    <el-table-column prop="lose" align="center" label="是否挂失" width="100px">
+                        <template slot-scope="scope">
+                            <el-switch
+                                    style="display: block"
+                                    v-model="scope.row.lose"
+                                    active-color="#13ce66"
+                                    inactive-color="#ff4949"
+                                    disabled>
+                            </el-switch>
+                        </template>
+                    </el-table-column>
                     <el-table-column label="操作" align="center">
                         <template slot-scope="scope">
                             <el-button
                                     size="mini"
                                     type="primary"
                                     @click="upEdit(scope.row)">编辑</el-button>
-                            <el-button
-                                    size="mini"
-                                    type="danger"
-                                    @click="handleDelete(scope.row)">删除</el-button>
+<!--                            <el-button-->
+<!--                                    size="mini"-->
+<!--                                    type="danger"-->
+<!--                                    @click="handleDelete(scope.row)">删除</el-button>-->
+                            <el-popover
+                                    placement="top"
+                                    width="160"
+                                    trigger="click"
+                                    :ref="scope.row.borrowInfoId">
+                                <p>确定删除吗？</p>
+                                <div style="text-align: right; margin: 0">
+                                    <el-button size="mini" type="text" @click="borrowInfoNoDelete(scope.row.borrowInfoId)">取消</el-button>
+                                    <el-button type="primary" size="mini" @click="borrowInfoDelete(scope.row.borrowInfoId)">确定</el-button>
+                                </div>
+                                <el-button
+                                        size="mini"
+                                        type="danger"
+                                        slot="reference">删除</el-button>
+                            </el-popover>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -178,7 +238,7 @@
                             </el-col>
                         </el-row>
                         <el-row>
-                            <el-col :span="12">
+                            <el-col :span="8">
                                 <el-form-item label="是否归还" prop="restore">
                                     <el-switch
                                             style="display: block; position: absolute; top: 50%; transform: translateY(-50%)"
@@ -188,11 +248,21 @@
                                     </el-switch>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :span="8">
                                 <el-form-item label="是否续借" prop="renew">
                                     <el-switch
                                             style="display: block; position: absolute; top: 50%; transform: translateY(-50%)"
                                             v-model="borrowForm.renew"
+                                            active-color="#13ce66"
+                                            inactive-color="#ff4949">
+                                    </el-switch>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="是否挂失" prop="lose">
+                                    <el-switch
+                                            style="display: block; position: absolute; top: 50%; transform: translateY(-50%)"
+                                            v-model="borrowForm.lose"
                                             active-color="#13ce66"
                                             inactive-color="#ff4949">
                                     </el-switch>
@@ -292,7 +362,7 @@
                             </el-col>
                         </el-row>
                         <el-row>
-                            <el-col :span="12">
+                            <el-col :span="8">
                                 <el-form-item label="是否归还" prop="restore">
                                     <el-switch
                                             style="display: block; position: absolute; top: 50%; transform: translateY(-50%)"
@@ -302,11 +372,21 @@
                                     </el-switch>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="10">
+                            <el-col :span="8">
                                 <el-form-item label="是否续借" prop="renew">
                                     <el-switch
                                             style="display: block; position: absolute; top: 50%; transform: translateY(-50%)"
                                             v-model="borrowForm.renew"
+                                            active-color="#13ce66"
+                                            inactive-color="#ff4949">
+                                    </el-switch>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="是否挂失" prop="lose">
+                                    <el-switch
+                                            style="display: block; position: absolute; top: 50%; transform: translateY(-50%)"
+                                            v-model="borrowForm.lose"
                                             active-color="#13ce66"
                                             inactive-color="#ff4949">
                                     </el-switch>
@@ -345,8 +425,10 @@
                 currentPage: 1,
                 pageSize:10,
                 total: 100,
-                requirement: null
+                requirement: null,
+                screens: []
             },
+            tags: [],
             borrowList: [],
             loading: true,
             dialogVisibleCreate: false,
@@ -413,6 +495,46 @@
                     this.$refs[formName].resetFields();
                 }
             },
+
+            // 关闭标签
+            tagClose(tag) {
+                switch (tag) {
+                    case "归还":
+                        this.pagination.screens.splice(this.pagination.screens.indexOf("restore"), 1);
+                        break;
+                    case "续借":
+                        this.pagination.screens.splice(this.pagination.screens.indexOf("renew"), 1);
+                        break;
+                    case "挂失":
+                        this.pagination.screens.splice(this.pagination.screens.indexOf("lose"), 1);
+                        break;
+                }
+                this.findPage()
+                this.tags.splice(this.tags.indexOf(tag), 1);
+            },
+
+            // 下拉菜单选择触发
+            screen(command) {
+                if (!command) {
+                    return;
+                }
+                if (this.pagination.screens.indexOf(command) == -1) {
+                    this.pagination.screens.push(command);
+                    this.findPage();
+                    switch (command) {
+                        case "restore":
+                            this.tags.push("归还");
+                            break;
+                        case "renew":
+                            this.tags.push("续借");
+                            break;
+                        case "lose":
+                            this.tags.push("挂失");
+                            break;
+                    }
+                }
+            },
+
             //弹窗关闭确定
             handleClose(done) {
                 this.$confirm('确认关闭？')
@@ -548,35 +670,72 @@
 
             },
 
+
             //删除
-            handleDelete(row) {
-                //alert(row.typeId);
-                this.$confirm('是否确认删除？', '删除', {
-                    distinguishCancelAndClose: true,
-                    confirmButtonText: '删除',
-                    cancelButtonText: '取消'
-                }).then(() => {
-                    axios.get("/books_manage_backend/borrowInfo/delete.do?borrowInfoId=" + row.borrowInfoId).then((res) => {
-                        if (res.data.flag){
-                            this.$message({
-                                message: res.data.message,
-                                type: 'success'
-                            });
-                            //重新查询数据
-                            this.findPage();
-                        }else {
-                            this.$message.error(res.data.message);
-                        }
-                    }).catch((res) => {
-                        this.permissionsMessage(res);
-                    });
-                }).catch(action => {
-                    this.$message({
-                        type: 'info',
-                        message: '放弃删除'
-                    })
+            borrowInfoDelete(borrowInfoId){
+                axios.get("/books_manage_backend/borrowInfo/delete.do?borrowInfoId=" + borrowInfoId).then((res) => {
+                    if (res.data.flag){
+                        this.$message({
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                        this.findPage();
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                    this.deleteWindowClose(borrowInfoId);
+                }).catch((res) => {
+                    this.permissionsMessage(res);
+                    this.deleteWindowClose(borrowInfoId);
                 });
             },
+
+            /**
+             * 删除弹窗关闭
+             * @param borrowInfoId
+             */
+            deleteWindowClose(borrowInfoId) {
+                this.$refs[borrowInfoId].doClose();
+            },
+
+            //取消删除
+            borrowInfoNoDelete(borrowInfoId){
+                this.deleteWindowClose(borrowInfoId);
+                this.$message({
+                    type: 'info',
+                    message: '放弃删除'
+                })
+            },
+
+            // //删除
+            // handleDelete(row) {
+            //     //alert(row.typeId);
+            //     this.$confirm('是否确认删除？', '删除', {
+            //         distinguishCancelAndClose: true,
+            //         confirmButtonText: '删除',
+            //         cancelButtonText: '取消'
+            //     }).then(() => {
+            //         axios.get("/books_manage_backend/borrowInfo/delete.do?borrowInfoId=" + row.borrowInfoId).then((res) => {
+            //             if (res.data.flag){
+            //                 this.$message({
+            //                     message: res.data.message,
+            //                     type: 'success'
+            //                 });
+            //                 //重新查询数据
+            //                 this.findPage();
+            //             }else {
+            //                 this.$message.error(res.data.message);
+            //             }
+            //         }).catch((res) => {
+            //             this.permissionsMessage(res);
+            //         });
+            //     }).catch(action => {
+            //         this.$message({
+            //             type: 'info',
+            //             message: '放弃删除'
+            //         })
+            //     });
+            // },
 
             permissionsMessage(res){
                 console.log(res);
@@ -604,6 +763,7 @@
                     currentPage: this.pagination.currentPage,
                     pageSize: this.pagination.pageSize,
                     requirement: this.pagination.requirement,
+                    screens: this.pagination.screens
                 };
                 axios.post("/books_manage_backend/borrowInfo/findPage.do",param).then((res) => {
                     //解析返回的数据

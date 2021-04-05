@@ -28,22 +28,27 @@
                                 background-color="#545c64"
                                 text-color="#fff"
                                 active-text-color="#ffd04b">
-                            <el-menu-item index="1" class="home-menu">
-                                <a :href="menuHomeUrl" target="iframe" class="home-menu-a">首页</a>
-                            </el-menu-item>
-                            <el-submenu v-for="menu in menuList" :index="menu.path">
-                                <template slot="title">
-                                    <i class="fn" :class="menu.icon"></i>&nbsp;&nbsp;
-                                    {{menu.title}}
-                                </template>
-                                <template v-for="child in menu.children">
-                                    <a :href="child.linkUrl" target="iframe">
-                                        <el-menu-item :index="child.path">
-                                            {{child.title}}
-                                        </el-menu-item>
+                            <template v-for="menu in menuList">
+                                <el-submenu v-if="menu.children != null" :index="menu.path">
+                                    <template slot="title">
+                                        <i class="fn" :class="menu.icon"></i>&nbsp;&nbsp;
+                                        {{menu.title}}
+                                    </template>
+                                    <template v-for="child in menu.children">
+                                        <a :href="child.linkUrl" target="iframe">
+                                            <el-menu-item :index="child.path">
+                                                {{child.title}}
+                                            </el-menu-item>
+                                        </a>
+                                    </template>
+                                </el-submenu>
+                                <el-menu-item v-if="menu.linkUrl != null" :index="menu.path" class="home-menu">
+                                    <i class="fn" :class="menu.icon"></i>
+                                    <a :href="menu.linkUrl" target="iframe" class="home-menu-a">
+                                        {{menu.title}}
                                     </a>
-                                </template>
-                            </el-submenu>
+                                </el-menu-item>
+                            </template>
                         </el-menu>
                     </el-col>
                 </el-row>
@@ -103,12 +108,14 @@
     new Vue({
         el:"#app",
         data:{
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄',
-            activeIndex: '2',
-            menuHomeUrl: "home.html",
+            activeIndex: '1',
             menuList: [
+                {
+                    "path": "1",
+                    "title": "首页",
+                    "icon": "",
+                    "linkUrl": "home.html"
+                },
                 {
                     "path": "2",
                     "title": "信息管理",
@@ -138,26 +145,7 @@
                     "path": "3",
                     "title": "借阅管理",
                     "icon": "el-icon-edit-outline",
-                    "children": [
-                        {
-                            "path": "3-1",
-                            "title": "图书借阅",
-                            "linkUrl": "books_borrow.html",
-                            "children": []
-                        },
-                        {
-                            "path": "3-2",
-                            "title": "图书归还",
-                            "linkUrl": "books_restore.html",
-                            "children": []
-                        },
-                        {
-                            "path": "3-3",
-                            "title": "图书挂失",
-                            "linkUrl": "books_lose.html",
-                            "children": []
-                        }
-                    ]
+                    "linkUrl": "books_borrow.html"
                 }
             ],
         },

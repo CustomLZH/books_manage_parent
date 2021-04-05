@@ -1,6 +1,7 @@
 package com.guaiwuxue.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 封装获取的条件
@@ -21,6 +22,11 @@ public class QueryPageBean implements Serializable {
      * 查询条件
      */
     private String requirement;
+
+    /**
+     * 筛选条件
+     */
+    private List<String> screens;
 
     public Integer getCurrentPage() {
         return currentPage;
@@ -44,5 +50,13 @@ public class QueryPageBean implements Serializable {
 
     public void setRequirement(String requirement) {
         this.requirement = requirement;
+    }
+
+    public List<String> getScreens() {
+        return screens;
+    }
+
+    public void setScreens(List<String> screens) {
+        this.screens = screens;
     }
 }

@@ -2,15 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.guaiwuxue.dao.BorrowInfoDao">
-    <select id="findPageByCondition" parameterType="string" resultType="com.guaiwuxue.entity.BorrowInfoReq">
+    <select id="findPageByCondition" parameterType="com.guaiwuxue.entity.QueryPageBean" resultType="com.guaiwuxue.entity.BorrowInfoReq">
         select bi.*, b.bookName, b.bookWriter, u.userName, u.userPhone from borrow_info as bi
         left join books as b
         on bi.bookId = b.bookId
         left join users as u
         on bi.userId = u.userId
-        <if test="requirement != null and requirement.length > 0 ">
-            where b.bookName like #{requirement} or u.userName like #{requirement}
-        </if>
+        <where>
+            <if test="queryPageBean != null and queryPageBean.requirement != null and queryPageBean.requirement.length > 0 ">
+                and b.bookName like concat('%',#{queryPageBean.requirement},'%') or u.userName like concat('%',#{queryPageBean.requirement},'%')
+            </if>
+            <if test="queryPageBean != null and queryPageBean.screens != null and queryPageBean.screens.size() > 0">
+                <if test="queryPageBean.screens.contains(&quot;restore&quot;)">
+                    and bi.restore = 1
+                </if>
+                <if test="queryPageBean.screens.contains(&quot;renew&quot;)">
+                    and bi.renew = 1
+                </if>
+                <if test="queryPageBean.screens.contains(&quot;lose&quot;)">
+                    and bi.lose = 1
+                </if>
+            </if>
+
+        </where>
+
     </select>
 
     <delete id="delete" parameterType="long">
@@ -50,6 +65,9 @@
             </if>
             <if test="renew != null">
                 renew = #{renew},
+            </if>
+            <if test="lose != null">
+                lose = #{lose},
             </if>
             <if test="updateDate != null">
                 update_date = #{updateDate},

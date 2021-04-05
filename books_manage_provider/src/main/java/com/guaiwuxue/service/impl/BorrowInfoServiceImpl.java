@@ -37,6 +37,9 @@ public class BorrowInfoServiceImpl implements BorrowInfoService {
         //查询条件
         String requirement = queryPageBean.getRequirement();
 
+        // 筛选条件
+        List<String> screens = queryPageBean.getScreens();
+
         //保证页码正常
         if (currentPage == null || currentPage < 1){
             currentPage = 1;
@@ -58,7 +61,7 @@ public class BorrowInfoServiceImpl implements BorrowInfoService {
         //初始化分页数据
         PageHelper.startPage(currentPage,pageSize);
         //调用查询，获得分页对象
-        Page<BorrowInfo> page = borrowInfoDao.findPageByCondition("%" + requirement + "%");
+        Page<BorrowInfo> page = borrowInfoDao.findPageByCondition(queryPageBean);
         //返回分页结果数据
         return new PageResult(page.getTotal(),page.getResult());
     }

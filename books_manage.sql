@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localhost-books_manage
+ Source Server         : localhost
  Source Server Type    : MySQL
  Source Server Version : 50729
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 31/03/2021 22:41:01
+ Date: 05/04/2021 23:01:55
 */
 
 SET NAMES utf8mb4;
@@ -72,14 +72,14 @@ CREATE TABLE `books`  (
   `bookCompany` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '出版社',
   `bookDate` date NULL DEFAULT NULL COMMENT '出版日期',
   `bookBrief` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '简介',
-  `bookNum` tinyint(10) NULL DEFAULT 0 COMMENT '拥有数量',
-  `borrowNum` tinyint(10) NULL DEFAULT 0 COMMENT '借阅数量',
+  `bookNum` int(11) NULL DEFAULT 0 COMMENT '拥有数量',
+  `borrowNum` int(11) NULL DEFAULT 0 COMMENT '借阅数量',
   `update_date` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `create_date` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`bookId`) USING BTREE,
   INDEX `book_type`(`typeId`) USING BTREE,
   CONSTRAINT `book_type` FOREIGN KEY (`typeId`) REFERENCES `book_type` (`typeId`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 22 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for borrow_info
@@ -91,14 +91,15 @@ CREATE TABLE `borrow_info`  (
   `userId` bigint(20) NULL DEFAULT NULL COMMENT '用户编号',
   `borrowDate` datetime(0) NULL DEFAULT NULL COMMENT '借阅日期',
   `returnDate` datetime(0) NULL DEFAULT NULL COMMENT '还书日期',
-  `restore` tinyint(1) NULL DEFAULT NULL COMMENT '是否归还',
-  `renew` tinyint(1) NULL DEFAULT NULL COMMENT '是否续借',
+  `restore` tinyint(1) NULL DEFAULT 0 COMMENT '是否归还（0否，1是）',
+  `renew` tinyint(1) NULL DEFAULT 0 COMMENT '是否续借（0否，1是）',
+  `lose` tinyint(1) NULL DEFAULT 0 COMMENT '是否挂失（0否，1是）',
   `update_date` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `create_date` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`borrowInfoId`) USING BTREE,
   INDEX `borrow_uId`(`userId`) USING BTREE,
   INDEX `borrow_bookId`(`bookId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for permission

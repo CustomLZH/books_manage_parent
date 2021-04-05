@@ -2,6 +2,7 @@ package com.guaiwuxue.dao;
 
 import com.github.pagehelper.Page;
 import com.guaiwuxue.entity.MonthFiveBorrowNumResp;
+import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.entity.WeekNumResp;
 import com.guaiwuxue.pojo.BorrowInfo;
 import org.apache.ibatis.annotations.Param;
@@ -22,7 +23,7 @@ public interface BorrowInfoDao {
      * @param requirement
      * @return
      */
-    public Page<BorrowInfo> findPageByCondition(@Param("requirement") String requirement);
+    public Page<BorrowInfo> findPageByCondition(@Param("queryPageBean") QueryPageBean queryPageBean);
 
     /**
      * 删除借阅信息

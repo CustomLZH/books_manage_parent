@@ -72,7 +72,7 @@ public class BorrowInfoController {
     }
 
     /**
-     * 添加借阅信息
+     * 更新借阅信息
      * @param borrowInfo
      * @return
      */

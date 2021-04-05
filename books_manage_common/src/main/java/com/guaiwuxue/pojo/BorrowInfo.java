@@ -45,6 +45,12 @@ public class BorrowInfo {
     private Boolean renew;
 
     /**
+     * 是否挂失
+     */
+    private Boolean lose;
+
+
+    /**
      * 更新时间
      */
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
@@ -56,22 +62,6 @@ public class BorrowInfo {
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
     public Long getBorrowInfoId() {
         return borrowInfoId;
     }
@@ -79,8 +69,6 @@ public class BorrowInfo {
     public void setBorrowInfoId(Long borrowInfoId) {
         this.borrowInfoId = borrowInfoId;
     }
-
-
 
     public Long getBookId() {
         return bookId;
@@ -128,5 +116,29 @@ public class BorrowInfo {
 
     public void setRenew(Boolean renew) {
         this.renew = renew;
+    }
+
+    public Boolean getLose() {
+        return lose;
+    }
+
+    public void setLose(Boolean lose) {
+        this.lose = lose;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 }
