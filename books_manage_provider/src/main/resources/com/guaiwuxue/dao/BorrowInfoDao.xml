@@ -78,7 +78,7 @@
     <select id="findWeekBorrowNum" resultType="com.guaiwuxue.entity.WeekNumResp">
         SELECT date_format(bi.borrowDate,'%Y-%m-%d') as date, COUNT(*) AS num, WEEKDAY(bi.borrowDate) + 1 as week
         FROM borrow_info as bi
-        where bi.borrowDate &gt;= DATE_ADD(now(), INTERVAL -7 DAY)
+        where bi.borrowDate &gt;= DATE_ADD(now(), INTERVAL -6 DAY)
         and bi.borrowDate &lt;= now()
         GROUP BY date, week
         ORDER BY date

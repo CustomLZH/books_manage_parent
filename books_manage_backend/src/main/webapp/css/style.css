@@ -32,15 +32,6 @@ ul{
     text-align: left;
 }
 
-a {
-    color: #3c8dbc;
-    text-decoration:none;
-    text-align: center;
-}
-
-.el-menu-item,a{
-    color: #303133;
-}
 .el-menu-item:hover,.el-menu-item.is-active {
     color: #fff;
     background: #8cc5ff;

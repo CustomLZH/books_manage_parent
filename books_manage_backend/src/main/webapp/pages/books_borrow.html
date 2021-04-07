@@ -94,35 +94,74 @@
                     <el-table-column prop="returnDate" align="center" :formatter="dateFormatter" label="归还日期"></el-table-column>
                     <el-table-column prop="restore" align="center" label="是否归还" width="100px">
                         <template slot-scope="scope">
-                            <el-switch
-                                    style="display: block"
-                                    v-model="scope.row.restore"
-                                    active-color="#13ce66"
-                                    inactive-color="#ff4949"
-                                    disabled>
-                            </el-switch>
+                            <el-popover
+                                    placement="top"
+                                    width="160"
+                                    trigger="click"
+                                    :ref="referencePre_restore + scope.row.borrowInfoId">
+                                <p>确定吗？</p>
+                                <div style="text-align: right; margin: 0">
+                                    <el-button size="mini" type="text" @click="borrowInfoNoSwitch(referencePre_restore, scope.row)">取消</el-button>
+                                    <el-button type="primary" size="mini" @click="borrowInfoSwitch(referencePre_restore, scope.row)">确定</el-button>
+                                </div>
+                                <el-switch
+                                        style="display: block"
+                                        v-model="scope.row.restore"
+                                        active-color="#13ce66"
+                                        inactive-color="#ff4949"
+                                        type="danger"
+                                        @change='changeStatus($event, scope.row, referencePre_restore)'
+                                        slot="reference">
+                                </el-switch>
+                            </el-popover>
                         </template>
                     </el-table-column>
                     <el-table-column prop="renew" align="center" label="是否续借" width="100px">
                         <template slot-scope="scope">
-                            <el-switch
-                                    style="display: block"
-                                    v-model="scope.row.renew"
-                                    active-color="#13ce66"
-                                    inactive-color="#ff4949"
-                                    disabled>
-                            </el-switch>
+                            <el-popover
+                                    placement="top"
+                                    width="160"
+                                    trigger="click"
+                                    :ref="referencePre_renew + scope.row.borrowInfoId">
+                                <p>确定吗？</p>
+                                <div style="text-align: right; margin: 0">
+                                    <el-button size="mini" type="text" @click="borrowInfoNoSwitch(referencePre_renew, scope.row)">取消</el-button>
+                                    <el-button type="primary" size="mini" @click="borrowInfoSwitch(referencePre_renew, scope.row)">确定</el-button>
+                                </div>
+                                <el-switch
+                                        style="display: block"
+                                        v-model="scope.row.renew"
+                                        active-color="#13ce66"
+                                        inactive-color="#ff4949"
+                                        type="danger"
+                                        @change='changeStatus($event, scope.row, referencePre_renew)'
+                                        slot="reference">
+                                </el-switch>
+                            </el-popover>
                         </template>
                     </el-table-column>
                     <el-table-column prop="lose" align="center" label="是否挂失" width="100px">
                         <template slot-scope="scope">
-                            <el-switch
-                                    style="display: block"
-                                    v-model="scope.row.lose"
-                                    active-color="#13ce66"
-                                    inactive-color="#ff4949"
-                                    disabled>
-                            </el-switch>
+                            <el-popover
+                                    placement="top"
+                                    width="160"
+                                    trigger="click"
+                                    :ref="referencePre_lose + scope.row.borrowInfoId">
+                                <p>确定吗？</p>
+                                <div style="text-align: right; margin: 0">
+                                    <el-button size="mini" type="text" @click="borrowInfoNoSwitch(referencePre_lose, scope.row)">取消</el-button>
+                                    <el-button type="primary" size="mini" @click="borrowInfoSwitch(referencePre_lose, scope.row)">确定</el-button>
+                                </div>
+                                <el-switch
+                                        style="display: block"
+                                        v-model="scope.row.lose"
+                                        active-color="#13ce66"
+                                        inactive-color="#ff4949"
+                                        type="danger"
+                                        @change='changeStatus($event, scope.row, referencePre_lose)'
+                                        slot="reference">
+                                </el-switch>
+                            </el-popover>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" align="center">
@@ -131,10 +170,6 @@
                                     size="mini"
                                     type="primary"
                                     @click="upEdit(scope.row)">编辑</el-button>
-<!--                            <el-button-->
-<!--                                    size="mini"-->
-<!--                                    type="danger"-->
-<!--                                    @click="handleDelete(scope.row)">删除</el-button>-->
                             <el-popover
                                     placement="top"
                                     width="160"
@@ -429,6 +464,9 @@
                 screens: []
             },
             tags: [],
+            referencePre_restore: 'restore-',
+            referencePre_renew: 'renew-',
+            referencePre_lose: 'lose-',
             borrowList: [],
             loading: true,
             dialogVisibleCreate: false,
@@ -690,10 +728,7 @@
                 });
             },
 
-            /**
-             * 删除弹窗关闭
-             * @param borrowInfoId
-             */
+            // 删除弹窗关闭
             deleteWindowClose(borrowInfoId) {
                 this.$refs[borrowInfoId].doClose();
             },
@@ -705,6 +740,79 @@
                     type: 'info',
                     message: '放弃删除'
                 })
+            },
+
+            //确认
+            borrowInfoSwitch(referencePre, borrowInfo){
+                // axios.get("/books_manage_backend/borrowInfo/delete.do?borrowInfoId=" + borrowInfoId).then((res) => {
+                //     if (res.data.flag){
+                //         this.$message({
+                //             message: res.data.message,
+                //             type: 'success'
+                //         });
+                //         this.findPage();
+                //     } else {
+                //         this.$message.error(res.data.message);
+                //     }
+                //     this.restoreWindowClose(borrowInfoId);
+                // }).catch((res) => {
+                //     this.permissionsMessage(res);
+                //     this.restoreWindowClose(borrowInfoId);
+                // });
+                switch (referencePre) {
+                    case 'lose-':
+                        borrowInfo.lose = !borrowInfo.lose;
+                        break;
+                    case 'renew-':
+                        borrowInfo.renew = !borrowInfo.renew;
+                        break;
+                    case 'restore-':
+                        borrowInfo.restore = !borrowInfo.restore;
+                        break;
+                }
+                axios.post("/books_manage_backend/borrowInfo/updateBorrowInfo.do", borrowInfo).then((res) => {
+                    if (res.data.flag){
+                        this.$message({
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                        this.findPage();
+                    }else {
+                        this.$message.error(res.data.message);
+                    }
+                }).catch((res) => {
+                    this.permissionsMessage(res);
+                });
+                this.switchWindowClose(referencePre + borrowInfo.borrowInfoId);
+            },
+
+            // 弹窗关闭
+            switchWindowClose(referencePre) {
+                this.$refs[referencePre].doClose();
+            },
+
+            //取消
+            borrowInfoNoSwitch(referencePre, borrowInfo){
+                this.switchWindowClose(referencePre + borrowInfo.borrowInfoId);
+                this.$message({
+                    type: 'info',
+                    message: '放弃操作'
+                })
+            },
+
+            // switch改变
+            changeStatus(event, borrowInfo, referencePre){
+                switch (referencePre) {
+                    case 'lose-':
+                        borrowInfo.lose = !event;
+                        break;
+                    case 'renew-':
+                        borrowInfo.renew = !event;
+                        break;
+                    case 'restore-':
+                        borrowInfo.restore = !event;
+                        break;
+                }
             },
 
             // //删除

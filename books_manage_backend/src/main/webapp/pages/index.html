@@ -11,6 +11,12 @@
     <script src="../plugins/elementui/index.js"></script>
     <link rel="stylesheet" href="../css/style.css">
 </head>
+<style>
+    .el-menu--collapse .el-menu .el-submenu, .el-menu--popup{
+        text-align: center;
+        min-width: 100px !important;
+    }
+</style>
 <body>
     <div id="app">
         <el-container>
@@ -29,24 +35,18 @@
                                 text-color="#fff"
                                 active-text-color="#ffd04b">
                             <template v-for="menu in menuList">
-                                <el-submenu v-if="menu.children != null" :index="menu.path">
+                                <el-submenu v-if="menu.flag" :index="menu.index">
                                     <template slot="title">
                                         <i class="fn" :class="menu.icon"></i>&nbsp;&nbsp;
                                         {{menu.title}}
                                     </template>
-                                    <template v-for="child in menu.children">
-                                        <a :href="child.linkUrl" target="iframe">
-                                            <el-menu-item :index="child.path">
-                                                {{child.title}}
-                                            </el-menu-item>
-                                        </a>
-                                    </template>
+                                    <el-menu-item v-for="child in menu.children" :index="child" class="li_item">
+                                        {{child.title}}
+                                    </el-menu-item>
                                 </el-submenu>
-                                <el-menu-item v-if="menu.linkUrl != null" :index="menu.path" class="home-menu">
+                                <el-menu-item v-if="!menu.flag" :index="menu" class="home-menu">
                                     <i class="fn" :class="menu.icon"></i>
-                                    <a :href="menu.linkUrl" target="iframe" class="home-menu-a">
                                         {{menu.title}}
-                                    </a>
                                 </el-menu-item>
                             </template>
                         </el-menu>
@@ -56,7 +56,7 @@
 
             <el-container>
                 <el-main>
-                    <iframe name="iframe" class="el-main" src="home.html" width="100%" height="780px" frameborder="0"></iframe>
+                    <iframe name="iframe" class="el-main" :src="srcUrl" width="100%" height="780px" frameborder="0"></iframe>
                 </el-main>
             </el-container>
         </el-container>
@@ -109,55 +109,53 @@
         el:"#app",
         data:{
             activeIndex: '1',
+            srcUrl:"home.html",
             menuList: [
                 {
-                    "path": "1",
+                    "index": "1",
                     "title": "首页",
                     "icon": "",
-                    "linkUrl": "home.html"
+                    "flag": false,
+                    "path": "home.html",
                 },
                 {
-                    "path": "2",
+                    "index": "2",
                     "title": "信息管理",
                     "icon": "el-icon-document",
+                    "flag": true,
                     "children": [
                         {
-                            "path": "2-1",
+                            "index": "2-1",
                             "title": "图书管理",
-                            "linkUrl": "books_manage.html",
-                            "children": []
+                            "flag": true,
+                            "path": "books_manage.html",
                         },
                         {
-                            "path": "2-2",
+                            "index": "2-2",
                             "title": "分类管理",
-                            "linkUrl": "sort_manage.html",
-                            "children": []
+                            "flag": true,
+                            "path": "sort_manage.html",
                         },
                         {
-                            "path": "2-3",
+                            "index": "2-3",
                             "title": "库存管理",
-                            "linkUrl": "repertory_manage.html",
-                            "children": []
+                            "flag": true,
+                            "path": "repertory_manage.html",
                         }
                     ]
                 },
                 {
-                    "path": "3",
+                    "index": "3",
                     "title": "借阅管理",
                     "icon": "el-icon-edit-outline",
-                    "linkUrl": "books_borrow.html"
+                    "flag": false,
+                    "path": "books_borrow.html",
                 }
             ],
         },
         methods: {
-            handleOpen(key, keyPath) {
-                console.log(key, keyPath);
-            },
-            handleClose(key, keyPath) {
-                console.log(key, keyPath);
-            },
-            handleSelect(key, keyPath) {
-                console.log(key, keyPath);
+            handleSelect(menu) {
+                this.srcUrl = menu.path;
             }
         }
     });
