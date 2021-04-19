@@ -16,6 +16,23 @@
         text-align: center;
         min-width: 100px !important;
     }
+    .right-menu {
+        float: right;
+        padding: 0 30px 0 0;
+    }
+    .avatar-wrapper {
+        color: #fff;
+    }
+    .avatar-wrapper img{
+        width: 40px;
+        height: 40px;
+        border-radius: 20px;
+        vertical-align: middle
+    }
+    .menu-a a {
+        color: #6f7180;
+        text-decoration: none;
+    }
 </style>
 <body>
     <div id="app">
@@ -25,7 +42,7 @@
                     <el-col :span="3" class="title-col">
                         <span class="title">图书管理系统</span>
                     </el-col>
-                    <el-col :span="21">
+                    <el-col :span="18">
                         <el-menu
                                 :default-active="activeIndex"
                                 class="el-menu-demo"
@@ -51,9 +68,55 @@
                             </template>
                         </el-menu>
                     </el-col>
+                    <el-col :span="3">
+                        <div class="right-menu">
+                            <el-dropdown trigger="click">
+                                <div class="avatar-wrapper">
+                                    <img src="../img/custom.jpg" class="user-avatar">
+                                    {{admin.adminUsername}}
+                                </div>
+                                <el-dropdown-menu
+                                        class="menu-a"
+                                        slot="dropdown">
+                                    <el-dropdown-item divided>
+                                        <a @click="upEdit()">
+                                            <span style="display:block;">修改密码</span>
+                                        </a>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item divided>
+                                        <a href="/books_manage_backend/logout.do">
+                                            <span style="display:block;">退出</span>
+                                        </a>
+                                    </el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
+                    </el-col>
                 </el-row>
             </el-header>
+            <div>
+                <el-dialog
+                        title="修改密码"
+                        :visible.sync="dialogVisibleEdit"
+                        width="20%"
+                        :before-close="handleClose">
 
+                    <el-form :model="admin" :rules="adminRules" ref="admin" label-width="100px">
+                        <el-row>
+                            <el-col :span="20">
+                                <el-form-item status-icon label="密码" prop="adminPassword">
+                                    <el-input v-model="admin.adminPassword"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="dialogVisibleEdit = false">取 消</el-button>
+                        <el-button type="primary" @click="handleEdit('admin')">修 改</el-button>
+                    </span>
+                </el-dialog>
+            </div>
             <el-container>
                 <el-main>
                     <iframe name="iframe" class="el-main" :src="srcUrl" width="100%" height="780px" frameborder="0"></iframe>
@@ -110,6 +173,13 @@
         data:{
             activeIndex: '1',
             srcUrl:"home.html",
+            admin: {},
+            adminRules: {
+                adminPassword: [
+                    { required: true, message: '请填写密码', trigger: ['blur','change'] },
+                ],
+            },
+            dialogVisibleEdit: false,
             menuList: [
                 {
                     "index": "1",
@@ -150,13 +220,120 @@
                     "icon": "el-icon-edit-outline",
                     "flag": false,
                     "path": "books_borrow.html",
-                }
+                },
+                {
+                    "index": "4",
+                    "title": "系统管理",
+                    "icon": "el-icon-document",
+                    "flag": true,
+                    "children": [
+                        {
+                            "index": "4-1",
+                            "title": "用户管理",
+                            "flag": true,
+                            "path": "users_manage.html",
+                        },
+                        {
+                            "index": "4-2",
+                            "title": "管理员设置",
+                            "flag": true,
+                            "path": "admin_manage.html",
+                        },
+                        {
+                            "index": "4-3",
+                            "title": "权限管理",
+                            "flag": true,
+                            "path": "permission.html",
+                        },
+                        {
+                            "index": "4-4",
+                            "title": "菜单管理",
+                            "flag": true,
+                            "path": "menu_manage.html",
+                        }
+                    ]
+                },
             ],
         },
         methods: {
             handleSelect(menu) {
                 this.srcUrl = menu.path;
-            }
+            },
+            getAdmin() {
+                //发送ajax请求，请求Controller获取当前登录用户的用户名，展示到页面中
+                axios.get("/books_manage_backend/admin/getAdminExcludePasswords.do").then((res) => {
+                    if (res.data.flag){
+                        this.admin = res.data.data;
+                    }
+                })
+            },
+
+            //表单重置
+            resetForm(formName) {
+                this.admin = {
+                    adminId: this.admin.adminId,
+                    adminUsername: this.admin.adminUsername,
+                    adminPassword: undefined,
+                    adminGrade: this.admin.adminGrade,
+                    adminState: this.admin.adminState,
+                };
+                if (this.$refs[formName] !== undefined){
+                    this.$refs[formName].resetFields();
+                }
+            },
+
+
+            //弹出编辑窗口
+            upEdit() {
+                this.dialogVisibleEdit = true;
+                this.resetForm('admin');
+            },
+            //编辑提交
+            handleEdit(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        axios.post("/books_manage_backend/admin/updateAdmin.do", this.admin).then((res) => {
+                            if (res.data.flag){
+                                this.$message({
+                                    message: res.data.message,
+                                    type: 'success'
+                                });
+                                this.dialogVisibleEdit = false;
+                            }else {
+                                this.$message.error(res.data.message);
+                            }
+                        }).catch((res) => {
+                            this.dialogVisibleEdit = false;
+                            this.permissionsMessage(res);
+                        });
+                    } else {
+                        this.$message.error('请检查信息填写是否正确！');
+                        return false;
+                    }
+                });
+            },
+
+            permissionsMessage(res){
+                if (res == 'Error: Request failed with status code 403'){
+                    //权限不足
+                    this.$message.error('权限不足');
+                    return;
+                }else{
+                    this.$message.error('操作失败');
+                    return;
+                }
+            },
+            //弹窗关闭确定
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+        },
+        created() {
+            this.getAdmin();
         }
     });
 </script>

@@ -105,4 +105,60 @@ public class BorrowInfoServiceImpl implements BorrowInfoService {
         weekBorrowNum.addAll(weekBorrowNum1);
         return weekBorrowNum;
     }
+
+    @Override
+    public TreeSet<WeekNumResp> findWeekRestoreNum() {
+        TreeSet<WeekNumResp> weekRestoreNum = new TreeSet<>();
+        List<Date> sevenDays = DateUtil.getSevenDays();
+        int todayWeek = DateUtil.getTodayWeek();
+        String[] weekNames = new String[] {"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
+        for (Date sevenDay : sevenDays) {
+            int week = DateUtil.getTodayWeek(sevenDay);
+            String weekName = weekNames[week - 1];
+            if (week > todayWeek) {
+                weekName = "上" + weekName;
+            }
+            weekRestoreNum.add(new WeekNumResp(sevenDay, 0, week, weekName));
+        }
+        TreeSet<WeekNumResp> weekBorrowNum1 = borrowInfoDao.findWeekRestoreNum();
+        weekRestoreNum.addAll(weekBorrowNum1);
+        return weekRestoreNum;
+    }
+
+    @Override
+    public TreeSet<WeekNumResp> findWeekLoseNum() {
+        TreeSet<WeekNumResp> weekLoseNum = new TreeSet<>();
+        List<Date> sevenDays = DateUtil.getSevenDays();
+        int todayWeek = DateUtil.getTodayWeek();
+        String[] weekNames = new String[] {"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
+        for (Date sevenDay : sevenDays) {
+            int week = DateUtil.getTodayWeek(sevenDay);
+            String weekName = weekNames[week - 1];
+            if (week > todayWeek) {
+                weekName = "上" + weekName;
+            }
+            weekLoseNum.add(new WeekNumResp(sevenDay, 0, week, weekName));
+        }
+        TreeSet<WeekNumResp> weekBorrowNum1 = borrowInfoDao.findWeekLoseNum();
+        weekLoseNum.addAll(weekBorrowNum1);
+        return weekLoseNum;
+    }
+    @Override
+    public TreeSet<WeekNumResp> findWeekUsersNum() {
+        TreeSet<WeekNumResp> weekUsersNum = new TreeSet<>();
+        List<Date> sevenDays = DateUtil.getSevenDays();
+        int todayWeek = DateUtil.getTodayWeek();
+        String[] weekNames = new String[] {"周一", "周二", "周三", "周四", "周五", "周六", "周日"};
+        for (Date sevenDay : sevenDays) {
+            int week = DateUtil.getTodayWeek(sevenDay);
+            String weekName = weekNames[week - 1];
+            if (week > todayWeek) {
+                weekName = "上" + weekName;
+            }
+            weekUsersNum.add(new WeekNumResp(sevenDay, 0, week, weekName));
+        }
+        TreeSet<WeekNumResp> weekBorrowNum1 = borrowInfoDao.findWeekUsersNum();
+        weekUsersNum.addAll(weekBorrowNum1);
+        return weekUsersNum;
+    }
 }

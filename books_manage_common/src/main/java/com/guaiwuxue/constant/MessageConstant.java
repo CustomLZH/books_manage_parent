@@ -39,4 +39,18 @@ public class MessageConstant {
     public static final String QUERY_WEEK_BORROW_NUM_SUCCESS = "获取一周内每天的借阅量成功";
     public static final String QUERY_WEEK_ALL_NUM_FAIL = "获取一周内每天信息失败";
     public static final String QUERY_WEEK_ALL_NUM_SUCCESS = "获取一周内每天信息成功";
+    public static final String CREATE_USERS_FAIL = "添加用户失败";
+    public static final String CREATE_USERS_SUCCESS = "添加用户成功";
+    public static final String UPDATE_USERS_FAIL = "修改用户失败";
+    public static final String UPDATE_USERS_SUCCESS = "修改用户成功";
+    public static final String DELETE_USERS_SUCCESS = "删除用户成功";
+    public static final String DELETE_USERS_FAIL = "删除用户失败";
+    public static final String GET_ADMIN_SUCCESS = "获取用户成功";
+    public static final String GET_ADMIN_FAIL = "获取用户失败";
+    public static final String DELETE_ADMIN_SUCCESS = "删除管理员成功";
+    public static final String DELETE_ADMIN_FAIL = "删除管理员失败";
+    public static final String CREATE_ADMIN_FAIL = "创建管理员失败";
+    public static final String CREATE_ADMIN_SUCCESS = "创建管理员成功";
+    public static final String UPDATE_ADMIN_FAIL = "更新管理员失败";
+    public static final String UPDATE_ADMIN_SUCCESS = "更新管理员成功";
 }

@@ -2,9 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.guaiwuxue.dao.BooksDao">
+
     <update id="updateBorrowNumById" parameterType="int">
         update books set borrowNum=#{borrowNum} where bookId=#{bookId}
     </update>
+
     <update id="updateBookByBookId" parameterType="com.guaiwuxue.pojo.Books">
         update books
         <set>
@@ -35,9 +37,11 @@
         </set>
         where bookId=#{bookId}
     </update>
+
     <delete id="deleteBookByBookId" parameterType="int">
         delete from books where bookId=#{bookId}
     </delete>
+
     <insert id="insertBook" parameterType="books">
         insert into books(bookName,typeId,bookWriter,bookCompany,bookDate,bookBrief,bookNum,borrowNum)
         values(#{bookName},#{typeId},#{bookWriter},#{bookCompany},#{bookDate},#{bookBrief},#{bookNum},#{borrowNum})
@@ -46,6 +50,7 @@
     <select id="findAll" resultType="com.guaiwuxue.pojo.Books">
         select * from books
     </select>
+
     <select id="findPageByCondition" parameterType="string" resultType="books">
         select bookId,bookName,bookWriter,bookCompany
         ,bookDate,bookBrief from books
@@ -53,21 +58,26 @@
             where bookName like #{requirement} or bookWriter like #{requirement}
         </if>
     </select>
+
     <select id="findBorrowNumById" parameterType="int" resultType="java.lang.Integer">
         select borrowNum from books where bookId=#{bookId}
     </select>
+
     <select id="findBookNumById" parameterType="int" resultType="java.lang.Integer">
         select bookNum from books where bookId=#{bookId}
     </select>
+
     <select id="findCountByTypeId" parameterType="string" resultType="java.lang.Integer">
         select count(typeId) from books where typeId=#{typeId}
     </select>
+
     <select id="findBookInfoByBookId" resultType="books">
         SELECT b.bookName,b.typeId,bt.typeName,b.bookWriter
         ,b.bookCompany,b.bookDate,b.bookBrief,b.bookNum,b.borrowNum
         FROM books as b,book_type as bt
         where b.typeId = bt.typeId and b.bookId = #{bookId};
     </select>
+
     <select id="findPageInfo" resultType="java.util.Map" parameterType="string">
         SELECT b.bookId,b.bookName,b.typeId,bt.typeName,b.bookWriter
         ,b.bookCompany,b.bookDate,b.bookBrief,b.bookNum,b.borrowNum
@@ -77,7 +87,9 @@
             and (b.bookName like #{requirement} or b.bookWriter like #{requirement})
         </if>
     </select>
+
     <select id="findAllToBorrowInfoCreate" resultType="com.guaiwuxue.pojo.Books">
         select b.bookId, b.bookName, b.bookWriter from books as b
     </select>
+
 </mapper>

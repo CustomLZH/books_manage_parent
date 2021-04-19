@@ -6,4 +6,40 @@
     <select id="findByUsername" parameterType="string" resultType="com.guaiwuxue.pojo.Admin">
         select adminId,adminUsername,adminPassword,adminGrade,adminState from admin where adminUsername = #{adminUsername}
     </select>
+
+    <delete id="delete">
+        delete from admin where adminId = #{admin}
+    </delete>
+    <insert id="createAdmin">
+        insert into admin(adminUsername, adminPassword, adminGrade, adminState, update_date)
+        values(#{adminUsername}, #{adminPassword}, #{adminGrade}, #{adminState}, now())
+    </insert>
+    <update id="updateAdmin">
+        update admin
+        set update_date = now()
+        <if test="adminUsername != null">
+            ,adminUsername = #{adminUsername}
+        </if>
+        <if test="adminPassword != null">
+            ,adminPassword = #{adminPassword}
+        </if>
+        <if test="adminGrade != null">
+            ,adminGrade = #{adminGrade}
+        </if>
+        <if test="adminState != null">
+            ,adminState = #{adminState}
+        </if>
+        <if test="updateDate != null">
+            ,update_date = #{updateDate}
+        </if>
+        where adminId = #{adminId}
+    </update>
+    <select id="findPageByCondition" resultType="com.guaiwuxue.pojo.Admin">
+        select adminId, adminUsername, adminGrade, adminState, update_date as updateDate, create_date as createDate
+        from admin
+        <if test="requirement != null and requirement.length() > 0 ">
+            where adminUsername like #{requirement}
+        </if>
+    </select>
+
 </mapper>

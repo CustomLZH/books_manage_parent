@@ -84,4 +84,37 @@
         ORDER BY date
     </select>
 
+    <select id="findWeekRestoreNum" resultType="com.guaiwuxue.entity.WeekNumResp">
+        SELECT date_format(bi.update_date,'%Y-%m-%d') as date, COUNT(*) AS num, WEEKDAY(bi.update_date) + 1 as week
+        FROM borrow_info as bi
+        where bi.update_date &gt;= DATE_ADD(now(), INTERVAL -6 DAY)
+        and bi.update_date &lt;= now()
+        and bi.restore = 1
+        GROUP BY date, week
+        ORDER BY date
+    </select>
+    <select id="findWeekLoseNum" resultType="com.guaiwuxue.entity.WeekNumResp">
+        SELECT date_format(bi.update_date,'%Y-%m-%d') as date, COUNT(*) AS num, WEEKDAY(bi.update_date) + 1 as week
+        FROM borrow_info as bi
+        where bi.update_date &gt;= DATE_ADD(now(), INTERVAL -6 DAY)
+        and bi.update_date &lt;= now()
+        and bi.lose = 1
+        GROUP BY date, week
+        ORDER BY date
+    </select>
+    <select id="findWeekUsersNum" resultType="com.guaiwuxue.entity.WeekNumResp">
+        select b.date,count(b.userId) num,  week
+        from
+        (
+            SELECT date_format(bi.borrowDate,'%Y-%m-%d') as date, bi.userId as userId, WEEKDAY(bi.borrowDate) + 1 as week
+            FROM borrow_info as bi
+            where bi.borrowDate &gt;= DATE_ADD(now(), INTERVAL -7 DAY)
+            and bi.borrowDate &lt;= now()
+            GROUP BY date, userId, week
+            ORDER BY date
+        ) as b
+        GROUP BY b.date, week
+        ORDER BY date
+    </select>
+
 </mapper>

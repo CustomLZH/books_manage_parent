@@ -1,5 +1,19 @@
 package com.guaiwuxue.controller;
 
+import com.guaiwuxue.constant.MessageConstant;
+import com.guaiwuxue.constant.RolePermissionConstant;
+import com.guaiwuxue.entity.PageResult;
+import com.guaiwuxue.entity.QueryPageBean;
+import com.guaiwuxue.entity.Result;
+import com.guaiwuxue.pojo.Admin;
+import com.guaiwuxue.pojo.Users;
+import com.guaiwuxue.service.AdminService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,5 +26,108 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin")
 public class AdminController {
 
+    @Autowired
+    private AdminService adminService;
+
+
+    /**
+     * 分页查询
+     * @return
+     */
+    @RequestMapping("/findPage")
+    public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
+        return adminService.findPage(queryPageBean);
+    }
+
+    /**
+     * 获得当前登录用户的用户名
+     * @return
+     */
+    @RequestMapping("/getAdmin")
+    public Result<Admin> getAdmin(){
+        //当Spring security完成认证后，会将当前用户信息保存到框架提供的上下文对象
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user != null){
+            return new Result<>(true, MessageConstant.GET_ADMIN_SUCCESS, adminService.findByUsername(user.getUsername()));
+        }
+        return new Result<>(false, MessageConstant.GET_ADMIN_FAIL);
+    }
+    /**
+     * 获得当前登录用户的用户名排除密码
+     * @return
+     */
+    @RequestMapping("/getAdminExcludePasswords")
+    public Result<Admin> getAdminExcludePasswords(){
+        //当Spring security完成认证后，会将当前用户信息保存到框架提供的上下文对象
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (user != null){
+            return new Result<>(true, MessageConstant.GET_ADMIN_SUCCESS, adminService.findByUsernameExcludePasswords(user.getUsername()));
+        }
+        return new Result<>(false, MessageConstant.GET_ADMIN_FAIL);
+    }
+
+
+
+
+
+    /**
+     * 根据管理员id删除
+     * @param adminId
+     * @return
+     */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.ADMIN_DELETE + "')")
+    @RequestMapping("/delete")
+    public Result<Void> delete(Long adminId){
+        try{
+            adminService.delete(adminId);
+            return new Result<>(true, MessageConstant.DELETE_ADMIN_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result<>(false,MessageConstant.DELETE_ADMIN_FAIL);
+        }
+    }
+
+
+
+    /**
+     * 添加管理员
+     * @param admin
+     * @return
+     */
+    @RequestMapping("/createAdmin")
+    public Result<Void> createUsers(@RequestBody Admin admin) {
+        if (admin == null || admin.getAdminUsername() == null || admin.getAdminPassword() == null) {
+            return new Result<>(false, "请检查是否填写数据");
+        }
+        if (adminService.findByUsername(admin.getAdminUsername()) != null) {
+            return new Result<>(false, "用户名已使用");
+        }
+        try {
+            adminService.createAdmin(admin);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result<>(false,MessageConstant.CREATE_ADMIN_FAIL);
+        }
+        return new Result<>(true,MessageConstant.CREATE_ADMIN_SUCCESS);
+    }
+
+
+    /**
+     * 更新管理员
+     * @param admin
+     * @return
+     */
+    @RequestMapping("/updateAdmin")
+    public Result<Void> updateBorrowInfo(@RequestBody Admin admin) {
+        if (admin == null || admin.getAdminUsername() == null)
+            return new Result<>(false, "请检查是否填写数据");
+        try {
+            adminService.updateAdmin(admin);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result<>(false,MessageConstant.UPDATE_ADMIN_FAIL);
+        }
+        return new Result<>(true,MessageConstant.UPDATE_ADMIN_SUCCESS);
+    }
 
 }

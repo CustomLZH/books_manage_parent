@@ -23,6 +23,11 @@ public class WeekAllNumResp implements Comparable {
     private String type;
 
     /**
+     * 类别
+     */
+    private String stack;
+
+    /**
      * 数据
      */
     private TreeSet<WeekNumResp> data;
@@ -41,6 +46,14 @@ public class WeekAllNumResp implements Comparable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getStack() {
+        return stack;
+    }
+
+    public void setStack(String stack) {
+        this.stack = stack;
     }
 
     public TreeSet<WeekNumResp> getData() {

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分类管理</title>
+    <script src="../js/vue/vue.min.js"></script>
+    <script src="../js/jQuery/jquery-3.5.0.min.js"></script>
+    <script src="../js/vue/axios-0.18.0.js"></script>
+    <link rel="stylesheet" href="../plugins/elementui/index.css">
+    <script src="../plugins/elementui/index.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<style>
+    .el-dropdown {
+        margin: 0 10px;
+    }
+    .el-dropdown-link {
+        cursor: pointer;
+        color: #409EFF;
+    }
+    .el-icon-arrow-down {
+        font-size: 12px;
+    }
+    .el-tag {
+        margin-right: 5px;
+    }
+</style>
+
+<body>
+
+<div id="app">
+    <div class="leaderTab" style="width: 100%;">
+        <div class="title-h3">
+            <h3>
+                系统管理
+                <small>用户管理</small>
+                <el-button type="primary" size="mini"
+                           icon="el-icon-refresh"
+                           @click="findPage()"
+                           circle></el-button>
+            </h3>
+        </div>
+        <div class="title-item">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
+                <el-breadcrumb-item>系统管理</el-breadcrumb-item>
+                <el-breadcrumb-item>用户管理</el-breadcrumb-item>
+            </el-breadcrumb>
+        </div>
+        <div style="clear: both;"></div>
+
+
+    </div>
+    <div class="data">
+        <div class="data-info">
+            <div class="data-query">
+                <el-input
+                        placeholder="用户名/联系方式"
+                        v-model="pagination.requirement"
+                        style="width: 200px;"
+                        @change="findPage()"
+                        clearable>
+                </el-input>
+                <el-button @click="findPage()">查询</el-button>
+                <el-button type="primary" plain @click="upCreate()">添加</el-button>
+            </div>
+            <div class="data-table">
+                <el-table
+                        v-loading="loading"
+                        :data="usersList">
+                    <el-table-column type="index" align="center" label="序号"></el-table-column>
+                    <el-table-column prop="userName" align="center" label="用户名"></el-table-column>
+                    <el-table-column prop="userSex" align="center" label="性别">
+                        <template slot-scope="scope">
+                            <el-tag type="warning" effect="dark" v-if="scope.row.userSex == 0">女</el-tag>
+                            <el-tag type="" effect="dark" v-if="scope.row.userSex == 1">男</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="userPhone" align="center" label="联系电话"></el-table-column>
+                    <el-table-column prop="borrowNum" align="center" label="借阅数量"></el-table-column>
+                    <el-table-column prop="userState" align="center" label="状态" width="100px">
+                        <template slot-scope="scope">
+                            <el-popover
+                                    placement="top"
+                                    width="160"
+                                    trigger="click"
+                                    :ref="referencePre_state + scope.row.userId">
+                                <p>确定吗？</p>
+                                <div style="text-align: right; margin: 0">
+                                    <el-button size="mini" type="text" @click="usersNoSwitch(referencePre_state, scope.row)">取消</el-button>
+                                    <el-button type="primary" size="mini" @click="usersSwitch(referencePre_state, scope.row)">确定</el-button>
+                                </div>
+                                <el-switch
+                                        style="display: block"
+                                        v-model="scope.row.userState"
+                                        active-color="#13ce66"
+                                        inactive-color="#ff4949"
+                                        type="danger"
+                                        @change='changeStatus($event, scope.row, referencePre_state)'
+                                        slot="reference">
+                                </el-switch>
+                            </el-popover>
+                        </template>
+                    </el-table-column>
+                    <el-table-column prop="updateDate" align="center" :formatter="dateFormatter" label="修改日期"></el-table-column>
+                    <el-table-column prop="createDate" align="center" :formatter="dateFormatter" label="创建日期"></el-table-column>
+                    <el-table-column label="操作" align="center">
+                        <template slot-scope="scope">
+                            <el-button
+                                    size="mini"
+                                    type="primary"
+                                    @click="upEdit(scope.row)">编辑</el-button>
+                            <el-popover
+                                    placement="top"
+                                    width="160"
+                                    trigger="click"
+                                    :ref="scope.row.userId">
+                                <p>确定删除吗？</p>
+                                <div style="text-align: right; margin: 0">
+                                    <el-button size="mini" type="text" @click="usersNoDelete(scope.row.userId)">取消</el-button>
+                                    <el-button type="primary" size="mini" @click="usersDelete(scope.row.userId)">确定</el-button>
+                                </div>
+                                <el-button
+                                        size="mini"
+                                        type="danger"
+                                        slot="reference">删除</el-button>
+                            </el-popover>
+                        </template>
+                    </el-table-column>
+                </el-table>
+            </div>
+
+            <div>
+                <el-dialog
+                        title="添加"
+                        :visible.sync="dialogVisibleCreate"
+                        width="40%"
+                        :before-close="handleClose">
+
+                    <el-form :model="usersForm" :rules="usersRules" ref="usersForm" label-width="100px">
+                        <el-row>
+                            <el-col :span="11">
+                                <el-form-item label="用户名" prop="userName">
+                                    <el-input v-model="usersForm.userName"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="10">
+                                <el-form-item label="联系电话" prop="userPhone">
+                                    <el-input v-model="usersForm.userPhone"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="8">
+                                <el-form-item label="性别" prop="userSex">
+                                    <el-select v-model="usersForm.userSex"
+                                               value-key="userId"
+                                               filterable
+                                               clearable
+                                               placeholder="请选择性别"
+                                               style="width:100%">
+                                        <el-option
+                                                v-for="item in userSex"
+                                                :key="item.key"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="借阅数量" prop="borrowNum">
+                                    <el-input v-model.number="usersForm.borrowNum"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="4">
+                                <el-form-item label="是否启用" prop="userState">
+                                    <el-switch
+                                            style="display: block; position: absolute; top: 50%; transform: translateY(-50%)"
+                                            v-model="usersForm.userState"
+                                            active-color="#13ce66"
+                                            inactive-color="#ff4949">
+                                    </el-switch>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+
+                    <span slot="footer" class="dialog-footer">
+                            <el-button @click="resetForm('usersForm')">重 置</el-button>
+                            <el-button @click="dialogVisibleCreate = false">取 消</el-button>
+                            <el-button type="primary" @click="handleCreate('usersForm')">添 加</el-button>
+                        </span>
+                </el-dialog>
+            </div>
+
+            <div>
+                <el-dialog
+                        title="编辑"
+                        :visible.sync="dialogVisibleEdit"
+                        width="40%"
+                        :before-close="handleClose">
+
+                    <el-form :model="usersForm" :rules="usersRules" ref="usersForm" label-width="100px">
+                        <el-row>
+                            <el-col :span="11">
+                                <el-form-item label="用户名" prop="userName">
+                                    <el-input v-model="usersForm.userName"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="10">
+                                <el-form-item label="联系电话" prop="userPhone">
+                                    <el-input v-model="usersForm.userPhone"></el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-col :span="8">
+                                <el-form-item label="性别" prop="userSex">
+                                    <el-select v-model="usersForm.userSex"
+                                               value-key="userId"
+                                               filterable
+                                               clearable
+                                               placeholder="请选择性别"
+                                               style="width:100%">
+                                        <el-option
+                                                v-for="item in userSex"
+                                                :key="item.key"
+                                                :label="item.label"
+                                                :value="item.value">
+                                        </el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="借阅数量" prop="borrowNum">
+                                    <el-input v-model.number="usersForm.borrowNum"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="4">
+                                <el-form-item label="是否启用" prop="userState">
+                                    <el-switch
+                                            style="display: block; position: absolute; top: 50%; transform: translateY(-50%)"
+                                            v-model="usersForm.userState"
+                                            active-color="#13ce66"
+                                            inactive-color="#ff4949">
+                                    </el-switch>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+
+                    <span slot="footer" class="dialog-footer">
+                            <el-button @click="resetFormEdit()">重 置</el-button>
+                            <el-button @click="dialogVisibleEdit = false">取 消</el-button>
+                            <el-button type="primary" @click="handleEdit('usersForm')">修 改</el-button>
+                        </span>
+                </el-dialog>
+            </div>
+
+            <div class="pageNum">
+                <el-pagination
+                        @current-change="handleCurrentChange"
+                        :current-page="pagination.currentPage"
+                        :page-size="pagination.pageSize"
+                        layout="total, prev, pager, next, jumper"
+                        :total="pagination.total">
+                </el-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    var vm = new Vue({
+        el:"#app",
+        data:{
+            pagination:{
+                currentPage: 1,
+                pageSize:10,
+                total: 100,
+                requirement: null,
+                screens: []
+            },
+            tags: [],
+            referencePre_state: 'state-',
+            usersList: [],
+            loading: true,
+            dialogVisibleCreate: false,
+            dialogVisibleEdit: false,
+            userSex: [
+                {
+                    key: 0,
+                    label: '女',
+                    value: 0,
+                },
+                {
+                    key: 1,
+                    label: '男',
+                    value: 1,
+                }
+            ],
+            usersForm: {},
+            row: {
+
+            },
+            usersRules: {
+                userName: [
+                    { required: true, message: '请填写用户名', trigger: ['blur','change'] },
+                ],
+                userPhone: [
+                    { required: true, message: '请填写联系电话', trigger: ['blur','change'] },
+                ],
+                borrowDate: [
+                    { required: true, message: '请选择借阅日期', trigger: 'blur' },
+                    { min: 1, message: '请选择借阅日期', trigger: 'change' }
+                ],
+                borrowNum: [
+                    { required: true, message: '借阅量不能为空', trigger: ['change','blur']},
+                    { type: 'number', message: '借阅量必须为数字值', trigger: ['change','blur']},
+                ]
+            }
+
+        },
+        //钩子函数，VUE对象初始化完成后自动执行
+        created() {
+            this.findPage();
+        },
+        methods: {
+
+            //编辑表单重置
+            resetFormEdit() {
+                this.setEditForm();
+            },
+
+            //表单重置
+            resetForm(formName) {
+                this.usersForm = {
+                    userName: undefined,
+                    userPhone: undefined,
+                    borrowNum: undefined,
+                    userSex: 0,
+                    userState: true,
+                };
+                if (this.$refs[formName]!==undefined){
+                    this.$refs[formName].resetFields();
+                }
+            },
+
+            //弹窗关闭确定
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                        done();
+                    })
+                    .catch(_ => {});
+            },
+
+            //弹出添加窗口
+            upCreate(){
+                this.dialogVisibleCreate = true;
+                this.resetForm('usersForm');
+            },
+            //添加提交
+            handleCreate(formName){
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        axios.post("/books_manage_backend/users/createUsers.do",this.usersForm).then((res) => {
+                            if (res.data.flag){
+                                this.$message({
+                                    message: res.data.message,
+                                    type: 'success'
+                                });
+                                this.dialogVisibleCreate = false;
+                                this.findPage();
+                            }else {
+                                this.$message.error(res.data.message);
+                            }
+                        }).catch((res) => {
+                            this.dialogVisibleCreate = false;
+                            this.permissionsMessage(res);
+                        });
+                    } else {
+                        this.$message.error('请检查信息填写是否正确！');
+                        return false;
+                    }
+                });
+            },
+            //编辑提交
+            handleEdit(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        axios.post("/books_manage_backend/users/updateUsers.do",this.usersForm).then((res) => {
+                            if (res.data.flag){
+                                this.$message({
+                                    message: res.data.message,
+                                    type: 'success'
+                                });
+                                this.dialogVisibleEdit = false;
+                                this.findPage();
+                            }else {
+                                this.$message.error(res.data.message);
+                            }
+                        }).catch((res) => {
+                            this.dialogVisibleEdit = false;
+                            this.permissionsMessage(res);
+                        });
+                    } else {
+                        this.$message.error('请检查信息填写是否正确！');
+                        return false;
+                    }
+                });
+            },
+
+            // 设置编辑框数据
+            setEditForm(){
+                this.usersForm = {
+                    userId: this.row.userId,
+                    userName: this.row.userName,
+                    userPhone: this.row.userPhone,
+                    userSex: this.row.userSex,
+                    borrowNum: Number(this.row.borrowNum),
+                    userState: this.row.userState,
+                    updateDate: this.row.borrowDate,
+                    createDate: this.row.returnDate,
+                };
+            },
+
+            //弹出编辑窗口
+            upEdit(row) {
+                this.row = row;
+                this.setEditForm();
+                this.dialogVisibleEdit = true;
+
+            },
+
+
+            //删除
+            usersDelete(userId){
+                axios.get("/books_manage_backend/users/delete.do?userId=" + userId).then((res) => {
+                    if (res.data.flag){
+                        this.$message({
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                        this.findPage();
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                    this.deleteWindowClose(userId);
+                }).catch((res) => {
+                    this.permissionsMessage(res);
+                    this.deleteWindowClose(userId);
+                });
+            },
+
+            // 删除弹窗关闭
+            deleteWindowClose(borrowInfoId) {
+                this.$refs[borrowInfoId].doClose();
+            },
+
+            //取消删除
+            usersNoDelete(userId){
+                this.deleteWindowClose(userId);
+                this.$message({
+                    type: 'info',
+                    message: '放弃删除'
+                })
+            },
+
+            //确认
+            usersSwitch(referencePre, users){
+                switch (referencePre) {
+                    case 'state-':
+                        users.userState = !users.userState;
+                        break;
+                }
+                axios.post("/books_manage_backend/users/updateUsers.do", users).then((res) => {
+                    if (res.data.flag){
+                        this.$message({
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                        this.findPage();
+                    }else {
+                        this.$message.error(res.data.message);
+                    }
+                }).catch((res) => {
+                    this.permissionsMessage(res);
+                });
+                this.switchWindowClose(referencePre + users.userId);
+            },
+
+            // 弹窗关闭
+            switchWindowClose(referencePre) {
+                this.$refs[referencePre].doClose();
+            },
+
+            //取消
+            usersNoSwitch(referencePre, users){
+                this.switchWindowClose(referencePre + users.userId);
+                this.$message({
+                    type: 'info',
+                    message: '放弃操作'
+                })
+            },
+
+            // switch改变
+            changeStatus(event, users, referencePre){
+                switch (referencePre) {
+                    case 'state-':
+                        users.userState = !event;
+                        break;
+                }
+            },
+
+            permissionsMessage(res){
+                if (res == 'Error: Request failed with status code 403'){
+                    //权限不足
+                    this.$message.error('权限不足');
+                    return;
+                }else{
+                    this.$message.error('操作失败');
+                    return;
+                }
+            },
+
+            //切换页码
+            handleCurrentChange(currentPage) {
+                //设置最新的页码
+                this.pagination.currentPage = currentPage;
+                //重新调用findPage方法进行分页查询
+                this.findPage();
+            },
+            //分页查询
+            findPage() {
+                //发送ajax请求，提交分页相关请求参数（页码、每页显示记录数、查询条件）
+                var param = {
+                    currentPage: this.pagination.currentPage,
+                    pageSize: this.pagination.pageSize,
+                    requirement: this.pagination.requirement,
+                    screens: this.pagination.screens
+                };
+                axios.post("/books_manage_backend/users/findPage.do",param).then((res) => {
+                    //解析返回的数据
+                    this.pagination.total = res.data.total;
+                    this.usersList = res.data.rows;
+                    this.loading = false;
+                });
+            },
+
+            // 日期格式化
+            dateFormatter(row, column, cellValue, index) {
+                const date = row[column.property];
+                if (date != null) {
+                    return date.split(" ")[0];
+                }
+            }
+        }
+    })
+</script>
+</html>

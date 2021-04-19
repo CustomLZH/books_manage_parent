@@ -519,7 +519,7 @@
 
             //编辑表单重置
             resetFormEdit() {
-                this.setTypeForm();
+                this.setEditForm();
             },
 
             //表单重置
@@ -584,8 +584,10 @@
 
             // 时间范围绑定
             dateBinding() {
-                this.borrowForm.borrowDate = this.dateScope[0];
-                this.borrowForm.returnDate = this.dateScope[1];
+                if (this.dateScope != null) {
+                    this.borrowForm.borrowDate = this.dateScope[0];
+                    this.borrowForm.returnDate = this.dateScope[1];
+                }
             },
 
             // 选择书籍
@@ -683,7 +685,7 @@
             },
 
             // 设置编辑框数据
-            setBorrowForm(){
+            setEditForm(){
                 this.borrowForm = {
                     borrowInfoId: this.row.borrowInfoId,
                     bookId: this.row.bookId,
@@ -703,7 +705,7 @@
             //弹出编辑窗口
             upEdit(row) {
                 this.row = row;
-                this.setBorrowForm();
+                this.setEditForm();
                 this.dialogVisibleEdit = true;
 
             },
@@ -814,36 +816,6 @@
                         break;
                 }
             },
-
-            // //删除
-            // handleDelete(row) {
-            //     //alert(row.typeId);
-            //     this.$confirm('是否确认删除？', '删除', {
-            //         distinguishCancelAndClose: true,
-            //         confirmButtonText: '删除',
-            //         cancelButtonText: '取消'
-            //     }).then(() => {
-            //         axios.get("/books_manage_backend/borrowInfo/delete.do?borrowInfoId=" + row.borrowInfoId).then((res) => {
-            //             if (res.data.flag){
-            //                 this.$message({
-            //                     message: res.data.message,
-            //                     type: 'success'
-            //                 });
-            //                 //重新查询数据
-            //                 this.findPage();
-            //             }else {
-            //                 this.$message.error(res.data.message);
-            //             }
-            //         }).catch((res) => {
-            //             this.permissionsMessage(res);
-            //         });
-            //     }).catch(action => {
-            //         this.$message({
-            //             type: 'info',
-            //             message: '放弃删除'
-            //         })
-            //     });
-            // },
 
             permissionsMessage(res){
                 console.log(res);

@@ -11,4 +11,6 @@ public class RolePermissionConstant {
     public static final String BOOK_TYPE_DELETE = "BOOK_TYPE_DELETE";
     public static final String BOOK_TYPE_CREATE = "BOOK_TYPE_CREATE";
     public static final String BORROW_INFO_DELETE = "BORROW_INFO_DELETE";
+    public static final String USERS_DELETE = "USERS_DELETE";
+    public static final String ADMIN_DELETE = "ADMIN_DELETE";
 }

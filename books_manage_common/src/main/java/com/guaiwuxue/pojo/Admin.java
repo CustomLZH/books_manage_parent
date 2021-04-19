@@ -34,7 +34,7 @@ public class Admin implements Serializable {
     /**
      * 管理员状态
      */
-    private Integer adminState;
+    private Boolean adminState;
 
     /**
      * 更新时间
@@ -101,11 +101,11 @@ public class Admin implements Serializable {
         this.adminGrade = adminGrade;
     }
 
-    public Integer getAdminState() {
+    public Boolean getAdminState() {
         return adminState;
     }
 
-    public void setAdminState(Integer adminState) {
+    public void setAdminState(Boolean adminState) {
         this.adminState = adminState;
     }
 

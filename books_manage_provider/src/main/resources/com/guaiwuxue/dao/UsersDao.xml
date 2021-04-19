@@ -5,4 +5,40 @@
     <select id="findAllToBorrowInfoCreate" resultType="com.guaiwuxue.pojo.Users">
         select u.userId, u.userName, u.userPhone from users as u
     </select>
+
+    <select id="findPageByCondition" resultType="com.guaiwuxue.pojo.Users">
+        select userId, userName, userSex, userPhone, borrowNum, user_state as userState, update_date as updateDate, create_date as createDate
+        from users
+        <if test="requirement != null and requirement.length > 0 ">
+            where userName like #{requirement} or userPhone like #{requirement}
+        </if>
+    </select>
+    <delete id="delete">
+        delete from users where userId = #{userId}
+    </delete>
+    <insert id="createUsers">
+        insert into users(userName, userSex, userPhone, borrowNum, user_state, update_date)
+        values(#{userName}, #{userSex}, #{userPhone}, #{borrowNum}, #{userState}, now())
+    </insert>
+
+    <update id="updateUsers">
+        update users
+        set update_date = now()
+        <if test="userName != null">
+            ,userName = #{userName}
+        </if>
+        <if test="userSex != null">
+            ,userSex = #{userSex}
+        </if>
+        <if test="userPhone != null">
+            ,userPhone = #{userPhone}
+        </if>
+        <if test="borrowNum != null">
+            ,borrowNum = #{borrowNum}
+        </if>
+        <if test="userState != null">
+            ,user_state = #{userState}
+        </if>
+        where userId = #{userId}
+    </update>
 </mapper>

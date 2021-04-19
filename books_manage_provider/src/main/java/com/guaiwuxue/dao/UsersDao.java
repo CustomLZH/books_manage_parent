@@ -1,6 +1,9 @@
 package com.guaiwuxue.dao;
 
+import com.github.pagehelper.Page;
+import com.guaiwuxue.pojo.Books;
 import com.guaiwuxue.pojo.Users;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,4 +20,28 @@ public interface UsersDao {
      */
     List<Users> findAllToBorrowInfoCreate();
 
+    /**
+     * 分页查询
+     * @param requirement
+     * @return
+     */
+    Page<Users> findPageByCondition(@Param("requirement") String requirement);
+
+    /**
+     * 根据id删除用户
+     * @param userId
+     */
+    void delete(Long userId);
+
+    /**
+     * 添加用户
+     * @param users
+     */
+    void createUsers(Users users);
+
+    /**
+     * 更新用户
+     * @param users
+     */
+    void updateUsers(Users users);
 }

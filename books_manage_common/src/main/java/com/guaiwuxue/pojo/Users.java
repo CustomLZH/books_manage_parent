@@ -37,6 +37,11 @@ public class Users {
     private String borrowNum;
 
     /**
+     * 状态
+     */
+    private Boolean userState;
+
+    /**
      * 更新时间
      */
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
@@ -47,6 +52,14 @@ public class Users {
      */
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
+
+    public Boolean getUserState() {
+        return userState;
+    }
+
+    public void setUserState(Boolean userState) {
+        this.userState = userState;
+    }
 
     public Date getUpdateDate() {
         return updateDate;

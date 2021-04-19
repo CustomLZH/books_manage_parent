@@ -1,5 +1,7 @@
 package com.guaiwuxue.service;
 
+import com.guaiwuxue.entity.PageResult;
+import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.pojo.Admin;
 
 /**
@@ -15,4 +17,35 @@ public interface AdminService {
      * @return
      */
     public Admin findByUsername(String adminUsername);
+
+
+    /**
+     * 按照用户名查找并排除密码
+     * @param adminUsername
+     * @return
+     */
+    public Admin findByUsernameExcludePasswords(String adminUsername);
+
+
+
+    /**
+     * 按照管理员id删除
+     * @param admin
+     */
+    void delete(Long admin);
+
+    /**
+     * 创建管理员
+     * @param admin
+     */
+    void createAdmin(Admin admin);
+
+    /**
+     * 更新管理员
+     *
+     * @param admin
+     */
+    void updateAdmin(Admin admin);
+
+    PageResult findPage(QueryPageBean queryPageBean);
 }

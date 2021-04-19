@@ -51,6 +51,25 @@ public interface BorrowInfoDao {
 
     /**
      * 获取一周内每天的借阅量
+     * @return
      */
     TreeSet<WeekNumResp> findWeekBorrowNum();
+
+    /**
+     * 获取一周内每天的归还量
+     * @return
+     */
+    TreeSet<WeekNumResp> findWeekRestoreNum();
+
+    /**
+     * 获取一周内每天的挂失量
+     * @return
+     */
+    TreeSet<WeekNumResp> findWeekLoseNum();
+
+    /**
+     * 获取一周内每天借阅用户量
+     * @return
+     */
+    TreeSet<WeekNumResp> findWeekUsersNum();
 }
