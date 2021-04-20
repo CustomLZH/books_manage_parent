@@ -25,7 +25,7 @@
             <security:frame-options policy="SAMEORIGIN"/>
         </security:headers>
         <!--拦截规则，/**为所有请求，hasRole为需要的角色，hasAuthority为需要的权限-->
-        <security:intercept-url pattern="/**" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/**" access="hasAuthority('LOGIN')"/>
 
         <!--指定自定义登陆页面-->
         <!--

@@ -469,13 +469,17 @@
                 })
             },
 
-            //确认
-            usersSwitch(referencePre, users){
+            changeSwitch(referencePre, users) {
                 switch (referencePre) {
                     case 'state-':
                         users.userState = !users.userState;
                         break;
                 }
+            },
+
+            //确认
+            usersSwitch(referencePre, users){
+                this.changeSwitch(referencePre, users);
                 axios.post("/books_manage_backend/users/updateUsers.do", users).then((res) => {
                     if (res.data.flag){
                         this.$message({
@@ -484,6 +488,8 @@
                         });
                         this.findPage();
                     }else {
+                        // 权限不足，改变回来
+                        this.changeSwitch(referencePre, users);
                         this.$message.error(res.data.message);
                     }
                 }).catch((res) => {

@@ -33,6 +33,7 @@ public class BookTypeController {
      * @param queryPageBean
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
         return bookTypeService.findPage(queryPageBean);
@@ -119,6 +120,7 @@ public class BookTypeController {
      * 查询所有书籍类型
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findBookTypeAll")
     public Result<TreeSet<BookType>> findBookTypeAll(){
         try {

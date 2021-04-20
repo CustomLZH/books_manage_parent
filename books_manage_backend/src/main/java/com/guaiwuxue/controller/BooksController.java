@@ -1,6 +1,7 @@
 package com.guaiwuxue.controller;
 
 import com.guaiwuxue.constant.MessageConstant;
+import com.guaiwuxue.constant.RolePermissionConstant;
 import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.entity.Result;
@@ -8,6 +9,7 @@ import com.guaiwuxue.pojo.Books;
 import com.guaiwuxue.service.BooksService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,6 +35,7 @@ public class BooksController {
      * 获取所有图书
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findAll")
     public Result<List<Books>> findAll(){
         // 1. 调用service接口
@@ -48,6 +51,7 @@ public class BooksController {
      * 获取所有图书部分信息
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findAllToBorrowInfoCreate")
     public Result<List<Books>> findAllToBorrowInfoCreate(){
         // 1. 调用service接口
@@ -60,12 +64,11 @@ public class BooksController {
         }
     }
 
-
-
     /**
      * 分页查询
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
         //JSONObject.DEFFAULT_DATE_FORMAT="yyyy-MM-dd";
@@ -77,6 +80,7 @@ public class BooksController {
      * @param queryPageBean
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findPageInfo")
     public PageResult findPageInfo(@RequestBody QueryPageBean queryPageBean){
         return booksService.findPageInfo(queryPageBean, "bookDate desc");
@@ -89,6 +93,7 @@ public class BooksController {
      * @param borrowNum
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.UPDATE_BOOKS + "')")
     @RequestMapping("/updateBorrowNumById")
     public Result<Void> updateBorrowNumById(@Param("bookId") int bookId, @Param("borrowNum") int borrowNum){
         try {
@@ -106,6 +111,7 @@ public class BooksController {
      * @param bookId
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findBookInfo")
     public Result<Books> findBookInfo(int bookId){
         try {
@@ -123,6 +129,7 @@ public class BooksController {
      * @return
      * @throws UnsupportedEncodingException
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.CREATE_BOOKS + "')")
     @RequestMapping("/insertBookByMap")
     public Result<Void> insertBookByMap(@RequestBody Books books) throws UnsupportedEncodingException {
         try {
@@ -139,6 +146,7 @@ public class BooksController {
      * @param bookId
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.DELETE_BOOKS + "')")
     @RequestMapping("/deleteBookByBookId")
     public Result<Void> deleteBookByBookId(int bookId){
         try {
@@ -155,6 +163,7 @@ public class BooksController {
      * @param books
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.UPDATE_BOOKS + "')")
     @RequestMapping("updateBookByBookId")
     public Result<Void> updateBookByBookId(@RequestBody Books books){
         try {
@@ -172,6 +181,7 @@ public class BooksController {
      * @param books
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.UPDATE_BOOKS + "')")
     @RequestMapping("updateBookRepertoryByBookId")
     public Result updateBookRepertoryByBookId(@RequestBody Books books){
         try {

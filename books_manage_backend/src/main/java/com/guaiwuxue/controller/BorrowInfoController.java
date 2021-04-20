@@ -30,6 +30,7 @@ public class BorrowInfoController {
      * 分页查询
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
         return borrowInfoService.findPage(queryPageBean);
@@ -40,7 +41,7 @@ public class BorrowInfoController {
      * @param borrowInfoId
      * @return
      */
-    @PreAuthorize("hasAuthority('" + RolePermissionConstant.BORROW_INFO_DELETE + "')")
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.DELETE_BORROW_INFO + "')")
     @RequestMapping("/delete")
     public Result<Void> delete(Long borrowInfoId){
         try{
@@ -57,6 +58,7 @@ public class BorrowInfoController {
      * @param borrowInfo
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.CREATE_BORROW_INFO + "')")
     @RequestMapping("/createBorrowInfo")
     public Result<Void> createBorrowInfo(@RequestBody BorrowInfo borrowInfo) {
         if (borrowInfo == null || borrowInfo.getBookId() == null || borrowInfo.getUserId() == null ||
@@ -76,6 +78,7 @@ public class BorrowInfoController {
      * @param borrowInfo
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.UPDATE_BORROW_INFO + "')")
     @RequestMapping("/updateBorrowInfo")
     public Result<Void> updateBorrowInfo(@RequestBody BorrowInfo borrowInfo) {
         if (borrowInfo == null || borrowInfo.getBookId() == null || borrowInfo.getUserId() == null ||

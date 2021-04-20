@@ -1,6 +1,7 @@
 package com.guaiwuxue.controller;
 
 import com.guaiwuxue.constant.MessageConstant;
+import com.guaiwuxue.constant.RolePermissionConstant;
 import com.guaiwuxue.entity.MonthFiveBorrowNumResp;
 import com.guaiwuxue.entity.Result;
 import com.guaiwuxue.entity.WeekAllNumResp;
@@ -8,6 +9,7 @@ import com.guaiwuxue.entity.WeekNumResp;
 import com.guaiwuxue.service.BorrowInfoService;
 import com.guaiwuxue.service.HomeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -32,6 +34,7 @@ public class HomeController {
      * 获取月季度前五借阅量
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/monthFiveBorrowNum")
     public Result<List<MonthFiveBorrowNumResp>> monthFiveBorrowNum() {
         List<MonthFiveBorrowNumResp> monthFiveBorrowNumResps = null;
@@ -48,6 +51,7 @@ public class HomeController {
      * 获取一周内每天的借阅量
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findWeekBorrowNum")
     public Result<TreeSet<WeekNumResp>> findWeekBorrowNum() {
         TreeSet<WeekNumResp> weekBorrowNum = null;
@@ -63,6 +67,7 @@ public class HomeController {
      * 获取一周内每天的所有信息
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findWeekAllNum")
     public Result<List<WeekAllNumResp>> findWeekAllNum() {
         List<WeekAllNumResp> weekAllNums = null;

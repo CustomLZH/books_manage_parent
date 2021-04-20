@@ -681,6 +681,9 @@
                        this.$message.error(res.data.message);
                        this.bookNoDelete(bookId);
                    }
+                }).catch((res) => {
+                    this.permissionsMessage(res);
+                    this.bookNoDelete(bookId);
                 });
             },
             //取消删除
@@ -732,6 +735,9 @@
                             } else {
                                 this.$message.error(res.data.message);
                             };
+                        }).catch((res) => {
+                            this.dialogVisibleEdit = false;
+                            this.permissionsMessage(res);
                         });
                     }else if (!valid) {
                         this.$message.error('请检查信息填写是否正确！');
@@ -771,6 +777,9 @@
                                 }else {
                                     this.$message.error(res.data.message);
                                 }
+                            }).catch((res) => {
+                                this.dialogVisibleCreate = false;
+                                this.permissionsMessage(res);
                             });
                         }else {
                             this.$message.error('请选择中图分类号！');
@@ -782,6 +791,20 @@
                     }
                 });
             },
+
+
+            permissionsMessage(res){
+                console.log(res);
+                if (res == 'Error: Request failed with status code 403'){
+                    //权限不足
+                    this.$message.error('权限不足');
+                    return;
+                }else{
+                    this.$message.error('操作失败');
+                    return;
+                }
+            },
+
             //添加中图分类号单选触发
             handleCurrentChange_table(val) {
                 if (val!==undefined){

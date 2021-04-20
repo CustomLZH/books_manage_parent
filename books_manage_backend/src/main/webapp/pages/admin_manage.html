@@ -452,13 +452,18 @@
                 })
             },
 
-            //确认
-            usersSwitch(referencePre, admin){
+
+            changeSwitch(referencePre, admin) {
                 switch (referencePre) {
                     case 'state-':
                         admin.adminState = !admin.adminState;
                         break;
                 }
+            },
+
+            //确认
+            usersSwitch(referencePre, admin){
+                this.changeSwitch(referencePre, admin);
                 axios.post("/books_manage_backend/admin/updateAdmin.do", admin).then((res) => {
                     if (res.data.flag){
                         this.$message({
@@ -470,6 +475,8 @@
                         this.$message.error(res.data.message);
                     }
                 }).catch((res) => {
+                    // 权限不足，改变回来
+                    this.changeSwitch(referencePre, admin);
                     this.permissionsMessage(res);
                 });
                 this.switchWindowClose(referencePre + admin.adminId);

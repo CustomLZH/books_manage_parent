@@ -34,28 +34,16 @@ public class AdminController {
      * 分页查询
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
         return adminService.findPage(queryPageBean);
-    }
-
-    /**
-     * 获得当前登录用户的用户名
-     * @return
-     */
-    @RequestMapping("/getAdmin")
-    public Result<Admin> getAdmin(){
-        //当Spring security完成认证后，会将当前用户信息保存到框架提供的上下文对象
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (user != null){
-            return new Result<>(true, MessageConstant.GET_ADMIN_SUCCESS, adminService.findByUsername(user.getUsername()));
-        }
-        return new Result<>(false, MessageConstant.GET_ADMIN_FAIL);
     }
     /**
      * 获得当前登录用户的用户名排除密码
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/getAdminExcludePasswords")
     public Result<Admin> getAdminExcludePasswords(){
         //当Spring security完成认证后，会将当前用户信息保存到框架提供的上下文对象
@@ -65,10 +53,6 @@ public class AdminController {
         }
         return new Result<>(false, MessageConstant.GET_ADMIN_FAIL);
     }
-
-
-
-
 
     /**
      * 根据管理员id删除
@@ -87,13 +71,12 @@ public class AdminController {
         }
     }
 
-
-
     /**
      * 添加管理员
      * @param admin
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.ADMIN_CREATE + "')")
     @RequestMapping("/createAdmin")
     public Result<Void> createUsers(@RequestBody Admin admin) {
         if (admin == null || admin.getAdminUsername() == null || admin.getAdminPassword() == null) {
@@ -111,12 +94,12 @@ public class AdminController {
         return new Result<>(true,MessageConstant.CREATE_ADMIN_SUCCESS);
     }
 
-
     /**
      * 更新管理员
      * @param admin
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.ADMIN_UPDATE + "')")
     @RequestMapping("/updateAdmin")
     public Result<Void> updateBorrowInfo(@RequestBody Admin admin) {
         if (admin == null || admin.getAdminUsername() == null)

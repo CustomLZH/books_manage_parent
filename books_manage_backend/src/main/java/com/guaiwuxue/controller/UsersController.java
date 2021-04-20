@@ -33,6 +33,7 @@ public class UsersController {
      * 分页查询
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findPage")
     public PageResult findPage(@RequestBody QueryPageBean queryPageBean){
         return usersService.findPage(queryPageBean);
@@ -43,6 +44,7 @@ public class UsersController {
      * @param users
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.CREATE_USERS + "')")
     @RequestMapping("/createUsers")
     public Result<Void> createUsers(@RequestBody Users users) {
         if (users == null || users.getUserName() == null || users.getUserPhone() == null || users.getBorrowNum() == null)
@@ -62,8 +64,9 @@ public class UsersController {
      * @param users
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.UPDATE_USERS + "')")
     @RequestMapping("/updateUsers")
-    public Result<Void> updateBorrowInfo(@RequestBody Users users) {
+    public Result<Void> updateUsers(@RequestBody Users users) {
         if (users == null || users.getUserName() == null || users.getUserPhone() == null || users.getBorrowNum() == null)
             return new Result<>(false, "请检查是否填写数据");
         try {
@@ -79,6 +82,7 @@ public class UsersController {
      * 获取所有图书部分信息
      * @return
      */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.LOGIN + "')")
     @RequestMapping("/findAllToBorrowInfoCreate")
     public Result<List<Users>> findAllToBorrowInfoCreate(){
         // 1. 调用service接口
@@ -95,7 +99,7 @@ public class UsersController {
      * @param userId
      * @return
      */
-    @PreAuthorize("hasAuthority('" + RolePermissionConstant.USERS_DELETE + "')")
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.DELETE_USERS + "')")
     @RequestMapping("/delete")
     public Result<Void> delete(Long userId){
         try{
