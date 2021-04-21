@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localhost
+ Source Server         : localhost-books_manage
  Source Server Type    : MySQL
  Source Server Version : 50729
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 50729
  File Encoding         : 65001
 
- Date: 05/04/2021 23:01:55
+ Date: 21/04/2021 20:24:28
 */
 
 SET NAMES utf8mb4;
@@ -25,12 +25,11 @@ CREATE TABLE `admin`  (
   `adminId` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '管理员id',
   `adminUsername` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '管理员用户名',
   `adminPassword` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '管理员密码',
-  `adminGrade` int(11) NULL DEFAULT 0 COMMENT '管理员等级',
-  `adminState` int(11) NULL DEFAULT 0 COMMENT '管理员状态',
+  `adminState` tinyint(1) NULL DEFAULT 0 COMMENT '管理员状态',
   `update_date` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `create_date` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`adminId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for admin_role
@@ -99,7 +98,7 @@ CREATE TABLE `borrow_info`  (
   PRIMARY KEY (`borrowInfoId`) USING BTREE,
   INDEX `borrow_uId`(`userId`) USING BTREE,
   INDEX `borrow_bookId`(`bookId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for permission
@@ -112,7 +111,7 @@ CREATE TABLE `permission`  (
   `update_date` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `create_date` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 20 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for role
@@ -125,7 +124,7 @@ CREATE TABLE `role`  (
   `update_date` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `create_date` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 15 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for role_permission
@@ -151,9 +150,10 @@ CREATE TABLE `users`  (
   `userSex` int(2) NULL DEFAULT NULL COMMENT '用户性别',
   `userPhone` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '联系电话',
   `borrowNum` tinyint(4) NULL DEFAULT 0 COMMENT '借书数量',
+  `user_state` tinyint(1) NOT NULL DEFAULT 1 COMMENT '状态',
   `update_date` datetime(0) NULL DEFAULT NULL COMMENT '更新时间',
   `create_date` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '创建时间',
   PRIMARY KEY (`userId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
