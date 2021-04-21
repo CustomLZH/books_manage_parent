@@ -28,10 +28,6 @@ public class Admin implements Serializable {
      */
     private String adminPassword;
     /**
-     * 管理员等级
-     */
-    private Integer adminGrade;
-    /**
      * 管理员状态
      */
     private Boolean adminState;
@@ -91,14 +87,6 @@ public class Admin implements Serializable {
 
     public void setAdminPassword(String adminPassword) {
         this.adminPassword = adminPassword;
-    }
-
-    public Integer getAdminGrade() {
-        return adminGrade;
-    }
-
-    public void setAdminGrade(Integer adminGrade) {
-        this.adminGrade = adminGrade;
     }
 
     public Boolean getAdminState() {

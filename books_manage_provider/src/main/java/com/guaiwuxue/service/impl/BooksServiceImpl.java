@@ -9,6 +9,7 @@ import com.guaiwuxue.pojo.Books;
 import com.guaiwuxue.service.BooksService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import java.util.Map;
  * @Version: 1.0
  */
 @Service
+@Transactional(readOnly = true)
 public class BooksServiceImpl implements BooksService {
 
     @Autowired
@@ -60,6 +62,7 @@ public class BooksServiceImpl implements BooksService {
         return new PageResult(page.getTotal(),page.getResult());
     }
 
+    
     @Override
     public void updateBorrowNumById(int bookId, int borrowNum) {
         int borrowNumOld = booksDao.findBorrowNumById(bookId);
@@ -75,20 +78,24 @@ public class BooksServiceImpl implements BooksService {
         return booksDao.findBookInfoByBookId(bookId);
     }
 
+    
     @Override
     public void insertBook(Books books) {
         booksDao.insertBook(books);
     }
 
+    
     @Override
     public void deleteBookByBookId(int bookId) {
         booksDao.deleteBookByBookId(bookId);
     }
 
+    
     @Override
     public void updateBookByBookId(Books books) {
         booksDao.updateBookByBookId(books);
     }
+    
     @Override
     public void updateBookRepertoryByBookId(Books books) {
         Books booksRepertory = new Books();

@@ -7,6 +7,7 @@ import com.guaiwuxue.service.HomeService;
 import com.guaiwuxue.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +20,7 @@ import java.util.TreeSet;
  * @Version: 1.0
  */
 @Service
+@Transactional(readOnly = true)
 public class HomeServiceImpl implements HomeService {
     @Autowired
     private BorrowInfoService borrowInfoService;

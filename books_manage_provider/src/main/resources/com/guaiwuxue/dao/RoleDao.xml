@@ -8,4 +8,64 @@
         from role r,admin_role ar
         where r.id = ar.role_id and ar.admin_id = #{adminId}
     </select>
+
+    <select id="findAll" resultType="com.guaiwuxue.pojo.Role">
+        select r.id, r.name
+        from role as r
+    </select>
+
+    <insert id="insertAllRole">
+        insert admin_role(admin_id, role_id) values
+        <foreach collection="roles" index="index" separator="," item="item">
+            (#{adminId}, #{item.id})
+        </foreach>
+    </insert>
+    <select id="findRoleIdsByAdminId" resultType="com.guaiwuxue.pojo.Role">
+        select r.id, r.name
+        from role r,admin_role ar
+        where r.id = ar.role_id and ar.admin_id = #{adminId}
+    </select>
+    <delete id="deleteByAdminId">
+        delete from admin_role
+        where admin_id = #{admin}
+    </delete>
+
+    <select id="findPageByCondition" resultType="com.guaiwuxue.entity.RolePermissions">
+        select r.id, r.name, r.update_date as updateDate, r.create_date as createDate
+        from role as r
+        left join role_permission as rp
+        on r.id = rp.role_id
+        left join permission as p
+        on rp.permission_id = p.id
+        <if test="requirement != null and requirement.length() > 0 ">
+            where r.name like #{requirement} or p.name like #{requirement}
+        </if>
+        group by r.id, r.name, r.update_date, r.create_date
+    </select>
+
+
+    <delete id="delete">
+        delete from role where id = #{id}
+    </delete>
+
+    <select id="findByName" resultType="com.guaiwuxue.pojo.Role">
+        select r.id, r.name, r.update_date as updateDate, r.create_date as createDate
+        from role as r
+        where r.name = #{name}
+    </select>
+
+    <insert id="createRole" parameterType="com.guaiwuxue.entity.RolePermissions" useGeneratedKeys="true" keyProperty="id" keyColumn="id" >
+        insert into role (name , update_date)
+        values(#{name}, now())
+    </insert>
+    <update id="updateRole">
+        update role
+        set update_date = now()
+        <if test="name != null">
+            ,name = #{name}
+        </if>
+        where id = #{id}
+    </update>
+
+
 </mapper>

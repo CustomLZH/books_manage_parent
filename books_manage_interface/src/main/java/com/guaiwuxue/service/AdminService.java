@@ -1,5 +1,6 @@
 package com.guaiwuxue.service;
 
+import com.guaiwuxue.entity.AdminRoles;
 import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.pojo.Admin;
@@ -36,16 +37,16 @@ public interface AdminService {
 
     /**
      * 创建管理员
-     * @param admin
+     * @param adminRoles
      */
-    void createAdmin(Admin admin);
+    void createAdmin(AdminRoles adminRoles);
 
     /**
      * 更新管理员
      *
-     * @param admin
+     * @param adminRoles
      */
-    void updateAdmin(Admin admin);
+    void updateAdmin(AdminRoles adminRoles);
 
     PageResult findPage(QueryPageBean queryPageBean);
 }

@@ -9,7 +9,7 @@
     <select id="findPageByCondition" resultType="com.guaiwuxue.pojo.Users">
         select userId, userName, userSex, userPhone, borrowNum, user_state as userState, update_date as updateDate, create_date as createDate
         from users
-        <if test="requirement != null and requirement.length > 0 ">
+        <if test="requirement != null and requirement.length() > 0 ">
             where userName like #{requirement} or userPhone like #{requirement}
         </if>
     </select>

@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.guaiwuxue.dao.AdminDao;
 import com.guaiwuxue.dao.PermissionDao;
 import com.guaiwuxue.dao.RoleDao;
+import com.guaiwuxue.entity.AdminRoles;
 import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.pojo.Admin;
@@ -15,6 +16,7 @@ import com.guaiwuxue.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Random;
@@ -26,6 +28,7 @@ import java.util.Set;
  * @Version: 1.0
  */
 @Service
+@Transactional(readOnly = true)
 public class AdminServiceImpl implements AdminService {
 
 
@@ -46,7 +49,9 @@ public class AdminServiceImpl implements AdminService {
     public Admin findByUsername(String adminUsername) {
         // 获取用户基本信息
         Admin admin = adminDao.findByUsername(adminUsername);
-
+        if (admin == null) {
+            return null;
+        }
         // 获取与管理员相关的角色
         Set<Role> roles = roleDao.findByAdminId(admin.getAdminId());
 
@@ -68,15 +73,22 @@ public class AdminServiceImpl implements AdminService {
         return admin;
     }
 
+    
     @Override
     public void delete(Long admin) {
         this.adminDao.delete(admin);
+        this.roleDao.deleteByAdminId(admin);
     }
 
+    
     @Override
-    public void createAdmin(Admin admin) {
-        this.encoderPassword(admin);
-        this.adminDao.createAdmin(admin);
+    public void createAdmin(AdminRoles adminRoles) {
+        this.encoderPassword(adminRoles);
+        this.adminDao.createAdmin(adminRoles);
+        if (adminRoles.getRoles() != null && adminRoles.getRoles().size() > 0) {
+            // 绑定角色
+            roleDao.insertAllRole(adminRoles.getAdminId(), adminRoles.getRoles());
+        }
     }
 
     /**
@@ -103,13 +115,23 @@ public class AdminServiceImpl implements AdminService {
         return sb.toString();
     }
 
+    /**
+     * 更新
+     * @param adminRoles
+     */
+    
     @Override
-    public void updateAdmin(Admin admin) {
-        if (admin.getAdminPassword() != null) {
-            this.encoderPassword(admin);
+    public void updateAdmin(AdminRoles adminRoles) {
+        if (adminRoles.getAdminPassword() != null) {
+            this.encoderPassword(adminRoles);
         }
-        admin.setUpdateDate(new Date());
-        this.adminDao.updateAdmin(admin);
+        this.adminDao.updateAdmin(adminRoles);
+        // 删除之前的角色
+        roleDao.deleteByAdminId(adminRoles.getAdminId());
+        if (adminRoles.getRoles() != null && adminRoles.getRoles().size() > 0) {
+            // 绑定角色
+            roleDao.insertAllRole(adminRoles.getAdminId(), adminRoles.getRoles());
+        }
     }
 
     @Override
@@ -137,7 +159,11 @@ public class AdminServiceImpl implements AdminService {
         }
 
         PageHelper.startPage(currentPage,pageSize);
-        Page<Admin> page = adminDao.findPageByCondition("%" + requirement +"%");
+        Page<AdminRoles> page = adminDao.findPageByCondition("%" + requirement +"%");
+
+        for (AdminRoles adminRoles : page) {
+            adminRoles.setRoles(roleDao.findRoleIdsByAdminId(adminRoles.getAdminId()));
+        }
 
         return new PageResult(page.getTotal(),page.getResult());
     }

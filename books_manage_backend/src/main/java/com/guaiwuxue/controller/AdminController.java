@@ -2,6 +2,7 @@ package com.guaiwuxue.controller;
 
 import com.guaiwuxue.constant.MessageConstant;
 import com.guaiwuxue.constant.RolePermissionConstant;
+import com.guaiwuxue.entity.AdminRoles;
 import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.entity.Result;
@@ -73,20 +74,20 @@ public class AdminController {
 
     /**
      * 添加管理员
-     * @param admin
+     * @param adminRoles
      * @return
      */
     @PreAuthorize("hasAuthority('" + RolePermissionConstant.ADMIN_CREATE + "')")
     @RequestMapping("/createAdmin")
-    public Result<Void> createUsers(@RequestBody Admin admin) {
-        if (admin == null || admin.getAdminUsername() == null || admin.getAdminPassword() == null) {
+    public Result<Void> createUsers(@RequestBody AdminRoles adminRoles) {
+        if (adminRoles == null || adminRoles.getAdminUsername() == null || adminRoles.getAdminPassword() == null) {
             return new Result<>(false, "请检查是否填写数据");
         }
-        if (adminService.findByUsername(admin.getAdminUsername()) != null) {
+        if (adminService.findByUsername(adminRoles.getAdminUsername()) != null) {
             return new Result<>(false, "用户名已使用");
         }
         try {
-            adminService.createAdmin(admin);
+            adminService.createAdmin(adminRoles);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result<>(false,MessageConstant.CREATE_ADMIN_FAIL);
@@ -96,16 +97,16 @@ public class AdminController {
 
     /**
      * 更新管理员
-     * @param admin
+     * @param adminRoles
      * @return
      */
     @PreAuthorize("hasAuthority('" + RolePermissionConstant.ADMIN_UPDATE + "')")
     @RequestMapping("/updateAdmin")
-    public Result<Void> updateBorrowInfo(@RequestBody Admin admin) {
-        if (admin == null || admin.getAdminUsername() == null)
+    public Result<Void> updateBorrowInfo(@RequestBody AdminRoles adminRoles) {
+        if (adminRoles == null || adminRoles.getAdminUsername() == null)
             return new Result<>(false, "请检查是否填写数据");
         try {
-            adminService.updateAdmin(admin);
+            adminService.updateAdmin(adminRoles);
         } catch (Exception e) {
             e.printStackTrace();
             return new Result<>(false,MessageConstant.UPDATE_ADMIN_FAIL);

@@ -22,4 +22,7 @@ public class RolePermissionConstant {
     public static final String CREATE_BOOKS = "CREATE_BOOKS";
     public static final String UPDATE_BOOKS = "UPDATE_BOOKS";
     public static final String DELETE_BOOKS = "DELETE_BOOKS";
+    public static final String DELETE_ROLE = "DELETE_ROLE";
+    public static final String ROLE_CREATE = "ROLE_CREATE";
+    public static final String ROLE_UPDATE = "ROLE_UPDATE";
 }

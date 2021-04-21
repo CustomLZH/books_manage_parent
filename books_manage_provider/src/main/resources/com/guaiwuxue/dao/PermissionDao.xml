@@ -8,4 +8,29 @@
         from permission p,role_permission rp
         where p.id = rp.permission_id and rp.role_id = #{id}
     </select>
+
+    <select id="findAllPermission" resultType="com.guaiwuxue.pojo.Permission">
+        select p.id, p.name
+        from permission as p
+    </select>
+
+    <select id="findPermissionByRoleId" resultType="com.guaiwuxue.pojo.Permission">
+        select p.id, p.name
+        from permission as p, role_permission rp
+        where p.id = rp.permission_id and rp.role_id = #{roleId}
+    </select>
+
+
+    <delete id="deleteByRoleId">
+        delete from role_permission
+        where role_id = #{id}
+    </delete>
+
+    <insert id="insertAllPermission">
+        insert role_permission(role_id, permission_id) values
+        <foreach collection="permissions" index="index" separator="," item="item">
+            (#{id}, #{item.id})
+        </foreach>
+    </insert>
+
 </mapper>

@@ -10,6 +10,7 @@ import com.guaiwuxue.pojo.Users;
 import com.guaiwuxue.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ import java.util.List;
  * @Version: 1.0
  */
 @Service
+@Transactional(readOnly = true)
 public class UsersServiceImpl implements UsersService {
 
     @Autowired
@@ -59,16 +61,19 @@ public class UsersServiceImpl implements UsersService {
         return new PageResult(page.getTotal(),page.getResult());
     }
 
+    
     @Override
     public void delete(Long userId) {
         usersDao.delete(userId);
     }
 
+    
     @Override
     public void createUsers(Users users) {
         usersDao.createUsers(users);
     }
 
+    
     @Override
     public void updateUsers(Users users) {
         usersDao.updateUsers(users);

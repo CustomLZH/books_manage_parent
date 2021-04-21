@@ -53,4 +53,8 @@ public class MessageConstant {
     public static final String CREATE_ADMIN_SUCCESS = "创建管理员成功";
     public static final String UPDATE_ADMIN_FAIL = "更新管理员失败";
     public static final String UPDATE_ADMIN_SUCCESS = "更新管理员成功";
+    public static final String ROLE_FIND_ALL_FAIL = "查询所有角色失败";
+    public static final String ROLE_FIND_ALL_SUCCESS = "查询所有角色成功";
+    public static final String DELETE_ROLE_SUCCESS = "删除角色成功";
+    public static final String DELETE_ROLE_FAIL = "删除角色失败";
 }

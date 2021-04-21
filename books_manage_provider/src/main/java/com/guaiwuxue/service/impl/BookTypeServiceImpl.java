@@ -11,6 +11,7 @@ import com.guaiwuxue.service.BookTypeService;
 import com.guaiwuxue.util.SerializeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -22,6 +23,7 @@ import java.util.TreeSet;
  * @Version: 1.0
  */
 @Service
+@Transactional(readOnly = true)
 public class BookTypeServiceImpl implements BookTypeService {
 
     @Autowired
@@ -65,7 +67,7 @@ public class BookTypeServiceImpl implements BookTypeService {
         //返回分页结果数据
         return new PageResult(page.getTotal(),page.getResult());
     }
-
+    
     @Override
     public int delete(String typeId) {
         // 先从redis中获取数据
@@ -84,6 +86,7 @@ public class BookTypeServiceImpl implements BookTypeService {
         return count;
     }
 
+    
     @Override
     public boolean createBookType(BookType bookType) {
         // 先从redis中获取数据
@@ -106,6 +109,7 @@ public class BookTypeServiceImpl implements BookTypeService {
         return bookTypeDao.findTypeNameByTypeId(typeId);
     }
 
+    
     @Override
     public void updateBookType(BookType bookType) {
         // 先从redis中获取数据
@@ -136,8 +140,6 @@ public class BookTypeServiceImpl implements BookTypeService {
                 resource.set("typeSet".getBytes(), SerializeUtil.serialize(bookType));
             }
         }
-
         return bookType;
-
     }
 }

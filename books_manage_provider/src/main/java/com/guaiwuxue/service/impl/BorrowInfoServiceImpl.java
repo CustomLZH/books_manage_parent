@@ -12,6 +12,7 @@ import com.guaiwuxue.service.BorrowInfoService;
 import com.guaiwuxue.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.TreeSet;
  * @Version: 1.0
  */
 @Service
+@Transactional(readOnly = true)
 public class BorrowInfoServiceImpl implements BorrowInfoService {
 
     @Autowired
@@ -66,6 +68,7 @@ public class BorrowInfoServiceImpl implements BorrowInfoService {
         return new PageResult(page.getTotal(),page.getResult());
     }
 
+    
     @Override
     public void delete(Long borrowInfoId) {
         borrowInfoDao.delete(borrowInfoId);
@@ -76,11 +79,13 @@ public class BorrowInfoServiceImpl implements BorrowInfoService {
         return borrowInfoDao.monthFiveBorrowNum();
     }
 
+    
     @Override
     public void createBorrowInfo(BorrowInfo borrowInfo) {
         borrowInfoDao.createBorrowInfo(borrowInfo);
     }
 
+    
     @Override
     public void updateBorrowInfo(BorrowInfo borrowInfo) {
         borrowInfo.setUpdateDate(new Date());

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>分类管理</title>
+    <title>用户管理</title>
     <script src="../js/vue/vue.min.js"></script>
     <script src="../js/jQuery/jquery-3.5.0.min.js"></script>
     <script src="../js/vue/axios-0.18.0.js"></script>
@@ -284,7 +284,7 @@
                 screens: []
             },
             tags: [],
-            referencePre_state: 'state-',
+            referencePre_state: 'user_state-',
             usersList: [],
             loading: true,
             dialogVisibleCreate: false,
@@ -471,7 +471,7 @@
 
             changeSwitch(referencePre, users) {
                 switch (referencePre) {
-                    case 'state-':
+                    case 'user_state-':
                         users.userState = !users.userState;
                         break;
                 }
@@ -515,7 +515,7 @@
             // switch改变
             changeStatus(event, users, referencePre){
                 switch (referencePre) {
-                    case 'state-':
+                    case 'user_state-':
                         users.userState = !event;
                         break;
                 }

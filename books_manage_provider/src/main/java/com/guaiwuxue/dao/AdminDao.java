@@ -1,6 +1,7 @@
 package com.guaiwuxue.dao;
 
 import com.github.pagehelper.Page;
+import com.guaiwuxue.entity.AdminRoles;
 import com.guaiwuxue.pojo.Admin;
 import com.guaiwuxue.pojo.Users;
 import org.apache.ibatis.annotations.Param;
@@ -26,9 +27,10 @@ public interface AdminDao {
 
     /**
      * 创建管理员
-     * @param admin
+     *
+     * @param adminRoles
      */
-    void createAdmin(Admin admin);
+    void createAdmin(AdminRoles adminRoles);
 
     /**
      * 更新管理员
@@ -42,5 +44,5 @@ public interface AdminDao {
      * @param requirement
      * @return
      */
-    Page<Admin> findPageByCondition(@Param("requirement") String requirement);
+    Page<AdminRoles> findPageByCondition(@Param("requirement") String requirement);
 }
