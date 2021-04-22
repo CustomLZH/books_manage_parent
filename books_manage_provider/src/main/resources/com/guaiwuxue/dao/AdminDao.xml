@@ -3,7 +3,7 @@
 
 <mapper namespace="com.guaiwuxue.dao.AdminDao">
 
-    <select id="findByUsername" parameterType="string" resultType="com.guaiwuxue.pojo.Admin">
+    <select id="findByUsername" parameterType="string" resultType="com.guaiwuxue.entity.AdminRoles">
         select adminId, adminUsername, adminPassword, adminState
         from admin
         where adminUsername = #{adminUsername}
@@ -36,6 +36,11 @@
         <if test="requirement != null and requirement.length() > 0 ">
             where adminUsername like #{requirement}
         </if>
+    </select>
+
+    <select id="findAll" resultType="com.guaiwuxue.entity.AdminRoles">
+        select adminId, adminUsername, adminPassword, adminState, update_date as updateDate, create_date as createDate
+        from admin
     </select>
 
 </mapper>

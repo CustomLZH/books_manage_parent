@@ -20,13 +20,13 @@ public interface RoleDao {
      * @param adminId
      * @return
      */
-    public Set<Role> findByAdminId(Long adminId);
+    public Set<RolePermissions> findByAdminId(Long adminId);
     /**
      * 根据管理员id查询相关角色
      * @param adminId
      * @return
      */
-    public Set<Role> findRoleIdsByAdminId(Long adminId);
+    public Set<RolePermissions> findRoleIdsByAdminId(Long adminId);
 
     /**
      * 查询所有角色
@@ -39,7 +39,7 @@ public interface RoleDao {
      * @param adminId
      * @param roles
      */
-    public void insertAllRole(@Param("adminId") long adminId, @Param("roles") Set<Role> roles);
+    public void insertAllRole(@Param("adminId") long adminId, @Param("roles") Set<RolePermissions> roles);
 
     /**
      * 删除该管理员的所有权限

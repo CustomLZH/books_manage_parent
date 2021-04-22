@@ -1,5 +1,8 @@
 package com.guaiwuxue.service.impl;
 
+import com.guaiwuxue.dao.AdminDao;
+import com.guaiwuxue.entity.AdminRoles;
+import com.guaiwuxue.entity.RolePermissions;
 import com.guaiwuxue.pojo.Admin;
 import com.guaiwuxue.pojo.Permission;
 import com.guaiwuxue.pojo.Role;
@@ -15,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -36,20 +40,26 @@ public class SpringSecurityAdminServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Admin adminUsername = adminService.findByUsername(username);
+        AdminRoles adminUsername = adminService.findByUsername(username);
+        List<AdminRoles> adminRoles = adminService.findAll();
+
+        if (adminRoles == null) {
+            // 创建一个默认的管理员并赋予全部权限
+
+        }
+
         // 是否存在该管理员
         if (adminUsername == null){
             return null;
         }
 
         // 获取该管理员具备的角色
-        Set<Role> roles = adminUsername.getRoles();
-
+        Set<RolePermissions> roles = adminUsername.getRoles();
 
         List<GrantedAuthority> list = new ArrayList<>();
 
         // 添加角色权限
-        for (Role role : roles) {
+        for (RolePermissions role : roles) {
             list.add(new SimpleGrantedAuthority(role.getKeyWord()));
             // 添加角色具备的权限
             Set<Permission> permissions = role.getPermissions();

@@ -25,7 +25,7 @@ public interface RoleService {
      * @param adminId
      * @return
      */
-    public Set<Role> findByAdminId(Long adminId);
+    public Set<RolePermissions> findByAdminId(Long adminId);
 
     /**
      * 分页

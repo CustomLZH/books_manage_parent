@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="plugins/bootstrap/css/bootstrap.min.css">
     <script src="js/jQuery/jquery-3.5.0.min.js"></script>
     <script src="plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script src="js/vue/vue.min.js"></script>
+    <script src="js/vue/axios-0.18.0.js"></script>
+    <link rel="stylesheet" href="plugins/elementui/index.css">
+    <script src="plugins/elementui/index.js"></script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <style>
     body {
@@ -13,7 +18,7 @@
         background-size:cover;
         background-attachment:fixed;
     }
-    body > div {
+    .row {
         width: 600px;
         height: 300px;
         background-color: #FAF0E6;
@@ -25,42 +30,99 @@
         left: 50%;
         transform: translateX(-50%) translateY(-50%);
     }
-    body > div > div {
-        width: 400px;
+    .demo-ruleForm {
+        width: 450px;
         position: relative;
         top: 50%;
         left: 50%;
         transform: translateX(-50%) translateY(-50%);
     }
+    input {
+        width: 80% !important;
+    }
 </style>
 <body>
-    <div>
+    <div id="app">
         <div class="row">
-            <div>
-                <form action="/books_manage_backend/login.do" method="post" class="form-horizontal">
-                    <div class="form-group">
-                        <label for="adminUsername" class="col-sm-3 control-label">用户名：</label>
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="adminUsername" name="adminUsername" placeholder="用户名">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="adminPassword" class="col-sm-3 control-label">密  码：</label>
-                        <div class="col-sm-8">
-                            <input type="password" class="form-control" id="adminPassword" name="adminPassword" placeholder="密码">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-7">
-                            <button type="submit" class="btn btn-primary">登陆</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+            <el-form :model="adminForm" :rules="adminRules" ref="adminForm" label-width="100px" class="demo-ruleForm">
+                <el-form-item label="用户名" prop="adminUsername">
+                    <el-input v-model="adminForm.adminUsername"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="adminPassword">
+                    <el-input status-icon v-model="adminForm.adminPassword"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('adminForm')">立即登陆</el-button>
+                    <el-button @click="resetForm('adminForm')">重置</el-button>
+                </el-form-item>
+            </el-form>
         </div>
     </div>
 </body>
 <script>
+    var vm = new Vue({
+        el: "#app",
+        data: {
+            adminForm: {},
+            adminRules: {
+                adminUsername: [
+                    { required: true, message: '请填写用户名', trigger: ['blur','change'] },
+                ],
+                adminPassword: [
+                    { required: true, message: '请填写密码', trigger: ['blur','change'] },
+                ],
+            }
+        },
+        //钩子函数，VUE对象初始化完成后自动执行
+        created() {
 
+        },
+        methods: {
+            param(data) {
+                let url = "";
+                for (let k in data) {
+                    let value = data[k] != undefined ? data[k] : "";
+                    url += `&${k}=${encodeURIComponent(value)}`;
+                }
+                return url ? url.substring(1) : "";
+            },
+            submitForm(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        axios.post("/books_manage_backend/login.do", this.param(this.adminForm)).then((res) => {
+                            //跳转地址
+                            const url = res.request.responseURL;
+                            if (url.indexOf("/login.html") != -1) {
+                                this.$message.error('用户名或密码错误！');
+                            }else {
+                                window.location.href = url;
+                            }
+                        }).catch((res) => {
+                            this.permissionsMessage(res);
+                        });
+
+                    } else {
+                        this.$message.error('请检查信息填写是否正确！');
+                        return false;
+                    }
+                });
+            },
+            resetForm(formName) {
+                if (this.$refs[formName] !== undefined) {
+                    this.$refs[formName].resetFields();
+                }
+            },
+            permissionsMessage(res){
+                if (res == 'Error: Request failed with status code 403'){
+                    //权限不足
+                    this.$message.error('权限不足');
+                    return;
+                }else{
+                    this.$message.error('操作失败');
+                    return;
+                }
+            },
+        }
+    });
 </script>
 </html>

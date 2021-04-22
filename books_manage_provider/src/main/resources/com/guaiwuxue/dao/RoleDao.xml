@@ -3,7 +3,7 @@
 
 <mapper namespace="com.guaiwuxue.dao.RoleDao">
 
-    <select id="findByAdminId" parameterType="long" resultType="com.guaiwuxue.pojo.Role">
+    <select id="findByAdminId" parameterType="long" resultType="com.guaiwuxue.entity.RolePermissions">
         select r.id,r.name,r.keyWord
         from role r,admin_role ar
         where r.id = ar.role_id and ar.admin_id = #{adminId}
@@ -20,7 +20,7 @@
             (#{adminId}, #{item.id})
         </foreach>
     </insert>
-    <select id="findRoleIdsByAdminId" resultType="com.guaiwuxue.pojo.Role">
+    <select id="findRoleIdsByAdminId" resultType="com.guaiwuxue.entity.RolePermissions">
         select r.id, r.name
         from role r,admin_role ar
         where r.id = ar.role_id and ar.admin_id = #{adminId}

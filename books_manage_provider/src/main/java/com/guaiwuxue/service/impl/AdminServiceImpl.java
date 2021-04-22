@@ -8,17 +8,16 @@ import com.guaiwuxue.dao.RoleDao;
 import com.guaiwuxue.entity.AdminRoles;
 import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
+import com.guaiwuxue.entity.RolePermissions;
 import com.guaiwuxue.pojo.Admin;
 import com.guaiwuxue.pojo.Permission;
-import com.guaiwuxue.pojo.Role;
-import com.guaiwuxue.pojo.Users;
 import com.guaiwuxue.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -46,25 +45,31 @@ public class AdminServiceImpl implements AdminService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
-    public Admin findByUsername(String adminUsername) {
+    public AdminRoles findByUsername(String adminUsername) {
         // 获取用户基本信息
-        Admin admin = adminDao.findByUsername(adminUsername);
-        if (admin == null) {
+        AdminRoles adminRoles = adminDao.findByUsername(adminUsername);
+        if (adminRoles == null) {
             return null;
         }
         // 获取与管理员相关的角色
-        Set<Role> roles = roleDao.findByAdminId(admin.getAdminId());
+        Set<RolePermissions> roles = roleDao.findByAdminId(adminRoles.getAdminId());
 
         // 对角色的权限进行封装
-        for (Role role : roles) {
+        for (RolePermissions role : roles) {
             Set<Permission> permissions = permissionDao.findByRoleId(role.getId());
             role.setPermissions(permissions);
         }
         // 对管理员的角色进行封装
-        admin.setRoles(roles);
+        adminRoles.setRoles(roles);
 
-        return admin;
+        return adminRoles;
     }
+
+    @Override
+    public List<AdminRoles> findAll() {
+        return adminDao.findAll();
+    }
+
     @Override
     public Admin findByUsernameExcludePasswords(String adminUsername) {
         // 获取用户基本信息
@@ -166,5 +171,10 @@ public class AdminServiceImpl implements AdminService {
         }
 
         return new PageResult(page.getTotal(),page.getResult());
+    }
+
+    @Override
+    public void reset() {
+
     }
 }

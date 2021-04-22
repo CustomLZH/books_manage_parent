@@ -15,15 +15,13 @@ public class AdminRoles extends Admin {
     /**
      * 角色
      */
-    Set<Role> roles;
+    Set<RolePermissions> roles;
 
-    @Override
-    public Set<Role> getRoles() {
+    public Set<RolePermissions> getRoles() {
         return roles;
     }
 
-    @Override
-    public void setRoles(Set<Role> roles) {
+    public void setRoles(Set<RolePermissions> roles) {
         this.roles = roles;
     }
 }

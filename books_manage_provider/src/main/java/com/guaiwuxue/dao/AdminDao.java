@@ -6,6 +6,8 @@ import com.guaiwuxue.pojo.Admin;
 import com.guaiwuxue.pojo.Users;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * @Author: Custom
  * @Date: 2020/7/25 11:05
@@ -17,7 +19,7 @@ public interface AdminDao {
      * @param adminUsername
      * @return
      */
-    public Admin findByUsername(String adminUsername);
+    public AdminRoles findByUsername(String adminUsername);
 
     /**
      * 根据管理员id删除
@@ -45,4 +47,10 @@ public interface AdminDao {
      * @return
      */
     Page<AdminRoles> findPageByCondition(@Param("requirement") String requirement);
+
+    /**
+     * 查找所有管理员
+     * @return
+     */
+    public List<AdminRoles> findAll();
 }

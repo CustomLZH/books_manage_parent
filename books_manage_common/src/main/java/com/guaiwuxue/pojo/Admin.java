@@ -44,11 +44,6 @@ public class Admin implements Serializable {
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date createDate;
 
-    /**
-     * 拥有的角色
-     */
-    private Set<Role> roles = new HashSet<>();
-
     public Date getUpdateDate() {
         return updateDate;
     }
@@ -97,11 +92,4 @@ public class Admin implements Serializable {
         this.adminState = adminState;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
 }

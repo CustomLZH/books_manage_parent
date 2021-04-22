@@ -30,11 +30,6 @@ public class Permission implements Serializable {
     private String keyWord;
 
     /**
-     * 拥有该权限的角色
-     */
-    private Set<Role> roles = new HashSet<>();
-
-    /**
      * 更新时间
      */
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
@@ -85,14 +80,6 @@ public class Permission implements Serializable {
 
     public void setKeyWord(String keyWord) {
         this.keyWord = keyWord;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
     }
 
     @Override

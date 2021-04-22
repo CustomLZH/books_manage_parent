@@ -37,7 +37,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public Set<Role> findByAdminId(Long adminId) {
+    public Set<RolePermissions> findByAdminId(Long adminId) {
         return roleDao.findByAdminId(adminId);
     }
 

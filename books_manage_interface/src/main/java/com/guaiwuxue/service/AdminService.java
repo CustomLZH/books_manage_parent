@@ -5,6 +5,8 @@ import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.pojo.Admin;
 
+import java.util.List;
+
 /**
  * 关于管理员的接口
  * @Author: Custom
@@ -17,7 +19,13 @@ public interface AdminService {
      * @param adminUsername
      * @return
      */
-    public Admin findByUsername(String adminUsername);
+    public AdminRoles findByUsername(String adminUsername);
+
+    /**
+     * 查找所有管理员
+     * @return
+     */
+    public List<AdminRoles> findAll();
 
 
     /**
@@ -48,5 +56,15 @@ public interface AdminService {
      */
     void updateAdmin(AdminRoles adminRoles);
 
+    /**
+     * 分页
+     * @param queryPageBean
+     * @return
+     */
     PageResult findPage(QueryPageBean queryPageBean);
+
+    /**
+     * 重置
+     */
+    void reset();
 }
