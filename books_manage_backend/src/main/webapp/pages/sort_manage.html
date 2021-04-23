@@ -47,11 +47,19 @@
                     </el-input>
                     <el-button @click="findPage()">查询</el-button>
                     <el-button type="primary" plain @click="upCreate()">添加</el-button>
+                    <el-button
+                            v-show="visibleButton"
+                            type="danger">
+                        删除选中
+                    </el-button>
                 </div>
                 <div class="data-table">
                     <el-table
                             v-loading="loading"
+                            ref="multipleSelection"
+                            @selection-change="handleSelectionChange"
                             :data="dataList">
+                        <el-table-column type="selection" width="55"></el-table-column>
                         <el-table-column type="index" align="center" label="序号"></el-table-column>
                         <el-table-column prop="typeId" align="center" label="中图分类号"></el-table-column>
                         <el-table-column prop="typeName" align="center" label="分类号名称"></el-table-column>
@@ -74,7 +82,8 @@
                                     <el-button
                                             size="mini"
                                             type="danger"
-                                            slot="reference">删除</el-button>
+                                            slot="reference">删除
+                                    </el-button>
                                 </el-popover>
                             </template>
                         </el-table-column>
@@ -156,8 +165,10 @@
                 visible : false,
                 dataList: [],
                 loading: true,
+                visibleButton: false,
                 dialogVisibleCreate: false,
                 dialogVisibleEdit: false,
+                multipleSelection: [],
                 typeForm: {
                     typeId: null,
                     typeName: null,
@@ -203,11 +214,31 @@
                 },
 
 
+                // toggleSelection(rows) {
+                //     if (rows) {
+                //         rows.forEach(row => {
+                //             this.$refs.multipleTable.toggleRowSelection(row);
+                //         });
+                //     } else {
+                //         this.$refs.multipleTable.clearSelection();
+                //     }
+                // },
+                handleSelectionChange(val) {
+                    if (!this.visibleButton) {
+                        this.visibleButton = true;
+                    }
+                    this.multipleSelection = val;
+                    if (this.multipleSelection.length == 0) {
+                        this.visibleButton = false;
+                    }
+                },
+
 
                 //弹出添加窗口
                 upCreate(){
                     this.dialogVisibleCreate = true;
                     this.resetForm('typeForm');
+                    console.log(this.multipleSelection);
                 },
                 //添加提交
                 handleCreate(formName){

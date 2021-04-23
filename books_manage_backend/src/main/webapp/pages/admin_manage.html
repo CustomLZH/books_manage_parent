@@ -61,11 +61,18 @@
                 </el-input>
                 <el-button @click="findPage()">查询</el-button>
                 <el-button type="primary" plain @click="upCreate()">添加</el-button>
+                <el-button
+                        v-show="visibleButton"
+                        type="danger">
+                    删除选中
+                </el-button>
             </div>
             <div class="data-table">
                 <el-table
                         v-loading="loading"
-                        :data="adminList">
+                        :data="adminList"
+                        @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="55"></el-table-column>
                     <el-table-column type="index" align="center" label="序号"></el-table-column>
                     <el-table-column prop="adminUsername" align="center" label="管理员名称"></el-table-column>
                     <el-table-column prop="roles" align="center" label="拥有角色">
@@ -275,6 +282,8 @@
             loading: true,
             dialogVisibleCreate: false,
             dialogVisibleEdit: false,
+            visibleButton: false,
+            multipleSelection: [],
             role: [],
             adminForm: {},
             row: {},
@@ -429,6 +438,16 @@
                 })
             },
 
+
+            handleSelectionChange(val) {
+                if (!this.visibleButton) {
+                    this.visibleButton = true;
+                }
+                this.multipleSelection = val;
+                if (this.multipleSelection.length == 0) {
+                    this.visibleButton = false;
+                }
+            },
 
             changeSwitch(referencePre, admin) {
                 switch (referencePre) {

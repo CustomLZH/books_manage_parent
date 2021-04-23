@@ -87,6 +87,7 @@
                 return url ? url.substring(1) : "";
             },
             submitForm(formName) {
+                console.log(this.param(this.adminForm));
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         axios.post("/books_manage_backend/login.do", this.param(this.adminForm)).then((res) => {

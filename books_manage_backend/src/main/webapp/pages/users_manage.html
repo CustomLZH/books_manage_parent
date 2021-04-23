@@ -63,11 +63,18 @@
                 </el-input>
                 <el-button @click="findPage()">查询</el-button>
                 <el-button type="primary" plain @click="upCreate()">添加</el-button>
+                <el-button
+                        v-show="visibleButton"
+                        type="danger">
+                    删除选中
+                </el-button>
             </div>
             <div class="data-table">
                 <el-table
                         v-loading="loading"
-                        :data="usersList">
+                        :data="usersList"
+                        @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="55"></el-table-column>
                     <el-table-column type="index" align="center" label="序号"></el-table-column>
                     <el-table-column prop="userName" align="center" label="用户名"></el-table-column>
                     <el-table-column prop="userSex" align="center" label="性别">
@@ -287,8 +294,10 @@
             referencePre_state: 'user_state-',
             usersList: [],
             loading: true,
+            visibleButton: false,
             dialogVisibleCreate: false,
             dialogVisibleEdit: false,
+            multipleSelection: [],
             userSex: [
                 {
                     key: 0,
@@ -355,6 +364,17 @@
                         done();
                     })
                     .catch(_ => {});
+            },
+
+
+            handleSelectionChange(val) {
+                if (!this.visibleButton) {
+                    this.visibleButton = true;
+                }
+                this.multipleSelection = val;
+                if (this.multipleSelection.length == 0) {
+                    this.visibleButton = false;
+                }
             },
 
             //弹出添加窗口

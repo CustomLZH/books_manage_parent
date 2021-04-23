@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>分类管理</title>
+    <title>借阅管理</title>
     <script src="../js/vue/vue.min.js"></script>
     <script src="../js/jQuery/jquery-3.5.0.min.js"></script>
     <script src="../js/vue/axios-0.18.0.js"></script>
@@ -73,6 +73,11 @@
                         <el-dropdown-item command="lose">挂失</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
+                <el-button
+                        v-show="visibleButton"
+                        type="danger">
+                    删除选中
+                </el-button>
                 <el-tag
                         v-for="tag in tags"
                         :key="tag"
@@ -84,7 +89,9 @@
             <div class="data-table">
                 <el-table
                         v-loading="loading"
-                        :data="borrowList">
+                        :data="borrowList"
+                        @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="55"></el-table-column>
                     <el-table-column type="index" align="center" label="序号"></el-table-column>
                     <el-table-column prop="bookName" align="center" label="书名"></el-table-column>
                     <el-table-column prop="bookWriter" align="center" label="作者"></el-table-column>
@@ -470,7 +477,9 @@
             borrowList: [],
             loading: true,
             dialogVisibleCreate: false,
+            visibleButton: false,
             dialogVisibleEdit: false,
+            multipleSelection: [],
             pickerOptions: {
                 shortcuts: [{
                     text: '最近一周',
@@ -549,6 +558,17 @@
                 }
                 this.findPage()
                 this.tags.splice(this.tags.indexOf(tag), 1);
+            },
+
+
+            handleSelectionChange(val) {
+                if (!this.visibleButton) {
+                    this.visibleButton = true;
+                }
+                this.multipleSelection = val;
+                if (this.multipleSelection.length == 0) {
+                    this.visibleButton = false;
+                }
             },
 
             // 下拉菜单选择触发

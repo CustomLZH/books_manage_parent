@@ -63,12 +63,19 @@
                             clearable>
                     </el-input>
                     <el-button @click="findPage()">查询</el-button>
+                    <el-button
+                            v-show="visibleButton"
+                            type="danger">
+                        删除选中
+                    </el-button>
                 </div>
                 <div class="data-table">
                     <el-form :model="forms" ref="forms" :rules="typeRules">
                         <el-table
                                 v-loading="loading"
-                                :data="forms.dataList">
+                                :data="forms.dataList"
+                                @selection-change="handleSelectionChange">
+                            <el-table-column type="selection" width="55"></el-table-column>
                             <el-table-column type="index" align="center" label="序号"></el-table-column>
                             <el-table-column prop="bookName" align="center" label="书名"></el-table-column>
                             <el-table-column prop="bookWriter" align="center" label="作者"></el-table-column>
@@ -124,7 +131,9 @@
                 },
                 loading: true,
                 dialogVisibleCreate: false,
+                visibleButton: false,
                 dialogVisibleEdit: false,
+                multipleSelection: [],
                 forms: {
                     dataList:[]
                 },
@@ -161,6 +170,17 @@
                     this.typeForm={};
                     if (this.$refs[formName]!==undefined){
                         this.$refs[formName].resetFields();
+                    }
+                },
+
+
+                handleSelectionChange(val) {
+                    if (!this.visibleButton) {
+                        this.visibleButton = true;
+                    }
+                    this.multipleSelection = val;
+                    if (this.multipleSelection.length == 0) {
+                        this.visibleButton = false;
                     }
                 },
 

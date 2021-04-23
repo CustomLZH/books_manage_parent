@@ -63,11 +63,18 @@
                 </el-input>
                 <el-button @click="findPage()">查询</el-button>
                 <el-button type="primary" plain @click="upCreate()">添加</el-button>
+                <el-button
+                        v-show="visibleButton"
+                        type="danger">
+                    删除选中
+                </el-button>
             </div>
             <div class="data-table">
                 <el-table
                         v-loading="loading"
-                        :data="roleList">
+                        :data="roleList"
+                        @selection-change="handleSelectionChange">
+                    <el-table-column type="selection" width="55"></el-table-column>
                     <el-table-column type="index" align="center" label="序号"></el-table-column>
                     <el-table-column prop="name" align="center" label="角色名称"></el-table-column>
                     <el-table-column prop="permissions" align="center" label="拥有权限">
@@ -217,7 +224,9 @@
             roleList: [],
             loading: true,
             dialogVisibleCreate: false,
+            visibleButton: false,
             dialogVisibleEdit: false,
+            multipleSelection: [],
             permission: [],
             roleForm : {},
             row: {},
@@ -331,6 +340,17 @@
                 this.row = row;
                 this.setEditForm();
                 this.dialogVisibleEdit = true;
+            },
+
+
+            handleSelectionChange(val) {
+                if (!this.visibleButton) {
+                    this.visibleButton = true;
+                }
+                this.multipleSelection = val;
+                if (this.multipleSelection.length == 0) {
+                    this.visibleButton = false;
+                }
             },
 
 			//删除
