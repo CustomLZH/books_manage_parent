@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import java.util.List;
 import java.util.TreeSet;
 
 /**
@@ -82,7 +83,7 @@ public class BookTypeServiceImpl implements BookTypeService {
         //删除该类型
         bookTypeDao.deleteBytypeId(typeId);
         // 将查询出的新集合对象序列化存入redis
-        resource.set("typeList".getBytes(),SerializeUtil.serialize(bookTypeDao.findBookTypeAll()));
+        resource.set("typeSet".getBytes(),SerializeUtil.serialize(bookTypeDao.findBookTypeAll()));
         return count;
     }
 
@@ -100,7 +101,7 @@ public class BookTypeServiceImpl implements BookTypeService {
         }
         bookTypeDao.createBookType(bookType);
         // 将查询出的新集合对象序列化存入redis
-        resource.set("typeList".getBytes(),SerializeUtil.serialize(bookTypeDao.findBookTypeAll()));
+        resource.set("typeSet".getBytes(),SerializeUtil.serialize(bookTypeDao.findBookTypeAll()));
         return true;
     }
 
@@ -116,7 +117,7 @@ public class BookTypeServiceImpl implements BookTypeService {
         Jedis resource = jedisPool.getResource();
         bookTypeDao.updateByTypeId(bookType);
         // 将查询出的新集合对象序列化存入redis
-        resource.set("typeList".getBytes(),SerializeUtil.serialize(bookTypeDao.findBookTypeAll()));
+        resource.set("typeSet".getBytes(),SerializeUtil.serialize(bookTypeDao.findBookTypeAll()));
     }
 
     @Override
@@ -141,5 +142,23 @@ public class BookTypeServiceImpl implements BookTypeService {
             }
         }
         return bookType;
+    }
+
+    @Override
+    public int deleteAll(List<BookType> multipleSelection) {
+        // 先从redis中获取数据
+        Jedis resource = jedisPool.getResource();
+        //查询是否有书籍使用该类型编号
+        int count = booksDao.findCountByTypeIdAll(multipleSelection);
+        //进行判断
+        if (count > 0){
+            return count;
+        }
+
+        //删除该类型
+        bookTypeDao.deleteBytypeIdAll(multipleSelection);
+        // 将查询出的新集合对象序列化存入redis
+        resource.set("typeSet".getBytes(),SerializeUtil.serialize(bookTypeDao.findBookTypeAll()));
+        return count;
     }
 }

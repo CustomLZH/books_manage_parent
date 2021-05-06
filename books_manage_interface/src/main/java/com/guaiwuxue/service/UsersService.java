@@ -24,4 +24,6 @@ public interface UsersService {
     void createUsers(Users users);
 
     void updateUsers(Users users);
+
+    void deleteAll(List<Users> multipleSelection);
 }

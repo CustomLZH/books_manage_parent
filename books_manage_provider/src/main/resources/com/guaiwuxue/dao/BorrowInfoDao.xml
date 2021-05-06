@@ -116,5 +116,11 @@
         GROUP BY b.date, week
         ORDER BY date
     </select>
+    <delete id="deleteAll">
+        delete from borrow_info where borrowInfoId in
+        <foreach item="item" collection="multipleSelection" open="(" separator="," close=")">
+            #{item.borrowInfoId}
+        </foreach>
+    </delete>
 
 </mapper>

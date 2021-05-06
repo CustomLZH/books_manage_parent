@@ -53,4 +53,10 @@ public interface AdminDao {
      * @return
      */
     public List<AdminRoles> findAll();
+
+    /**
+     * 根据id集合删除
+     * @param multipleSelection
+     */
+    void deleteAll(@Param("multipleSelection") List<Admin> multipleSelection);
 }

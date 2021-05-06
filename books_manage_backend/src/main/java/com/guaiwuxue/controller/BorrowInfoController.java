@@ -93,4 +93,22 @@ public class BorrowInfoController {
         return new Result<>(true,MessageConstant.UPDATE_BORROW_INFO_SUCCESS);
     }
 
+
+    /**
+     * 根据借阅集合删除
+     * @param multipleSelection
+     * @return
+     */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.DELETE_BORROW_INFO + "')")
+    @RequestMapping("/deleteAll")
+    public Result<Void> deleteAll(@RequestBody List<BorrowInfo> multipleSelection){
+        try{
+            borrowInfoService.deleteAll(multipleSelection);
+            return new Result<>(true, MessageConstant.DELETE_BORROW_INFO_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result<>(false,MessageConstant.DELETE_BORROW_INFO_FAIL);
+        }
+    }
+
 }

@@ -24,5 +24,11 @@
     <select id="findBookTypeAll" resultType="com.guaiwuxue.pojo.BookType">
         select * from book_type
     </select>
+    <delete id="deleteBytypeIdAll">
+        delete from book_type where typeId in
+        <foreach item="item" collection="multipleSelection" open="(" separator="," close=")">
+            #{item.typeId}
+        </foreach>
+    </delete>
 
 </mapper>

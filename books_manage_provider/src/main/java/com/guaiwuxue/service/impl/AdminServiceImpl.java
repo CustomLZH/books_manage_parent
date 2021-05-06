@@ -175,6 +175,13 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public void reset() {
+        // TODO:实现第一次进入创建固定的管理员账号：admin 密码：admin
 
+    }
+
+    @Override
+    public void deleteAll(List<Admin> multipleSelection) {
+        adminDao.deleteAll(multipleSelection);
+        roleDao.deleteByAdminIdAll(multipleSelection);
     }
 }

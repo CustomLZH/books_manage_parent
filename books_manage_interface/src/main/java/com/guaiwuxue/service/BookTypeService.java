@@ -4,6 +4,7 @@ import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.pojo.BookType;
 
+import java.util.List;
 import java.util.TreeSet;
 
 /**
@@ -51,4 +52,11 @@ public interface BookTypeService {
      * @return
      */
     TreeSet<BookType> findBookTypeAll();
+
+    /**
+     * 根据类型集合删除
+     * @param multipleSelection
+     * @return
+     */
+    int deleteAll(List<BookType> multipleSelection);
 }

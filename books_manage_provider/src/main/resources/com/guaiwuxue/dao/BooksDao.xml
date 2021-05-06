@@ -91,5 +91,11 @@
     <select id="findAllToBorrowInfoCreate" resultType="com.guaiwuxue.pojo.Books">
         select b.bookId, b.bookName, b.bookWriter from books as b
     </select>
+    <select id="findCountByTypeIdAll" resultType="int">
+        select count(typeId) from books where typeId in
+        <foreach item="item" collection="multipleSelection" open="(" separator="," close=")">
+            #{item.typeId}
+        </foreach>
+    </select>
 
 </mapper>

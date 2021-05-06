@@ -110,4 +110,20 @@ public class UsersController {
             return new Result<>(false,MessageConstant.DELETE_USERS_FAIL);
         }
     }
+    /**
+     * 根据用户集合删除
+     * @param multipleSelection
+     * @return
+     */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.DELETE_USERS + "')")
+    @RequestMapping("/deleteAll")
+    public Result<Void> deleteAll(@RequestBody List<Users> multipleSelection){
+        try{
+            usersService.deleteAll(multipleSelection);
+            return new Result<>(true, MessageConstant.DELETE_USERS_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result<>(false,MessageConstant.DELETE_USERS_FAIL);
+        }
+    }
 }

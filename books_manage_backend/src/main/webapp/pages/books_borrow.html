@@ -73,11 +73,6 @@
                         <el-dropdown-item command="lose">挂失</el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
-                <el-button
-                        v-show="visibleButton"
-                        type="danger">
-                    删除选中
-                </el-button>
                 <el-tag
                         v-for="tag in tags"
                         :key="tag"
@@ -85,6 +80,21 @@
                         @close="tagClose(tag)">
                     {{tag}}
                 </el-tag>
+                <el-popover
+                        placement="top"
+                        width="160"
+                        trigger="click"
+                        :ref="'deleteAll'">
+                    <p>确定删除吗？</p>
+                    <div style="text-align: right; margin: 0">
+                        <el-button size="mini" type="text" @click="borrowInfoNoDelete('deleteAll')">取消</el-button>
+                        <el-button type="primary" size="mini" @click="deleteAll()">确定</el-button>
+                    </div>
+                    <el-button
+                            v-show="visibleButton"
+                            type="danger"
+                            slot="reference">删除选中</el-button>
+                </el-popover>
             </div>
             <div class="data-table">
                 <el-table
@@ -749,6 +759,23 @@
                     this.deleteWindowClose(borrowInfoId);
                 });
             },
+            //删除
+            deleteAll(){
+                axios.post("/books_manage_backend/borrowInfo/deleteAll.do", this.multipleSelection).then((res) => {
+                    if (res.data.flag){
+                        this.$message({
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                        this.findPage();
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                }).catch((res) => {
+                    this.permissionsMessage(res);
+                });
+                this.deleteWindowClose('deleteAll');
+            },
 
             // 删除弹窗关闭
             deleteWindowClose(borrowInfoId) {
@@ -829,8 +856,7 @@
             },
 
             permissionsMessage(res){
-                console.log(res);
-                if (res == 'Error: Request failed with status code 403'){
+                if (String(res).indexOf('Error: Request failed with status code 403') != -1){
                     //权限不足
                     this.$message.error('权限不足');
                     return;

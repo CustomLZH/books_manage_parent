@@ -66,6 +66,12 @@
         </if>
         where id = #{id}
     </update>
+    <delete id="deleteByAdminIdAll" parameterType="com.guaiwuxue.pojo.Admin">
+        delete from admin_role where admin_id in
+        <foreach collection="multipleSelection" item="item" open="(" separator="," close=")" >
+            #{item.adminId}
+        </foreach>
+    </delete>
 
 
 </mapper>

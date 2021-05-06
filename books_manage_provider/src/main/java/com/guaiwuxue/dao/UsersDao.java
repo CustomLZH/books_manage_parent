@@ -44,4 +44,10 @@ public interface UsersDao {
      * @param users
      */
     void updateUsers(Users users);
+
+    /**
+     * 根据用户集合删除
+     * @param multipleSelection
+     */
+    void deleteAll(@Param("multipleSelection") List<Users> multipleSelection);
 }

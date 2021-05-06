@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.TreeSet;
 
 /**
@@ -48,6 +49,7 @@ public class BookTypeController {
     @RequestMapping("/delete")
     public Result delete(String typeId){
         try{
+            // 如果有书籍使用则返回大于0的数
             int count = bookTypeService.delete(typeId);
             if (count > 0){
                 return new Result<>(false,MessageConstant.DELETE_BOOKTYPE_USE_FALL + count);
@@ -128,6 +130,27 @@ public class BookTypeController {
             return new Result<>(true,MessageConstant.QUERY_BOOKTYPE_SUCCESS,bookTypes);
         }catch (Exception e){
             return new Result<>(false,MessageConstant.QUERY_BOOKTYPE_FAIL);
+        }
+    }
+
+
+    /**
+     * 根据书籍类型id删除
+     * @param multipleSelection
+     * @return
+     */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.BOOK_TYPE_DELETE + "')")
+    @RequestMapping("/deleteAll")
+    public Result deleteAll(@RequestBody List<BookType> multipleSelection){
+        try{
+            int count = bookTypeService.deleteAll(multipleSelection);
+            if (count > 0){
+                return new Result<>(false,MessageConstant.DELETE_BOOKTYPE_USE_FALL + count);
+            }
+            return new Result<>(true, MessageConstant.DELETE_BOOKTYPE_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result<>(false,MessageConstant.DELETE_BOOKTYPE_FAIL);
         }
     }
 

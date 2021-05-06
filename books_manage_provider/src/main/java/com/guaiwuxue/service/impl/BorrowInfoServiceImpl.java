@@ -166,4 +166,9 @@ public class BorrowInfoServiceImpl implements BorrowInfoService {
         weekUsersNum.addAll(weekBorrowNum1);
         return weekUsersNum;
     }
+
+    @Override
+    public void deleteAll(List<BorrowInfo> multipleSelection) {
+        borrowInfoDao.deleteAll(multipleSelection);
+    }
 }

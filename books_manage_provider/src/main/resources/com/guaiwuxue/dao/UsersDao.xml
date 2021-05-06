@@ -41,4 +41,10 @@
         </if>
         where userId = #{userId}
     </update>
+    <delete id="deleteAll">
+        delete from users where userId in
+        <foreach item="item" collection="multipleSelection" open="(" separator="," close=")">
+            #{item.userId}
+        </foreach>
+    </delete>
 </mapper>

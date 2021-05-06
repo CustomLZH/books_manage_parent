@@ -1,6 +1,7 @@
 package com.guaiwuxue.dao;
 
 import com.github.pagehelper.Page;
+import com.guaiwuxue.pojo.BookType;
 import com.guaiwuxue.pojo.Books;
 import org.apache.ibatis.annotations.Param;
 
@@ -93,4 +94,11 @@ public interface BooksDao {
      * @return
      */
     List<Books> findAllToBorrowInfoCreate();
+
+    /**
+     * 根据类型集合查找书籍并计数
+     * @param multipleSelection
+     * @return
+     */
+    int findCountByTypeIdAll(@Param("multipleSelection") List<BookType> multipleSelection);
 }

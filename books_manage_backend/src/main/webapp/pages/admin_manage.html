@@ -61,11 +61,21 @@
                 </el-input>
                 <el-button @click="findPage()">查询</el-button>
                 <el-button type="primary" plain @click="upCreate()">添加</el-button>
-                <el-button
-                        v-show="visibleButton"
-                        type="danger">
-                    删除选中
-                </el-button>
+                <el-popover
+                        placement="top"
+                        width="160"
+                        trigger="click"
+                        :ref="'deleteAll'">
+                    <p>确定删除吗？</p>
+                    <div style="text-align: right; margin: 0">
+                        <el-button size="mini" type="text" @click="adminNoDelete('deleteAll')">取消</el-button>
+                        <el-button type="primary" size="mini" @click="deleteAll()">确定</el-button>
+                    </div>
+                    <el-button
+                            v-show="visibleButton"
+                            type="danger"
+                            slot="reference">删除选中</el-button>
+                </el-popover>
             </div>
             <div class="data-table">
                 <el-table
@@ -424,6 +434,26 @@
                 });
                 this.windowClose(adminId);
             },
+
+            //删除
+            deleteAll(){
+                console.log(this.multipleSelection);
+                axios.post("/books_manage_backend/admin/deleteAll.do", this.multipleSelection).then((res) => {
+                    if (res.data.flag){
+                        this.$message({
+                            message: res.data.message,
+                            type: 'success'
+                        });
+                        this.findPage();
+                    } else {
+                        this.$message.error(res.data.message);
+                    }
+                }).catch((res) => {
+                    this.permissionsMessage(res);
+                });
+                this.windowClose('deleteAll');
+            },
+
             // 弹窗关闭
             windowClose(adminId) {
                 this.$refs[adminId].doClose();
@@ -497,7 +527,7 @@
             },
 
             permissionsMessage(res){
-                if (res == 'Error: Request failed with status code 403'){
+                if (String(res).indexOf('Error: Request failed with status code 403') != -1){
                     //权限不足
                     this.$message.error('权限不足');
                     return;

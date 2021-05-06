@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @Author: Custom
  * @Date: 2020/7/11 14:39
@@ -112,6 +114,23 @@ public class AdminController {
             return new Result<>(false,MessageConstant.UPDATE_ADMIN_FAIL);
         }
         return new Result<>(true,MessageConstant.UPDATE_ADMIN_SUCCESS);
+    }
+
+    /**
+     * 根据管理员id集合删除
+     * @param multipleSelection
+     * @return
+     */
+    @PreAuthorize("hasAuthority('" + RolePermissionConstant.ADMIN_DELETE + "')")
+    @RequestMapping("/deleteAll")
+    public Result<Void> deleteAll(@RequestBody List<Admin> multipleSelection){
+        try{
+            adminService.deleteAll(multipleSelection);
+            return new Result<>(true, MessageConstant.DELETE_ADMIN_SUCCESS);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new Result<>(false,MessageConstant.DELETE_ADMIN_FAIL);
+        }
     }
 
 }

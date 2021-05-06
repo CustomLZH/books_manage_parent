@@ -4,6 +4,7 @@ import com.github.pagehelper.Page;
 import com.guaiwuxue.pojo.BookType;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.TreeSet;
 
 /**
@@ -45,4 +46,10 @@ public interface BookTypeDao {
     public void updateByTypeId(BookType bookType);
 
     TreeSet<BookType> findBookTypeAll();
+
+    /**
+     * 根据类型集合删除
+     * @param multipleSelection
+     */
+    void deleteBytypeIdAll(@Param("multipleSelection") List<BookType> multipleSelection);
 }

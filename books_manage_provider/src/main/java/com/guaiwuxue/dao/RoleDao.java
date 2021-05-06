@@ -2,11 +2,13 @@ package com.guaiwuxue.dao;
 
 import com.github.pagehelper.Page;
 import com.guaiwuxue.entity.RolePermissions;
+import com.guaiwuxue.pojo.Admin;
 import com.guaiwuxue.pojo.Permission;
 import com.guaiwuxue.pojo.Role;
 import com.guaiwuxue.pojo.Users;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -79,5 +81,11 @@ public interface RoleDao {
      * @param rolePermissions
      */
     void updateRole(RolePermissions rolePermissions);
+
+    /**
+     * 根据管理员id删除角色绑定
+     * @param multipleSelection
+     */
+    void deleteByAdminIdAll(@Param("multipleSelection") List<Admin> multipleSelection);
 
 }

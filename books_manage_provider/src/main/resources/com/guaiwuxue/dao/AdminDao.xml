@@ -43,4 +43,11 @@
         from admin
     </select>
 
+    <delete id="deleteAll" parameterType="com.guaiwuxue.pojo.Admin">
+        delete from admin where adminId in
+        <foreach item="item" collection="multipleSelection" open="(" separator="," close=")">
+            #{item.adminId}
+        </foreach>
+    </delete>
+
 </mapper>

@@ -78,4 +78,9 @@ public class UsersServiceImpl implements UsersService {
     public void updateUsers(Users users) {
         usersDao.updateUsers(users);
     }
+
+    @Override
+    public void deleteAll(List<Users> multipleSelection) {
+        usersDao.deleteAll(multipleSelection);
+    }
 }

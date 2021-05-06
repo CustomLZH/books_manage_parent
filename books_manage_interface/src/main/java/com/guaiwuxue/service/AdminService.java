@@ -67,4 +67,10 @@ public interface AdminService {
      * 重置
      */
     void reset();
+
+    /**
+     * 根据管理员id集合删除
+     * @param multipleSelection
+     */
+    void deleteAll(List<Admin> multipleSelection);
 }

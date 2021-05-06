@@ -72,4 +72,10 @@ public interface BorrowInfoDao {
      * @return
      */
     TreeSet<WeekNumResp> findWeekUsersNum();
+
+    /**
+     * 根据借阅集合删除
+     * @param multipleSelection
+     */
+    void deleteAll(@Param("multipleSelection") List<BorrowInfo> multipleSelection);
 }
