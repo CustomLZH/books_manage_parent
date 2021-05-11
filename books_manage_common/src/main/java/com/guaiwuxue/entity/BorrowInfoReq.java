@@ -1,6 +1,5 @@
 package com.guaiwuxue.entity;
 
-import com.guaiwuxue.pojo.Books;
 import com.guaiwuxue.pojo.BorrowInfo;
 
 /**

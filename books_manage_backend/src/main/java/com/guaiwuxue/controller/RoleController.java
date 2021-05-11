@@ -2,7 +2,10 @@ package com.guaiwuxue.controller;
 
 import com.guaiwuxue.constant.MessageConstant;
 import com.guaiwuxue.constant.RolePermissionConstant;
-import com.guaiwuxue.entity.*;
+import com.guaiwuxue.entity.PageResult;
+import com.guaiwuxue.entity.QueryPageBean;
+import com.guaiwuxue.entity.Result;
+import com.guaiwuxue.entity.RolePermissions;
 import com.guaiwuxue.pojo.Permission;
 import com.guaiwuxue.pojo.Role;
 import com.guaiwuxue.service.PermissionService;

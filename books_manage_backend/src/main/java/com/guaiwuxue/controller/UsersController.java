@@ -5,8 +5,6 @@ import com.guaiwuxue.constant.RolePermissionConstant;
 import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
 import com.guaiwuxue.entity.Result;
-import com.guaiwuxue.pojo.Books;
-import com.guaiwuxue.pojo.BorrowInfo;
 import com.guaiwuxue.pojo.Users;
 import com.guaiwuxue.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;

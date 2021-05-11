@@ -1,9 +1,6 @@
 package com.guaiwuxue.entity;
 
 
-
-import com.alibaba.fastjson.JSONObject;
-
 import java.io.Serializable;
 
 /**

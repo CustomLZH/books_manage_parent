@@ -1,7 +1,6 @@
 package com.guaiwuxue.entity;
 
 import com.guaiwuxue.pojo.Admin;
-import com.guaiwuxue.pojo.Role;
 
 import java.util.Set;
 

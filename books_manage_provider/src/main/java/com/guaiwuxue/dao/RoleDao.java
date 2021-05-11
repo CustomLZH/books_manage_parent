@@ -3,9 +3,7 @@ package com.guaiwuxue.dao;
 import com.github.pagehelper.Page;
 import com.guaiwuxue.entity.RolePermissions;
 import com.guaiwuxue.pojo.Admin;
-import com.guaiwuxue.pojo.Permission;
 import com.guaiwuxue.pojo.Role;
-import com.guaiwuxue.pojo.Users;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

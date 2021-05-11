@@ -1,18 +1,14 @@
 package com.guaiwuxue.service.impl;
 
 import com.guaiwuxue.entity.WeekAllNumResp;
-import com.guaiwuxue.entity.WeekNumResp;
 import com.guaiwuxue.service.BorrowInfoService;
 import com.guaiwuxue.service.HomeService;
-import com.guaiwuxue.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.TreeSet;
 
 /**
  * @Author: liuzhaohong

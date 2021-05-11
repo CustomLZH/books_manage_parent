@@ -1,11 +1,8 @@
 package com.guaiwuxue.service.impl;
 
-import com.guaiwuxue.dao.AdminDao;
 import com.guaiwuxue.entity.AdminRoles;
 import com.guaiwuxue.entity.RolePermissions;
-import com.guaiwuxue.pojo.Admin;
 import com.guaiwuxue.pojo.Permission;
-import com.guaiwuxue.pojo.Role;
 import com.guaiwuxue.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 

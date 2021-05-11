@@ -5,7 +5,6 @@ import com.github.pagehelper.PageHelper;
 import com.guaiwuxue.dao.UsersDao;
 import com.guaiwuxue.entity.PageResult;
 import com.guaiwuxue.entity.QueryPageBean;
-import com.guaiwuxue.pojo.Books;
 import com.guaiwuxue.pojo.Users;
 import com.guaiwuxue.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;

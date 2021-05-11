@@ -1,7 +1,6 @@
 package com.guaiwuxue.dao;
 
 import com.github.pagehelper.Page;
-import com.guaiwuxue.pojo.Books;
 import com.guaiwuxue.pojo.Users;
 import org.apache.ibatis.annotations.Param;
 

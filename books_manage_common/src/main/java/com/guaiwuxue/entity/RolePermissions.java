@@ -3,7 +3,6 @@ package com.guaiwuxue.entity;
 import com.guaiwuxue.pojo.Permission;
 import com.guaiwuxue.pojo.Role;
 
-import java.util.Objects;
 import java.util.Set;
 
 /**
