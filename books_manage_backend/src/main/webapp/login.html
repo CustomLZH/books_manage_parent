@@ -49,7 +49,7 @@
                     <el-input v-model="adminForm.adminUsername"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="adminPassword">
-                    <el-input status-icon v-model="adminForm.adminPassword"></el-input>
+                    <el-input type="password" status-icon v-model="adminForm.adminPassword"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('adminForm')">立即登陆</el-button>
